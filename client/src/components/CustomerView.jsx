@@ -251,8 +251,8 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin" />
-          <p className="text-slate-600 font-medium">Connecting to printer shop...</p>
+          <RefreshCw className="w-8 h-8 text-[#b84b00] animate-spin" />
+          <p className="text-slate-600 font-medium text-xs">Connecting to printer shop...</p>
         </div>
       </div>
     );
@@ -272,27 +272,31 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
 
   return (
     <div className="min-h-screen bg-slate-100 pb-16">
-      {/* Top Shop Banner */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-              <Printer className="w-5 h-5" />
+      {/* Top Shop Banner - Fully Responsive for Mobile & Tablets */}
+      <header className="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
+        <div className="max-w-lg mx-auto px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#b84b00] flex items-center justify-center text-white font-bold shrink-0 shadow-sm shadow-amber-900/20">
+              <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
-              <h1 className="font-bold text-slate-900 text-base leading-tight flex items-center gap-1.5">
-                {shop.name}
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-              </h1>
-              <p className="text-xs text-slate-500 flex items-center gap-1">
-                <span>Self-Service Smart Print</span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
+                  {shop.name}
+                </h1>
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online"></span>
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">
+                <span className="truncate">Smart Print</span>
                 <span className="text-slate-300">•</span>
-                <span className="text-emerald-700 font-medium bg-emerald-50 px-1.5 py-0.2 rounded">Printer Ready</span>
-              </p>
+                <span className="text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded text-[10px] shrink-0">
+                  Ready
+                </span>
+              </div>
             </div>
           </div>
-          <div className="text-right">
-            <span className="text-[11px] font-semibold text-[#b84b00] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+          <div className="shrink-0">
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#b84b00] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
               UPI Direct
             </span>
           </div>
@@ -454,40 +458,46 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
         ) : (
           /* STEP 1 & 2: SELECTION & UPLOAD */
           <>
-            {/* Mode Selector Tabs */}
-            <div className="grid grid-cols-2 bg-slate-200/80 p-1 rounded-xl text-xs font-bold text-slate-600">
+            {/* Mode Selector Tabs - Responsive & Brand Color */}
+            <div className="grid grid-cols-2 bg-slate-200/80 p-1 rounded-xl text-xs font-bold text-slate-600 gap-1">
               <button
                 type="button"
                 onClick={() => setMode('doc')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all ${
-                  mode === 'doc' ? 'bg-white text-indigo-700 shadow-xs' : 'hover:text-slate-900'
+                className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg transition-all text-center cursor-pointer ${
+                  mode === 'doc'
+                    ? 'bg-white text-[#b84b00] shadow-xs font-black ring-1 ring-amber-300'
+                    : 'hover:text-slate-900 text-slate-600'
                 }`}
               >
-                <FileText className="w-4 h-4" />
-                Normal Document (PDF/Photo)
+                <FileText className="w-4 h-4 shrink-0 text-[#b84b00]" />
+                <span className="truncate">Document (PDF/Photo)</span>
               </button>
               <button
                 type="button"
                 onClick={() => setMode('id_card')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all ${
-                  mode === 'id_card' ? 'bg-white text-indigo-700 shadow-xs' : 'hover:text-slate-900'
+                className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg transition-all text-center cursor-pointer ${
+                  mode === 'id_card'
+                    ? 'bg-white text-[#b84b00] shadow-xs font-black ring-1 ring-amber-300'
+                    : 'hover:text-slate-900 text-slate-600'
                 }`}
               >
-                <CreditCard className="w-4 h-4" />
-                Smart Aadhaar / ID Card
+                <CreditCard className="w-4 h-4 shrink-0 text-[#b84b00]" />
+                <span className="truncate">Smart ID / Aadhaar</span>
               </button>
             </div>
 
             {/* MODE A: NORMAL DOCUMENT UPLOADER */}
             {mode === 'doc' ? (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-sm">Upload Document</h3>
-                  <span className="text-[11px] text-slate-500">PDF, JPG, PNG, DOCX</span>
+                  <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">
+                    PDF, JPG, PNG, DOCX
+                  </span>
                 </div>
 
-                <label className={`block border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                  docFile ? 'border-emerald-400 bg-emerald-50/30' : 'border-indigo-200 hover:border-indigo-400 bg-indigo-50/20'
+                <label className={`block border-2 border-dashed rounded-2xl p-5 sm:p-6 text-center cursor-pointer transition-all ${
+                  docFile ? 'border-emerald-400 bg-emerald-50/30' : 'border-amber-300 hover:border-[#b84b00] bg-amber-50/20'
                 }`}>
                   <input
                     type="file"
@@ -496,7 +506,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     className="hidden"
                   />
                   <div className="flex flex-col items-center gap-2">
-                    <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-[#b84b00] shadow-xs">
                       {uploading ? <RefreshCw className="w-6 h-6 animate-spin text-[#b84b00]" /> : <UploadCloud className="w-6 h-6 text-[#b84b00]" />}
                     </div>
                     {docFile ? (
@@ -595,7 +605,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
             )}
 
             {/* PRINT SETTINGS OPTIONS CARD */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
               <h3 className="font-bold text-slate-900 text-sm">Print Configuration</h3>
 
               {/* Color Mode */}
@@ -605,26 +615,32 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   <button
                     type="button"
                     onClick={() => setColorMode('bw')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
                       colorMode === 'bw'
-                        ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                        ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
+                        : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                     }`}
                   >
-                    <span className="w-3 h-3 rounded-full bg-slate-900 inline-block"></span>
-                    Black & White (₹{shop.rates?.bwSingle}/page)
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
+                      <span>Black & White</span>
+                    </div>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop.rates?.bwSingle}/page</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setColorMode('color')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
                       colorMode === 'color'
-                        ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                        ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
+                        : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                     }`}
                   >
-                    <span className="w-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
-                    Full Color (₹{shop.rates?.colorSingle}/page)
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
+                      <span>Full Color</span>
+                    </div>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop.rates?.colorSingle}/page</span>
                   </button>
                 </div>
               </div>
@@ -637,10 +653,10 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     <button
                       type="button"
                       onClick={() => setSides('single')}
-                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
                         sides === 'single'
-                          ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
-                          : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                          ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
+                          : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                       }`}
                     >
                       Single-Sided (1 Side)
@@ -648,10 +664,10 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     <button
                       type="button"
                       onClick={() => setSides('double')}
-                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
                         sides === 'double'
-                          ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
-                          : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                          ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
+                          : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                       }`}
                     >
                       Double-Sided (Both Sides)
