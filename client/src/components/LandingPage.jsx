@@ -90,7 +90,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
       </header>
 
       {/* 2. HERO SECTION (KARLSON-INSPIRED WITH FLAT TECH ILLUSTRATION) */}
-      <section id="how-it-works" className="pt-6 pb-4 sm:pt-8 sm:pb-8 bg-gradient-to-b from-slate-50/70 via-white to-white relative overflow-hidden">
+      <section className="pt-6 pb-4 sm:pt-8 sm:pb-8 bg-gradient-to-b from-slate-50/70 via-white to-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
             
@@ -178,6 +178,99 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 </div>
               </div>
 
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 2.5 DEDICATED HOW IT WORKS SECTION (KARLSON-INSPIRED WITH FLAT TECH ILLUSTRATION) */}
+      <section id="how-it-works" className="py-16 sm:py-24 border-t border-slate-100 bg-slate-50/60 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Left Column: 3 Simple Visual Steps */}
+            <div className="lg:col-span-6 space-y-6 text-left">
+              <div>
+                <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase inline-block bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200/60 mb-3">
+                  How It Works
+                </span>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-[1.2]">
+                  Effortless Self-Service Printing in 3 Simple Steps
+                </h2>
+                <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+                  No saving unknown WhatsApp numbers. No long waiting lines at your counter. Customers simply scan, pay, and collect their prints in seconds.
+                </p>
+              </div>
+
+              <div className="space-y-6 pt-2">
+                {/* Step 1 */}
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-amber-300 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                    1
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                      Scan Counter Standee QR
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Customer points any smartphone camera at your desk standee. Instant web page opens without downloading any mobile app.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                    2
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                      Upload Documents or Aadhaar
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Upload PDFs or snap photos of both Front &amp; Back of an ID card. Our smart engine auto-merges and formats both sides onto a single A4 page.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-indigo-300 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                    3
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                      Direct UPI Pay &amp; Auto-Print
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      Money goes 100% directly to your Paytm/GPay/PhonePe soundbox with 0% platform commission. Your printer automatically prints pages, and files are permanently purged.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={onOpenRegister}
+                  className="px-6 py-3.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer inline-flex items-center gap-2"
+                >
+                  <span>Start Free in 60 Seconds</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+            </div>
+
+            {/* Right Column: Karlson Tech Illustration (Uploaded by User) */}
+            <div className="lg:col-span-6 flex items-center justify-center relative">
+              <div className="relative w-full max-w-lg lg:max-w-xl">
+                <img
+                  src="/how-it-works-illustration-trans.png"
+                  alt="How Printo automated printing workflow works"
+                  className="w-full h-auto object-contain select-none drop-shadow-md"
+                />
+              </div>
             </div>
 
           </div>
