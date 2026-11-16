@@ -203,48 +203,78 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 </p>
               </div>
 
-              <div className="space-y-6 pt-2">
+              {/* Connected Progress Stepper Workflow */}
+              <div className="relative pl-6 sm:pl-8 space-y-6 sm:space-y-7 pt-2">
+                {/* Vertical Progress Rail Line */}
+                <div 
+                  className="absolute left-2.5 sm:left-3.5 top-5 bottom-8 w-0.5 bg-gradient-to-b from-[#b84b00] via-emerald-500 to-indigo-600 rounded-full"
+                  aria-hidden="true"
+                />
+
                 {/* Step 1 */}
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-amber-300 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                <div className="relative group">
+                  {/* Progress Node */}
+                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-[#b84b00] text-[#b84b00] font-black text-xs flex items-center justify-center shadow-md ring-4 ring-amber-100 z-10 transition-transform group-hover:scale-110">
                     1
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-amber-300 transition-all border-l-4 border-l-[#b84b00]">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-[#b84b00]">
+                        Step 01 • Connect
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-semibold">Instant Scan</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-snug">
                       Scan Counter Standee QR
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      Customer points any smartphone camera at your desk standee. Instant web page opens without downloading any mobile app.
+                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                      Customer points any phone camera at your desk standee. Instant web upload portal opens with zero app download or WhatsApp hassle.
                     </p>
                   </div>
                 </div>
 
                 {/* Step 2 */}
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                <div className="relative group">
+                  {/* Progress Node */}
+                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-emerald-600 text-emerald-600 font-black text-xs flex items-center justify-center shadow-md ring-4 ring-emerald-100 z-10 transition-transform group-hover:scale-110">
                     2
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all border-l-4 border-l-emerald-500">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">
+                        Step 02 • Prepare
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-semibold">Auto Aadhaar Merge</span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-snug">
                       Upload Documents or Aadhaar
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
                       Upload PDFs or snap photos of both Front &amp; Back of an ID card. Our smart engine auto-merges and formats both sides onto a single A4 page.
                     </p>
                   </div>
                 </div>
 
                 {/* Step 3 */}
-                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-indigo-300 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+                <div className="relative group">
+                  {/* Progress Node */}
+                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-indigo-600 text-indigo-600 font-black text-xs flex items-center justify-center shadow-md ring-4 ring-indigo-100 z-10 transition-transform group-hover:scale-110">
                     3
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      Direct UPI Pay &amp; Auto-Print
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-indigo-300 transition-all border-l-4 border-l-indigo-600">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
+                        Step 03 • Print
+                      </span>
+                      <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <span>✓</span> 0% Commission
+                      </span>
+                    </div>
+                    <h3 className="text-base font-bold text-slate-900 leading-snug">
+                      Direct UPI Pay &amp; Silent Auto-Print
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      Money goes 100% directly to your Paytm/GPay/PhonePe soundbox with 0% platform commission. Your printer automatically prints pages, and files are permanently purged.
+                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                      Money goes 100% directly to your Paytm/GPay/PhonePe soundbox. Your printer prints automatically in seconds, and files are permanently purged.
                     </p>
                   </div>
                 </div>
