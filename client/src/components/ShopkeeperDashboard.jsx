@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 

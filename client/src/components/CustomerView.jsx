@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileText, CreditCard, UploadCloud, Printer, CheckCircle, 
   Smartphone, ShieldCheck, ArrowRight, RefreshCw, Copy, ChevronRight,
