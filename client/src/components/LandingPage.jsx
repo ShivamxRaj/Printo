@@ -3,7 +3,7 @@ import {
   Printer, Smartphone, QrCode, ArrowRight, CheckCircle2, 
   ShieldCheck, IndianRupee, Zap, Clock, Users, Sparkles, 
   Download, ChevronRight, ChevronDown, FileText, CreditCard,
-  Check, HelpCircle, Star, ArrowUpRight, Layers, Menu, X
+  Check, HelpCircle, Star, ArrowUpRight, Layers, Menu, X, UploadCloud
 } from 'lucide-react';
 
 export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDemo }) {
@@ -203,91 +203,75 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 </p>
               </div>
 
-              {/* Connected Progress Stepper Workflow */}
-              <div className="relative pl-6 sm:pl-8 space-y-6 sm:space-y-7 pt-2">
-                {/* Vertical Progress Rail Line */}
-                <div 
-                  className="absolute left-2.5 sm:left-3.5 top-5 bottom-8 w-0.5 bg-gradient-to-b from-[#b84b00] via-emerald-500 to-indigo-600 rounded-full"
-                  aria-hidden="true"
-                />
-
-                {/* Step 1 */}
-                <div className="relative group">
-                  {/* Progress Node */}
-                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-[#b84b00] text-[#b84b00] font-black text-xs flex items-center justify-center shadow-md ring-4 ring-amber-100 z-10 transition-transform group-hover:scale-110">
-                    1
-                  </div>
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-amber-300 transition-all border-l-4 border-l-[#b84b00]">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-[#b84b00]">
-                        Step 01 • Connect
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-semibold">Instant Scan</span>
+              {/* Horizontal Progress Stepper (Matching Hand-Drawn Workflow: Scan QR -> Upload -> Pay using UPI) */}
+              <div className="bg-white p-6 sm:p-8 rounded-3xl">
+                <div className="flex items-center justify-between relative">
+                  
+                  {/* Step 1: Scan QR */}
+                  <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-50 border-2 border-[#b84b00] text-[#b84b00] flex items-center justify-center shadow-md shadow-amber-500/10 ring-4 ring-amber-100/70 transition-transform hover:scale-105">
+                      <QrCode className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 leading-snug">
-                      Scan Counter Standee QR
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                      Customer points any phone camera at your desk standee. Instant web upload portal opens with zero app download or WhatsApp hassle.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="relative group">
-                  {/* Progress Node */}
-                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-emerald-600 text-emerald-600 font-black text-xs flex items-center justify-center shadow-md ring-4 ring-emerald-100 z-10 transition-transform group-hover:scale-110">
-                    2
-                  </div>
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all border-l-4 border-l-emerald-500">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">
-                        Step 02 • Prepare
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-semibold">Auto Aadhaar Merge</span>
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#b84b00] block">01</span>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                        Scan QR
+                      </h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5 hidden sm:block">
+                        Phone camera
+                      </p>
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 leading-snug">
-                      Upload Documents or Aadhaar
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                      Upload PDFs or snap photos of both Front &amp; Back of an ID card. Our smart engine auto-merges and formats both sides onto a single A4 page.
-                    </p>
                   </div>
-                </div>
 
-                {/* Step 3 */}
-                <div className="relative group">
-                  {/* Progress Node */}
-                  <div className="absolute -left-6 sm:-left-8 top-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border-2 border-indigo-600 text-indigo-600 font-black text-xs flex items-center justify-center shadow-md ring-4 ring-indigo-100 z-10 transition-transform group-hover:scale-110">
-                    3
-                  </div>
-                  <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:border-indigo-300 transition-all border-l-4 border-l-indigo-600">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
-                        Step 03 • Print
-                      </span>
-                      <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <span>✓</span> 0% Commission
-                      </span>
+                  {/* Connecting Arrow 1 */}
+                  <div className="flex items-center justify-center px-1 sm:px-2 z-0">
+                    <div className="flex items-center text-[#b84b00]">
+                      <div className="w-6 sm:w-14 h-0.5 bg-gradient-to-r from-amber-400 to-emerald-500"></div>
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 -ml-1" />
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 leading-snug">
-                      Direct UPI Pay &amp; Silent Auto-Print
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                      Money goes 100% directly to your Paytm/GPay/PhonePe soundbox. Your printer prints automatically in seconds, and files are permanently purged.
-                    </p>
                   </div>
-                </div>
-              </div>
 
-              <div className="pt-2">
-                <button
-                  onClick={onOpenRegister}
-                  className="px-6 py-3.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer inline-flex items-center gap-2"
-                >
-                  <span>Start Free in 60 Seconds</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                  {/* Step 2: Upload */}
+                  <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 border-2 border-emerald-600 text-emerald-700 flex items-center justify-center shadow-md shadow-emerald-500/10 ring-4 ring-emerald-100/70 transition-transform hover:scale-105">
+                      <UploadCloud className="w-6 h-6 sm:w-7 sm:h-7" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 block">02</span>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                        Upload
+                      </h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5 hidden sm:block">
+                        PDF or Aadhaar
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Connecting Arrow 2 */}
+                  <div className="flex items-center justify-center px-1 sm:px-2 z-0">
+                    <div className="flex items-center text-emerald-600">
+                      <div className="w-6 sm:w-14 h-0.5 bg-gradient-to-r from-emerald-500 to-indigo-600"></div>
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600 -ml-1" />
+                    </div>
+                  </div>
+
+                  {/* Step 3: Pay using UPI */}
+                  <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-indigo-50 border-2 border-indigo-600 text-indigo-700 flex items-center justify-center shadow-md shadow-indigo-500/10 ring-4 ring-indigo-100/70 transition-transform hover:scale-105">
+                      <CreditCard className="w-6 h-6 sm:w-7 sm:h-7" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 block">03</span>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                        Pay using UPI
+                      </h3>
+                      <p className="text-[10px] text-slate-500 mt-0.5 hidden sm:block">
+                        Auto-prints instantly
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
               </div>
 
             </div>
