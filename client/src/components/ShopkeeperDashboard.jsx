@@ -121,6 +121,23 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     }
   };
 
+  // Manually mark pending order as paid (cash received / direct UPI)
+  const handleMarkPaid = async (orderId) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/orders/${orderId}/verify-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transactionId: 'MANUAL_' + Date.now() })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(prev => prev.map(o => o.id === orderId ? data.order : o));
+      }
+    } catch (err) {
+      alert('Error updating payment status');
+    }
+  };
+
   // Trigger Reprint
   const handleTriggerReprint = async () => {
     if (!reprintModalOrder) return;
@@ -355,16 +372,16 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-600 block mb-1">Your Personal UPI ID (VPA)</label>
+                <label className="text-xs font-semibold text-slate-600 block mb-1">Your Shop / Business UPI ID (VPA)</label>
                 <input
                   type="text"
                   value={upiId}
                   onChange={(e) => setUpiId(e.target.value)}
-                  placeholder="e.g. 9876543210@paytm or shop@okaxis"
+                  placeholder="e.g. q12345678@ybl (PhonePe Business) or paytmqr...@paytm"
                   className="w-full text-xs font-mono font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   required
                 />
-                <p className="text-[10px] text-slate-500 mt-0.5">All customer money is sent directly to this UPI.</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">Use your PhonePe Business / Paytm QR UPI ID for zero bank restrictions.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1">
@@ -500,11 +517,20 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                           ₹{o.totalAmount}
                         </td>
                         <td className="py-3">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            o.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                          }`}>
-                            {o.paymentStatus === 'paid' ? '✓ PAID' : 'PENDING'}
-                          </span>
+                          {o.paymentStatus === 'paid' ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                              ✓ PAID
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleMarkPaid(o.id)}
+                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 hover:bg-emerald-600 text-amber-900 hover:text-white border border-amber-300 hover:border-emerald-600 transition-all cursor-pointer"
+                              title="Click to mark as Paid (Cash / Direct UPI received)"
+                            >
+                              <span>PENDING</span>
+                              <span className="text-[9px] underline">Mark Paid</span>
+                            </button>
+                          )}
                         </td>
                         <td className="py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
