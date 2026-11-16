@@ -292,13 +292,13 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
             </div>
 
-            {/* Right Column: Karlson Tech Illustration (Uploaded by User) */}
+            {/* Right Column: Original Pristine Karlson Illustration */}
             <div className="lg:col-span-6 flex items-center justify-center relative">
               <div className="relative w-full max-w-lg lg:max-w-xl">
                 <img
-                  src="/how-it-works-illustration-trans.png"
+                  src="/how-it-works-illustration.png"
                   alt="How Printo automated printing workflow works"
-                  className="w-full h-auto object-contain select-none drop-shadow-md"
+                  className="w-full h-auto object-contain select-none"
                 />
               </div>
             </div>
