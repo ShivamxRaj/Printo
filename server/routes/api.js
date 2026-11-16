@@ -293,7 +293,8 @@ pause
       const upiId = shop.upiId;
       const shopName = shop.name;
       const amountStr = calculation.totalAmount.toFixed(2);
-      const note = `Print Order #${order.orderCode} - ${shopName}`;
+      // Clean note without '#' or special characters that trigger bank parser errors
+      const note = `Print Order ${order.orderCode}`;
 
       // Standard UPI URI
       const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`;

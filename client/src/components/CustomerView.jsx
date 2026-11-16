@@ -38,6 +38,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [paymentData, setPaymentData] = useState(null);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  const [copiedUpi, setCopiedUpi] = useState(false);
 
   // Socket
   const [socket, setSocket] = useState(null);
@@ -229,6 +230,15 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
     }
   };
 
+  const handleCopyUpi = () => {
+    const upi = shop?.upiId;
+    if (upi) {
+      navigator.clipboard.writeText(upi);
+      setCopiedUpi(true);
+      setTimeout(() => setCopiedUpi(false), 2200);
+    }
+  };
+
   // Simulate payment callback (in production, bank webhook triggers this)
   const handleConfirmPayment = async () => {
     if (!currentOrder) return;
@@ -378,32 +388,65 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   <span className="font-bold text-[#b84b00] text-base">₹{currentOrder.totalAmount}</span>
                 </div>
 
+                {/* Copy UPI Box for Direct In-App Payment (Bypasses Bank Intent Blocks) */}
+                <div className="bg-white p-2.5 rounded-lg border border-amber-200/80 flex items-center justify-between shadow-2xs">
+                  <div className="min-w-0 pr-2">
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 block">Shop UPI ID</span>
+                    <span className="text-xs font-mono font-bold text-slate-900 truncate block">{shop?.upiId || 'No UPI ID'}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyUpi}
+                    className="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-[#b84b00] rounded-md text-[11px] font-bold flex items-center gap-1 transition-colors shrink-0 cursor-pointer"
+                  >
+                    {copiedUpi ? (
+                      <>
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy UPI</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
                 {/* 1-Tap Mobile UPI Intent Buttons */}
                 <div className="grid grid-cols-2 gap-2">
                   <a
                     href={paymentData.intents.gpay}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
                   >
                     <span>🔵</span> Google Pay
                   </a>
                   <a
                     href={paymentData.intents.phonepe}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
                   >
                     <span>🟣</span> PhonePe
                   </a>
                   <a
                     href={paymentData.intents.paytm}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
                   >
                     <span>🔷</span> Paytm
                   </a>
                   <a
                     href={paymentData.intents.generic}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-lg text-xs font-semibold shadow-2xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-lg text-xs font-semibold shadow-2xs transition-colors"
                   >
                     <span>⚡</span> Other UPI
                   </a>
+                </div>
+
+                {/* Helper notice for SBI / Bank Limit error */}
+                <div className="bg-amber-100/50 border border-amber-200/80 rounded-lg p-2 text-[10px] text-amber-900 flex items-start gap-1.5">
+                  <span className="text-amber-600 font-bold shrink-0">💡</span>
+                  <span>
+                    Agar aapke bank (jaise <strong>SBI</strong>) me <em>"Exceeded bank limit"</em> aaye, to upar se <strong>Copy UPI</strong> dabayein aur PhonePe / GPay me direct transfer karein ya neeche ka <strong>QR scan</strong> karein.
+                  </span>
                 </div>
 
                 {/* Fallback QR Code for cross-device scanning */}
