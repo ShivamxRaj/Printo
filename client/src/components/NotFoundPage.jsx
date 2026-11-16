@@ -18,16 +18,16 @@ export default function NotFoundPage({ onGoHome, onGoDashboard, onSearchShop }) 
       <header className="border-b border-slate-200 bg-white px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
+            <div className="w-9 h-9 rounded-xl bg-[#b84b00] text-white flex items-center justify-center font-bold">
               <Printer className="w-5 h-5" />
             </div>
-            <span className="text-xl font-black text-slate-900">
-              Print<span className="text-blue-600">Kwik</span>
+            <span className="text-xl font-black text-slate-900 tracking-tight">
+              Print<span className="text-[#b84b00]">o</span>
             </span>
           </div>
           <button
             onClick={onGoHome}
-            className="text-xs font-bold text-slate-600 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
+            className="text-xs font-bold text-slate-600 hover:text-[#b84b00] flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <Home className="w-4 h-4" />
             <span>Back to Home</span>
@@ -44,7 +44,7 @@ export default function NotFoundPage({ onGoHome, onGoDashboard, onSearchShop }) 
             404
           </span>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xl sm:text-2xl font-black text-blue-600 bg-white px-4 py-1 rounded-full border border-blue-100 shadow-sm">
+            <span className="text-xl sm:text-2xl font-black text-[#b84b00] bg-white px-4 py-1 rounded-full border border-amber-200 shadow-sm">
               Page Not Found
             </span>
           </div>
@@ -71,11 +71,11 @@ export default function NotFoundPage({ onGoHome, onGoDashboard, onSearchShop }) 
                 placeholder="Enter shop-id (e.g. demo-shop)"
                 value={shopInput}
                 onChange={(e) => setShopInput(e.target.value)}
-                className="flex-1 text-xs px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-blue-600 font-mono"
+                className="flex-1 text-xs px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-[#b84b00] font-mono"
               />
               <button
                 type="submit"
-                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5"
+                className="px-4 py-2.5 bg-[#b84b00] hover:bg-[#9a3e00] text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Search className="w-3.5 h-3.5" />
                 <span>Go</span>

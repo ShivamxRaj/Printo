@@ -520,7 +520,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                           <div className="flex items-center justify-end gap-1.5">
                             {o.fileUrl && (
                               <a
-                                href={o.fileUrl}
+                                href={o.fileUrl.startsWith('http') ? o.fileUrl : `${API_BASE}${o.fileUrl}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-[#b84b00] font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1"
