@@ -38,15 +38,14 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
       
       {/* 1. TOP NAVBAR */}
       <header className="border-b border-slate-100 sticky top-0 z-50 bg-white/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between">
           
           {/* Brand Logo */}
           <div className="flex items-center">
             <img
               src="/printo-logo-transparent.png"
               alt="Printo Logo"
-              style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
-              className="select-none"
+              className="h-8 sm:h-10 md:h-12 w-auto object-contain select-none"
             />
           </div>
 
@@ -59,10 +58,10 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           </nav>
 
           {/* Header Action Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onOpenRegister}
-              className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2"
+              className="px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 shrink-0"
             >
               <span>Get Started</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -71,7 +70,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-[#b84b00] hover:bg-slate-100 transition-colors focus:outline-hidden"
+              className="md:hidden p-1.5 sm:p-2 rounded-xl text-slate-700 hover:text-[#b84b00] hover:bg-slate-100 transition-colors focus:outline-hidden shrink-0"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -153,7 +152,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">Printer Online</h4>
+                    <p className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">Printer Online</p>
                   </div>
                   <p className="text-[9px] sm:text-[10px] text-slate-500">HP LaserJet 1020 Ready</p>
                 </div>
@@ -172,7 +171,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                   <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">₹10 UPI Received</h4>
+                  <p className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">₹10 UPI Received</p>
                   <p className="text-[9px] sm:text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
                     <span>✓</span> Soundbox Auto-Print
                   </p>
@@ -282,7 +281,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             {/* Free Plan */}
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
-                <h4 className="font-bold text-slate-900 text-lg">Starter</h4>
+                <h3 className="font-bold text-slate-900 text-lg">Starter</h3>
                 <p className="text-xs text-slate-500">Free forever for testing and small counters</p>
                 <div className="text-4xl font-extrabold text-slate-950">₹0 <span className="text-xs font-normal text-slate-500">/ forever</span></div>
                 <ul className="space-y-3 text-xs text-slate-600 pt-2 border-t border-slate-100">
@@ -306,7 +305,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 Most Popular for Shops
               </span>
               <div className="space-y-4">
-                <h4 className="font-bold text-white text-lg">Monthly Pro</h4>
+                <h3 className="font-bold text-white text-lg">Monthly Pro</h3>
                 <p className="text-xs text-amber-100">Busy cyber cafes &amp; college xerox shops</p>
                 <div className="text-4xl font-extrabold text-white">
                   ₹49 <span className="text-xs font-normal text-amber-200">/ month</span>
@@ -331,7 +330,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 text-lg">Yearly Pro</h4>
+                  <h3 className="font-bold text-slate-900 text-lg">Yearly Pro</h3>
                   <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Save ₹89</span>
                 </div>
                 <p className="text-xs text-slate-500">Best annual savings for established shops</p>
