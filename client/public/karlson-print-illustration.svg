@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Soft Gradients -->
+    <linearGradient id="cloudGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="accentRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </linearGradient>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- 1. Background Ambient Cloud & Abstract Shapes (Karlson Style) -->
+  <path d="M120 180 C180 80, 360 60, 480 120 C600 180, 680 120, 720 220 C760 320, 680 440, 560 480 C440 520, 220 540, 140 440 C60 340, 60 280, 120 180 Z" fill="url(#cloudGlow)" opacity="0.6"/>
+  <circle cx="670" cy="140" r="32" fill="#E2E8F0" opacity="0.6"/>
+  <path d="M670 110 A 30 30 0 0 1 700 140 L670 140 Z" fill="#94A3B8" opacity="0.6"/>
+
+  <!-- Decorative Plant / Foliage in Background -->
+  <g opacity="0.35">
+    <path d="M210 440 C200 360, 230 320, 250 280 C230 320, 260 380, 230 440 Z" fill="#94A3B8"/>
+    <path d="M240 440 C250 350, 280 320, 310 290 C290 330, 300 390, 260 440 Z" fill="#CBD5E1"/>
+    <!-- Plant Pot -->
+    <path d="M210 440 H250 L245 490 H215 Z" fill="#E2E8F0"/>
+  </g>
+
+  <!-- 2. Back Floating Window (Layered) -->
+  <g filter="url(#softShadow)" opacity="0.85">
+    <rect x="230" y="80" width="310" height="380" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <!-- Window Bar -->
+    <path d="M230 100 C230 89, 239 80, 250 80 H520 C531 80, 540 89, 540 100 V120 H230 Z" fill="#F8FAFC"/>
+    <circle cx="255" cy="100" r="4" fill="#CBD5E1"/>
+    <circle cx="270" cy="100" r="4" fill="#CBD5E1"/>
+    <circle cx="285" cy="100" r="4" fill="#CBD5E1"/>
+    <!-- Placeholder Lines -->
+    <rect x="255" y="145" width="120" height="10" rx="5" fill="#E2E8F0"/>
+    <rect x="255" y="170" width="230" height="8" rx="4" fill="#F1F5F9"/>
+    <rect x="255" y="190" width="190" height="8" rx="4" fill="#F1F5F9"/>
+    <rect x="255" y="210" width="210" height="8" rx="4" fill="#F1F5F9"/>
+  </g>
+
+  <!-- 3. Main Center Floating Window (Karlson UI Document Board) -->
+  <g filter="url(#softShadow)">
+    <rect x="290" y="120" width="350" height="360" rx="22" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    
+    <!-- Top Header Bar -->
+    <path d="M290 142 C290 130, 299 120, 312 120 H618 C631 120, 640 130, 640 142 V165 H290 Z" fill="#F1F5F9"/>
+    <!-- Browser Dots -->
+    <circle cx="315" cy="142" r="4.5" fill="#FDA4AF"/>
+    <circle cx="330" cy="142" r="4.5" fill="#FDE047"/>
+    <circle cx="345" cy="142" r="4.5" fill="#86EFAC"/>
+    
+    <!-- Title -->
+    <rect x="370" y="137" width="130" height="10" rx="5" fill="#CBD5E1"/>
+    
+    <!-- Status Indicator -->
+    <rect x="545" y="133" width="75" height="18" rx="9" fill="#DCFCE7"/>
+    <circle cx="557" cy="142" r="3" fill="#16A34A"/>
+    <text x="566" y="146" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="700" fill="#15803D">LIVE QUEUE</text>
+
+    <!-- Document Row 1: Active Printing -->
+    <g transform="translate(310, 185)">
+      <rect width="310" height="64" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="12" y="12" width="40" height="40" rx="10" fill="#EFF6FF"/>
+      <text x="24" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" fill="#2563EB">📄</text>
+      
+      <text x="64" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0F172A">Semester_Admit_Card.pdf</text>
+      <text x="64" y="44" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="500" fill="#64748B">2 Pages • B&amp;W Single Side</text>
+      
+      <rect x="225" y="20" width="70" height="24" rx="12" fill="#DBEAFE"/>
+      <text x="237" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="700" fill="#1D4ED8">Printing...</text>
+    </g>
+
+    <!-- Document Row 2: Aadhaar Merged Success -->
+    <g transform="translate(310, 262)">
+      <rect width="310" height="64" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="12" y="12" width="40" height="40" rx="10" fill="#F0FDF4"/>
+      <text x="24" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" fill="#16A34A">🪪</text>
+      
+      <text x="64" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0F172A">Aadhaar_Merged_A4.pdf</text>
+      <text x="64" y="44" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="500" fill="#64748B">Front + Back • 1 Page Color</text>
+      
+      <rect x="235" y="20" width="60" height="24" rx="12" fill="#DCFCE7"/>
+      <text x="247" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="700" fill="#15803D">✓ Paid ₹10</text>
+    </g>
+
+    <!-- Document Row 3: Upcoming Job -->
+    <g transform="translate(310, 339)">
+      <rect width="310" height="64" rx="14" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      <rect x="12" y="12" width="40" height="40" rx="10" fill="#FAF5FF"/>
+      <text x="24" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" fill="#9333EA">📑</text>
+      
+      <text x="64" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0F172A">Assignment_Final.docx</text>
+      <text x="64" y="44" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="500" fill="#64748B">8 Pages • Both Sides Duplex</text>
+      
+      <rect x="238" y="20" width="57" height="24" rx="12" fill="#F1F5F9"/>
+      <text x="250" y="36" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" font-weight="700" fill="#475569">Queued</text>
+    </g>
+
+    <!-- Spooler Status Footer inside window -->
+    <g transform="translate(310, 422)">
+      <text x="10" y="20" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748B">Active Spooler: <tspan font-weight="800" fill="#0F172A">HP LaserJet 1020</tspan></text>
+      <text x="220" y="20" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="700" fill="#2563EB">Fast Silent Mode</text>
+    </g>
+  </g>
+
+  <!-- 4. Left Stylized Character (Standing, Blue Jacket, Pointing) - Exactly like Karlson -->
+  <g id="characterLeft">
+    <!-- Shadow -->
+    <ellipse cx="160" cy="510" rx="35" ry="8" fill="#CBD5E1" opacity="0.6"/>
+
+    <!-- Left Leg (Teal pants) -->
+    <path d="M142 340 L135 480 L145 490 L160 490 L158 340 Z" fill="url(#tealGrad)"/>
+    <path d="M130 490 H165 C165 490 165 505 150 505 H125 C120 505 120 490 130 490 Z" fill="#0F172A"/>
+
+    <!-- Right Leg (Teal pants, front) -->
+    <path d="M165 340 L178 475 L190 485 L205 485 L185 340 Z" fill="url(#tealGrad)"/>
+    <path d="M175 485 H210 C210 485 210 500 195 500 H170 C165 500 165 485 175 485 Z" fill="#0F172A"/>
+
+    <!-- Body Torso (Royal Blue Jacket) -->
+    <path d="M135 220 C135 200 185 195 205 215 L205 345 C190 355 145 355 135 345 Z" fill="url(#primaryGrad)"/>
+
+    <!-- Left Arm & Hand (Pointing to screen) -->
+    <path d="M190 225 L260 250 L275 240 L260 220 L185 210 Z" fill="url(#primaryGrad)"/>
+    <circle cx="280" cy="245" r="9" fill="#FBBF24"/>
+    <path d="M280 240 L300 245 L285 252 Z" fill="#FBBF24"/> <!-- Pointing finger -->
+
+    <!-- Head & Hair (Modern Flat Stylized) -->
+    <!-- Neck -->
+    <rect x="160" y="185" width="16" height="25" fill="#FBBF24"/>
+    <!-- Head -->
+    <circle cx="170" cy="175" r="22" fill="#FBBF24"/>
+    <!-- Hair (Dark Blue Ponytail) -->
+    <path d="M150 175 C150 150 185 150 192 170 C180 165 160 170 155 185 Z" fill="#0F172A"/>
+    <ellipse cx="140" cy="165" rx="14" ry="18" fill="#0F172A" transform="rotate(-25 140 165)"/>
+  </g>
+
+  <!-- 5. Right Stylized Character (Sitting on Exercise/Office Ball, Coral Red Sweater) - Karlson Style -->
+  <g id="characterRight">
+    <!-- Ball / Seat (Soft Grey-Blue Office Yoga Ball) -->
+    <circle cx="640" cy="420" r="48" fill="#E2E8F0" filter="url(#softShadow)"/>
+    <ellipse cx="640" cy="460" rx="36" ry="12" fill="#CBD5E1" opacity="0.6"/>
+
+    <!-- Left Leg (Royal Blue Pants, crossed/sitting) -->
+    <path d="M630 360 C640 400 660 415 670 470 L685 465 L660 390 L635 350 Z" fill="url(#primaryGrad)"/>
+    <path d="M665 470 H695 C695 470 690 485 675 485 H655 Z" fill="#0F172A"/>
+
+    <!-- Right Leg (Folded on ball) -->
+    <path d="M610 360 C585 390 580 430 600 460 L615 450 C600 420 605 390 625 350 Z" fill="url(#primaryGrad)"/>
+    <path d="M595 455 H625 C625 455 620 470 605 470 H585 Z" fill="#0F172A"/>
+
+    <!-- Torso (Coral Red / Crimson Jacket) -->
+    <path d="M610 270 C625 255 675 260 670 285 L660 375 C640 385 615 380 610 365 Z" fill="url(#accentRed)"/>
+
+    <!-- Arm gesturing towards document board -->
+    <path d="M625 280 L550 330 L555 345 L625 305 Z" fill="url(#accentRed)"/>
+    <circle cx="545" cy="338" r="9" fill="#FBBF24"/>
+    <path d="M545 333 L525 340 L540 347 Z" fill="#FBBF24"/>
+
+    <!-- Head & Hair (Ponytail flying back) -->
+    <rect x="635" y="245" width="14" height="20" fill="#FBBF24"/>
+    <circle cx="645" cy="235" r="20" fill="#FBBF24"/>
+    <!-- Hair -->
+    <path d="M630 235 C630 215 660 215 665 235 C655 225 640 230 635 245 Z" fill="#0F172A"/>
+    <path d="M665 230 C705 230 730 255 745 285 C720 280 690 260 665 245 Z" fill="#0F172A"/>
+  </g>
+
+  <!-- 6. Floating Polish Accents: Small Paper Plane -->
+  <g transform="translate(60, 420) rotate(-15)">
+    <polygon points="0,20 40,0 20,40 16,24" fill="#93C5FD"/>
+    <polygon points="40,0 16,24 20,40" fill="#60A5FA"/>
+    <!-- Dashed trail -->
+    <path d="M-40 40 C-20 30, -10 25, 0 20" stroke="#93C5FD" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  </g>
+
+</svg>
+

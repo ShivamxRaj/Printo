@@ -1,0 +1,13 @@
+{
+  "name": "printkwik-agent",
+  "version": "1.0.0",
+  "description": "Windows Desktop Print Agent for automated self-service printing",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "socket.io-client": "^4.8.1"
+  }
+}

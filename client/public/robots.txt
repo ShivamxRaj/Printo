@@ -1,0 +1,10 @@
+# Robots.txt for Printo Smart Printing SaaS
+User-agent: *
+Allow: /
+Allow: /s/
+Allow: /standee/
+Disallow: /api/
+Disallow: /uploads/
+
+# Sitemap location
+Sitemap: https://printo.tech/sitemap.xml

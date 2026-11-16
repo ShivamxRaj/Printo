@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Glow circle -->
+  <circle cx="950" cy="200" r="280" fill="#2563EB" opacity="0.18" filter="blur(60px)"/>
+
+  <!-- Logo -->
+  <g transform="translate(100, 90)">
+    <rect width="70" height="70" rx="18" fill="#2563EB"/>
+    <path d="M22 14H48V28H22z" fill="#FFFFFF"/>
+    <rect x="14" y="26" width="42" height="26" rx="4" fill="#F8FAFC"/>
+    <circle cx="48" cy="33" r="3" fill="#10B981"/>
+    <rect x="20" y="42" width="30" height="18" rx="2" fill="#E2E8F0"/>
+    <text x="90" y="48" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="44" font-weight="900" fill="#FFFFFF">
+      Printo<tspan fill="#3B82F6">.tech</tspan>
+    </text>
+  </g>
+
+  <!-- Tagline / Title -->
+  <text x="100" y="260" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="-1">
+    Automate Your Xerox &amp; Cyber Cafe
+  </text>
+  <text x="100" y="330" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="56" font-weight="900" fill="url(#accent)" letter-spacing="-1">
+    With Instant QR Self-Service Printing
+  </text>
+
+  <!-- Subtitle -->
+  <text x="100" y="400" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="24" font-weight="400" fill="#94A3B8">
+    Customers scan QR, pay via UPI, and your printer prints automatically.
+  </text>
+  <text x="100" y="435" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="24" font-weight="400" fill="#94A3B8">
+    Zero WhatsApp hassle • 0% Commission • Auto Aadhaar Merging.
+  </text>
+
+  <!-- Pill Badges -->
+  <g transform="translate(100, 490)">
+    <!-- Badge 1 -->
+    <rect width="260" height="46" rx="23" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <text x="30" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" font-weight="700" fill="#38BDF8">✓ Any Windows Printer</text>
+    
+    <!-- Badge 2 -->
+    <g transform="translate(280, 0)">
+      <rect width="250" height="46" rx="23" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+      <text x="30" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" font-weight="700" fill="#34D399">✓ Direct Personal UPI</text>
+    </g>
+
+    <!-- Badge 3 -->
+    <g transform="translate(550, 0)">
+      <rect width="250" height="46" rx="23" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+      <text x="30" y="28" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" font-weight="700" fill="#FBBF24">✓ Zero Hardware Cost</text>
+    </g>
+  </g>
+</svg>

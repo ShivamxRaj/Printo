@@ -1,0 +1,22 @@
+# Printo.tech — Smart Self-Service Printing Platform
+
+> Printo (https://printo.tech) is an automated SaaS platform designed for Cyber Cafes, Xerox centers, university print stations, and stationery shops in India. It enables walk-in customers to scan a counter QR code, upload documents or ID cards, pay directly via UPI, and automatically print on the shopkeeper's existing Windows printer without manual file handling over WhatsApp or Bluetooth.
+
+## Core Capabilities
+- **Walk-in Customer Self-Service**: Mobile web portal accessed via QR code (no native app install required). Supports PDF, DOCX, and image uploads.
+- **Smart Aadhaar / ID Card Merging**: Automatically combines user-uploaded Front and Back photos onto a single A4 PDF with standard ID dimensions and cutting guide borders.
+- **Direct-to-Bank UPI Payments**: Zero platform commission. Payments are directed straight to the shopkeeper's personal UPI ID (VPA) with instant webhook/intent verification.
+- **Windows Silent Spooler Integration**: A lightweight desktop print agent automatically queries installed Windows printers (HP LaserJet, Canon LBP, Epson EcoTank, Brother) and prints silently without dialog boxes.
+- **Zero-Storage Privacy Purge**: Uploaded customer files are automatically purged from server and disk 30 seconds after printing.
+- **Reprint Security PIN**: 4-digit numeric verification code issued per order for paper-jam reprint without double-charging.
+
+## Web Routes & URLs
+- `/`: Public marketing landing page with ROI savings calculator, features, and pricing.
+- `/s/:shopId`: Customer self-service upload and UPI payment mobile view.
+- `/dashboard`: Shopkeeper live order queue, revenue metrics, rates configuration, and printer status.
+- `/standee/:shopId`: High-resolution printable A4 counter standee poster with dynamic QR code.
+
+## Technology Stack
+- **Frontend**: React 19, Tailwind CSS v4, Lucide React, Socket.IO Client.
+- **Backend**: Node.js, Express, Socket.IO, pdf-lib, QRCode, Multer.
+- **Desktop Agent**: Node.js Windows print agent utilizing native browser headless print and Windows Print Spooler.
