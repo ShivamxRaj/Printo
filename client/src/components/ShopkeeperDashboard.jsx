@@ -68,7 +68,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
       setShop(shopData);
       setShopName(shopData.name || '');
-      document.title = `Shop Dashboard â€” ${shopData.name || 'Admin'} | Printo`;
+      document.title = `Shop Dashboard — ${shopData.name || 'Admin'} | Printo`;
       setUpiId(shopData.upiId || '');
       if (shopData.rates) setRates(shopData.rates);
       setAgentStatus(shopData.status || 'offline');
@@ -132,7 +132,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
       });
       const data = await res.json();
       if (res.ok) {
-        alert(`âœ“ Reprint command sent to ${activePrinter || 'printer'}!`);
+        alert(`✓ Reprint command sent to ${activePrinter || 'printer'}!`);
         setReprintModalOrder(null);
         setReprintCode('');
       } else {
@@ -157,7 +157,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin" />
+        <RefreshCw className="w-8 h-8 text-[#b84b00] animate-spin" />
       </div>
     );
   }
@@ -168,13 +168,13 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
       <header className="bg-slate-900 text-white border-b border-slate-800">
         <div className="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#b84b00] flex items-center justify-center text-white font-bold shadow-md shadow-amber-900/20">
               <Printer className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-bold text-lg text-white">{shopName}</h1>
-                <span className="text-[11px] font-semibold bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+                <span className="text-[11px] font-semibold bg-slate-800 text-amber-400 px-2 py-0.5 rounded border border-slate-700">
                   Shop Admin
                 </span>
               </div>
@@ -203,7 +203,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
               title="Download 1-click agent launcher for this shop"
             >
-              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <Download className="w-3.5 h-3.5 text-amber-400" />
               <span>Download Agent (.bat)</span>
             </a>
 
@@ -211,7 +211,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               href={`/standee/${shopId}`}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white text-xs font-bold transition-all shadow-sm"
             >
               <QrCode className="w-3.5 h-3.5" />
               <span>Print Standee</span>
@@ -238,7 +238,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center shrink-0">
                   <Printer className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
@@ -253,7 +253,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                 <a
                   href={`/api/shops/${shopId}/download-launcher`}
                   download={`start-${shopId}-agent.bat`}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition-all"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs shadow-sm transition-all"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download 1-Click Connector</span>
@@ -271,7 +271,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                 Double-click to start
               </span>
               <span className="flex items-center gap-1.5 font-medium">
-                <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-[10px] font-bold">âœ“</span>
+                <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-[10px] font-bold">✓</span>
                 Zero setup: All printers detected automatically!
               </span>
             </div>
@@ -301,7 +301,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
           <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-500">Today's Revenue</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1">â‚¹{totalRevenue}</h3>
+              <h3 className="text-2xl font-black text-slate-900 mt-1">₹{totalRevenue}</h3>
               <p className="text-[11px] text-emerald-600 font-semibold mt-1">Direct to your bank UPI</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -315,7 +315,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               <h3 className="text-2xl font-black text-slate-900 mt-1">{paidOrdersCount}</h3>
               <p className="text-[11px] text-slate-500 mt-1">Walk-in customer orders</p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-amber-50 text-[#b84b00] flex items-center justify-center">
               <TrendingUp className="w-6 h-6" />
             </div>
           </div>
@@ -349,7 +349,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   type="text"
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  className="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-indigo-600"
+                  className="w-full text-xs font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   required
                 />
               </div>
@@ -361,7 +361,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   value={upiId}
                   onChange={(e) => setUpiId(e.target.value)}
                   placeholder="e.g. 9876543210@paytm or shop@okaxis"
-                  className="w-full text-xs font-mono font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-indigo-600"
+                  className="w-full text-xs font-mono font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   required
                 />
                 <p className="text-[10px] text-slate-500 mt-0.5">All customer money is sent directly to this UPI.</p>
@@ -369,69 +369,69 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 1-Side (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 1-Side (₹)</label>
                   <input
                     type="number"
                     step="0.5"
                     value={rates.bwSingle}
                     onChange={(e) => setRates({ ...rates, bwSingle: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 2-Sides (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 2-Sides (₹)</label>
                   <input
                     type="number"
                     step="0.5"
                     value={rates.bwDouble}
                     onChange={(e) => setRates({ ...rates, bwDouble: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 1-Side (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 1-Side (₹)</label>
                   <input
                     type="number"
                     step="1"
                     value={rates.colorSingle}
                     onChange={(e) => setRates({ ...rates, colorSingle: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 2-Sides (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 2-Sides (₹)</label>
                   <input
                     type="number"
                     step="1"
                     value={rates.colorDouble}
                     onChange={(e) => setRates({ ...rates, colorDouble: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Aadhaar/ID Card (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Aadhaar/ID Card (₹)</label>
                   <input
                     type="number"
                     step="1"
                     value={rates.idCard}
                     onChange={(e) => setRates({ ...rates, idCard: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Min Order (â‚¹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Min Order (₹)</label>
                   <input
                     type="number"
                     step="1"
                     value={rates.minOrder}
                     onChange={(e) => setRates({ ...rates, minOrder: e.target.value })}
-                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg"
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
                   />
                 </div>
               </div>
@@ -439,7 +439,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               <button
                 type="submit"
                 disabled={isSavingRates}
-                className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
+                className="w-full py-2 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
                 {isSavingRates ? 'Saving Rates...' : 'Save Updated Rates'}
               </button>
@@ -455,7 +455,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
               </div>
               <button
                 onClick={fetchData}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
+                className="text-xs text-[#b84b00] hover:text-[#9f4000] font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Refresh</span>
@@ -485,7 +485,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   <tbody className="divide-y divide-slate-100">
                     {orders.map((o) => (
                       <tr key={o.id} className="hover:bg-slate-50/60">
-                        <td className="py-3 font-mono font-bold text-indigo-600">
+                        <td className="py-3 font-mono font-bold text-[#b84b00]">
                           #{o.orderCode}
                         </td>
                         <td className="py-3">
@@ -493,24 +493,24 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                           <span className="text-[10px] text-slate-400 uppercase">{o.docType === 'id_card' ? 'Smart ID Card' : 'Standard Doc'}</span>
                         </td>
                         <td className="py-3 text-slate-600">
-                          <span>{o.totalPages}p Ã— {o.copies}c</span>
-                          <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} â€¢ {o.sides}</span>
+                          <span>{o.totalPages}p × {o.copies}c</span>
+                          <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} • {o.sides}</span>
                         </td>
                         <td className="py-3 font-bold text-slate-900">
-                          â‚¹{o.totalAmount}
+                          ₹{o.totalAmount}
                         </td>
                         <td className="py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             o.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                           }`}>
-                            {o.paymentStatus === 'paid' ? 'âœ“ PAID' : 'PENDING'}
+                            {o.paymentStatus === 'paid' ? '✓ PAID' : 'PENDING'}
                           </span>
                         </td>
                         <td className="py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             o.printStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' :
-                            o.printStatus === 'printing' ? 'bg-indigo-100 text-indigo-800 animate-pulse' :
-                            o.printStatus === 'sent_to_printer' ? 'bg-blue-100 text-blue-800' :
+                            o.printStatus === 'printing' ? 'bg-amber-100 text-[#b84b00] animate-pulse' :
+                            o.printStatus === 'sent_to_printer' ? 'bg-amber-50 text-amber-700' :
                             'bg-slate-100 text-slate-600'
                           }`}>
                             {o.printStatus}
@@ -523,7 +523,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                                 href={o.fileUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1"
+                                className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-[#b84b00] font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1"
                                 title="Open document in browser to view or print manually"
                               >
                                 <Printer className="w-3 h-3" />
@@ -535,7 +535,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                                 setReprintModalOrder(o);
                                 setReprintCode(o.orderCode);
                               }}
-                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-all text-[11px]"
+                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-all text-[11px] cursor-pointer"
                             >
                               Reprint
                             </button>
@@ -558,7 +558,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
           <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 space-y-4">
             <h3 className="font-bold text-slate-900 text-base">Confirm Paper Reprint</h3>
             <p className="text-xs text-slate-600">
-              Re-send order <span className="font-mono font-bold text-indigo-600">#{reprintModalOrder.orderCode}</span> ({reprintModalOrder.fileName}) to the printer? No extra payment will be charged.
+              Re-send order <span className="font-mono font-bold text-[#b84b00]">#{reprintModalOrder.orderCode}</span> ({reprintModalOrder.fileName}) to the printer? No extra payment will be charged.
             </p>
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1">Verify 4-Digit Order Code:</label>
@@ -566,21 +566,21 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                 type="text"
                 value={reprintCode}
                 onChange={(e) => setReprintCode(e.target.value)}
-                className="w-full text-center text-lg font-mono font-bold tracking-widest px-3 py-2 border border-slate-200 rounded-lg"
+                className="w-full text-center text-lg font-mono font-bold tracking-widest px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
               />
             </div>
             <div className="flex items-center gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setReprintModalOrder(null)}
-                className="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold"
+                className="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleTriggerReprint}
-                className="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold"
+                className="w-1/2 py-2 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-xl text-xs font-bold cursor-pointer"
               >
                 Send to Printer
               </button>

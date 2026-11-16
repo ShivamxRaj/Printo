@@ -50,7 +50,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
         setShop(data);
         setLoading(false);
         if (data?.name) {
-          document.title = `${data.name} â€” Self-Service Instant Print | Printo`;
+          document.title = `${data.name} — Self-Service Instant Print | Printo`;
         }
       })
       .catch(err => {
@@ -286,13 +286,13 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
               </h1>
               <p className="text-xs text-slate-500 flex items-center gap-1">
                 <span>Self-Service Smart Print</span>
-                <span className="text-slate-300">â€¢</span>
+                <span className="text-slate-300">•</span>
                 <span className="text-emerald-700 font-medium bg-emerald-50 px-1.5 py-0.2 rounded">Printer Ready</span>
               </p>
             </div>
           </div>
           <div className="text-right">
-            <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
+            <span className="text-[11px] font-semibold text-[#b84b00] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
               UPI Direct
             </span>
           </div>
@@ -304,9 +304,9 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
         
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-          <a href="/" className="hover:text-blue-600 transition-colors">Home</a>
+          <a href="/" className="hover:text-[#b84b00] transition-colors">Home</a>
           <ChevronRight className="w-3 h-3 text-slate-400" />
-          <a href="/dashboard" className="hover:text-blue-600 transition-colors">Shops</a>
+          <a href="/dashboard" className="hover:text-[#b84b00] transition-colors">Shops</a>
           <ChevronRight className="w-3 h-3 text-slate-400" />
           <span className="text-slate-800 font-semibold truncate">{shop.name}</span>
         </nav>
@@ -316,7 +316,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-5">
             <div className="text-center pb-2 border-b border-slate-100">
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pickup / Reprint PIN</span>
-              <div className="text-4xl font-black text-indigo-600 tracking-widest my-1 font-mono">
+              <div className="text-4xl font-black text-[#b84b00] tracking-widest my-1 font-mono">
                 #{currentOrder.orderCode}
               </div>
               <p className="text-xs text-slate-500">Show this PIN to shopkeeper if any paper reprint is needed.</p>
@@ -328,14 +328,14 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                 <div className={`mt-0.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                   currentOrder.paymentStatus === 'paid' ? 'bg-emerald-500 text-white' : 'bg-amber-100 text-amber-700 animate-pulse'
                 }`}>
-                  {currentOrder.paymentStatus === 'paid' ? 'âœ“' : '1'}
+                  {currentOrder.paymentStatus === 'paid' ? '✓' : '1'}
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900 text-sm">
                     {currentOrder.paymentStatus === 'paid' ? 'Payment Verified' : 'Awaiting Payment'}
                   </h4>
                   <p className="text-xs text-slate-500">
-                    {currentOrder.paymentStatus === 'paid' ? 'Received via UPI' : `Total to pay: â‚¹${currentOrder.totalAmount}`}
+                    {currentOrder.paymentStatus === 'paid' ? 'Received via UPI' : `Total to pay: ₹${currentOrder.totalAmount}`}
                   </p>
                 </div>
               </div>
@@ -345,10 +345,10 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   currentOrder.printStatus === 'completed' 
                     ? 'bg-emerald-500 text-white' 
                     : currentOrder.printStatus === 'printing' || currentOrder.printStatus === 'sent_to_printer'
-                    ? 'bg-indigo-600 text-white animate-spin'
+                    ? 'bg-[#b84b00] text-white animate-spin'
                     : 'bg-slate-100 text-slate-400'
                 }`}>
-                  {currentOrder.printStatus === 'completed' ? 'âœ“' : '2'}
+                  {currentOrder.printStatus === 'completed' ? '✓' : '2'}
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900 text-sm">
@@ -368,10 +368,10 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
 
             {/* Payment Launcher if not yet paid */}
             {currentOrder.paymentStatus !== 'paid' && paymentData && (
-              <div className="bg-indigo-50/70 border border-indigo-100 rounded-xl p-4 space-y-3">
+              <div className="bg-amber-50/70 border border-amber-200/60 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-slate-800 text-sm">Pay using any UPI app:</span>
-                  <span className="font-bold text-indigo-700 text-base">â‚¹{currentOrder.totalAmount}</span>
+                  <span className="font-bold text-[#b84b00] text-base">₹{currentOrder.totalAmount}</span>
                 </div>
 
                 {/* 1-Tap Mobile UPI Intent Buttons */}
@@ -380,25 +380,25 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     href={paymentData.intents.gpay}
                     className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
                   >
-                    <span>ðŸ”µ</span> Google Pay
+                    <span>🔵</span> Google Pay
                   </a>
                   <a
                     href={paymentData.intents.phonepe}
                     className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
                   >
-                    <span>ðŸŸ£</span> PhonePe
+                    <span>🟣</span> PhonePe
                   </a>
                   <a
                     href={paymentData.intents.paytm}
                     className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs"
                   >
-                    <span>ðŸ”·</span> Paytm
+                    <span>🔷</span> Paytm
                   </a>
                   <a
                     href={paymentData.intents.generic}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-2xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-lg text-xs font-semibold shadow-2xs"
                   >
-                    <span>âš¡</span> Other UPI
+                    <span>⚡</span> Other UPI
                   </a>
                 </div>
 
@@ -416,10 +416,10 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                 <div className="pt-2">
                   <button
                     onClick={handleConfirmPayment}
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all"
+                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   >
                     <CheckCircle className="w-4 h-4" />
-                    I Have Paid â‚¹{currentOrder.totalAmount} (Auto-Verify & Print)
+                    I Have Paid ₹{currentOrder.totalAmount} (Auto-Verify & Print)
                   </button>
                   <p className="text-[10px] text-center text-slate-500 mt-1.5">
                     Clicking confirms payment with the shopkeeper's account & triggers instant printing.
@@ -497,18 +497,18 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   />
                   <div className="flex flex-col items-center gap-2">
                     <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                      {uploading ? <RefreshCw className="w-6 h-6 animate-spin" /> : <UploadCloud className="w-6 h-6" />}
+                      {uploading ? <RefreshCw className="w-6 h-6 animate-spin text-[#b84b00]" /> : <UploadCloud className="w-6 h-6 text-[#b84b00]" />}
                     </div>
                     {docFile ? (
                       <div>
                         <p className="font-bold text-slate-900 text-sm">{docFile.name}</p>
                         <p className="text-xs text-emerald-700 font-semibold mt-0.5">
-                          âœ“ {docPageCount} {docPageCount === 1 ? 'Page' : 'Pages'} detected
+                          ✓ {docPageCount} {docPageCount === 1 ? 'Page' : 'Pages'} detected
                         </p>
                       </div>
                     ) : (
                       <div>
-                        <p className="font-semibold text-indigo-900 text-sm">Tap here to choose file</p>
+                        <p className="font-semibold text-slate-900 text-sm">Tap here to choose file</p>
                         <p className="text-[11px] text-slate-500 mt-0.5">or drag and drop your document</p>
                       </div>
                     )}
@@ -523,14 +523,14 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     <h3 className="font-bold text-slate-900 text-sm">Smart ID / Aadhaar Auto-Merge</h3>
                     <p className="text-[11px] text-slate-500">Upload both sides. We auto-align them on a single A4 page.</p>
                   </div>
-                  <span className="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-amber-100 text-[#b84b00] font-bold px-2 py-0.5 rounded-full">
                     Auto-Stitch
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   {/* Front Side */}
-                  <label className="block border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-3 text-center cursor-pointer bg-slate-50/50">
+                  <label className="block border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-xl p-3 text-center cursor-pointer bg-slate-50/50">
                     <input
                       type="file"
                       accept="image/*"
@@ -542,19 +542,19 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                       {frontPreview ? (
                         <img src={frontPreview} alt="Front side photograph of identification card" className="w-full h-24 object-cover rounded-lg border border-slate-200" />
                       ) : (
-                        <div className="w-full h-24 rounded-lg bg-indigo-50/60 flex flex-col items-center justify-center text-indigo-500">
+                        <div className="w-full h-24 rounded-lg bg-amber-50/60 flex flex-col items-center justify-center text-[#b84b00]">
                           <CreditCard className="w-6 h-6 mb-1" />
                           <span className="text-[11px] font-semibold text-slate-700">1. Front Photo</span>
                         </div>
                       )}
-                      <span className="text-[10px] text-indigo-600 font-bold">
+                      <span className="text-[10px] text-[#b84b00] font-bold">
                         {frontPreview ? 'Change Front' : 'Upload Front'}
                       </span>
                     </div>
                   </label>
 
                   {/* Back Side */}
-                  <label className="block border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-3 text-center cursor-pointer bg-slate-50/50">
+                  <label className="block border-2 border-dashed border-slate-200 hover:border-amber-400 rounded-xl p-3 text-center cursor-pointer bg-slate-50/50">
                     <input
                       type="file"
                       accept="image/*"
@@ -566,12 +566,12 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                       {backPreview ? (
                         <img src={backPreview} alt="Back side photograph of identification card" className="w-full h-24 object-cover rounded-lg border border-slate-200" />
                       ) : (
-                        <div className="w-full h-24 rounded-lg bg-indigo-50/60 flex flex-col items-center justify-center text-indigo-500">
+                        <div className="w-full h-24 rounded-lg bg-amber-50/60 flex flex-col items-center justify-center text-[#b84b00]">
                           <CreditCard className="w-6 h-6 mb-1" />
                           <span className="text-[11px] font-semibold text-slate-700">2. Back Photo</span>
                         </div>
                       )}
-                      <span className="text-[10px] text-indigo-600 font-bold">
+                      <span className="text-[10px] text-[#b84b00] font-bold">
                         {backPreview ? 'Change Back' : 'Upload Back'}
                       </span>
                     </div>
@@ -579,7 +579,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                 </div>
 
                 {uploading && (
-                  <div className="flex items-center justify-center gap-2 py-2 text-indigo-600 text-xs font-semibold">
+                  <div className="flex items-center justify-center gap-2 py-2 text-[#b84b00] text-xs font-semibold">
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>Auto-aligning ID Card to A4 sheet...</span>
                   </div>
@@ -605,26 +605,26 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   <button
                     type="button"
                     onClick={() => setColorMode('bw')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       colorMode === 'bw'
-                        ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+                        ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
                     <span className="w-3 h-3 rounded-full bg-slate-900 inline-block"></span>
-                    Black & White (â‚¹{shop.rates?.bwSingle}/page)
+                    Black & White (₹{shop.rates?.bwSingle}/page)
                   </button>
                   <button
                     type="button"
                     onClick={() => setColorMode('color')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       colorMode === 'color'
-                        ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+                        ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <span className="w-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-indigo-500 inline-block"></span>
-                    Full Color (â‚¹{shop.rates?.colorSingle}/page)
+                    <span className="w-3 h-3 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
+                    Full Color (₹{shop.rates?.colorSingle}/page)
                   </button>
                 </div>
               </div>
@@ -637,9 +637,9 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     <button
                       type="button"
                       onClick={() => setSides('single')}
-                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                         sides === 'single'
-                          ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+                          ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
                           : 'border-slate-200 hover:border-slate-300 text-slate-700'
                       }`}
                     >
@@ -648,9 +648,9 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                     <button
                       type="button"
                       onClick={() => setSides('double')}
-                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all ${
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                         sides === 'double'
-                          ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+                          ? 'border-[#b84b00] bg-amber-50 text-[#b84b00]'
                           : 'border-slate-200 hover:border-slate-300 text-slate-700'
                       }`}
                     >
@@ -667,7 +667,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   <button
                     type="button"
                     onClick={() => setCopies(Math.max(1, copies - 1))}
-                    className="w-8 h-8 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-200"
+                    className="w-8 h-8 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-200 cursor-pointer"
                   >
                     -
                   </button>
@@ -675,7 +675,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   <button
                     type="button"
                     onClick={() => setCopies(copies + 1)}
-                    className="w-8 h-8 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-200"
+                    className="w-8 h-8 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-200 cursor-pointer"
                   >
                     +
                   </button>
@@ -693,7 +693,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                 <div className="text-right">
                   <span className="text-xs text-slate-400">Total</span>
                   <div className="text-2xl font-black text-emerald-400">
-                    â‚¹{calculation.totalAmount || 0}
+                    ₹{calculation.totalAmount || 0}
                   </div>
                 </div>
               </div>
@@ -715,7 +715,7 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
                   </>
                 ) : (
                   <>
-                    <span>Pay â‚¹{calculation.totalAmount || 0} & Print Automatically</span>
+                    <span>Pay ₹{calculation.totalAmount || 0} & Print Automatically</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
