@@ -3,7 +3,9 @@
   "outputDirectory": "client/dist",
   "framework": "vite",
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://printo-production-7fad6f69.up.railway.app/api/:path*" },
+    { "source": "/uploads/:path*", "destination": "https://printo-production-7fad6f69.up.railway.app/uploads/:path*" },
+    { "source": "/socket.io/:path*", "destination": "https://printo-production-7fad6f69.up.railway.app/socket.io/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
-
