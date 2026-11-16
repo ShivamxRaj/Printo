@@ -456,7 +456,7 @@ pause
       if (!frontendOrigin) {
         const host = req.get('host');
         if (host && host.includes('railway.app')) {
-          frontendOrigin = 'https://printo-seven.vercel.app';
+          frontendOrigin = 'https://getprinto.in';
         } else {
           frontendOrigin = `${req.protocol}://${host}`;
         }

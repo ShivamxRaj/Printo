@@ -118,7 +118,7 @@ io.on('connection', (socket) => {
 });
 
 // Fallback redirects to production frontend when client/dist is not bundled (e.g. on Railway)
-const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://printo-seven.vercel.app';
+const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://getprinto.in';
 
 app.get('/s/:shopId', (req, res) => {
   res.redirect(`${FRONTEND_ORIGIN}/s/${req.params.shopId}`);
