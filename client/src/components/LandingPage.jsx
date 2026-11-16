@@ -29,14 +29,6 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
     {
       q: "What about customer document privacy and security?",
       a: "Complete confidentiality is guaranteed. All uploaded files are permanently auto-purged from both the cloud server and your local PC 30 seconds after printing. No customer files remain stored on your computer."
-    },
-    {
-      q: "What happens if a paper jam occurs or the printer runs out of ink?",
-      a: "Every print job generates a unique 4-digit order PIN. If a page jams or ink runs out, the shopkeeper can re-trigger the exact print job with one click from their dashboard without charging the customer twice."
-    },
-    {
-      q: "How long does the setup take?",
-      a: "Less than 2 minutes! Simply register your shop, run our lightweight Windows Silent Print Agent, print your customized counter standee poster, and your shop is ready for automated printing."
     }
   ];
 
