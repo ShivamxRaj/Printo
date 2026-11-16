@@ -2,20 +2,20 @@
   "shops": [
     {
       "id": "demo-shop",
-      "name": "Sharma Cyber & Xerox Hub",
-      "ownerName": "",
-      "phone": "",
-      "upiId": "sharmacyber@okaxis",
+      "name": "Shivam",
+      "ownerName": "Shivam Raj",
+      "phone": "6299446452",
+      "upiId": "6299446452-2@axl",
       "rates": {
-        "bwSingle": 5,
-        "bwDouble": 10,
+        "bwSingle": 2,
+        "bwDouble": 3,
         "colorSingle": 10,
-        "colorDouble": 15,
+        "colorDouble": 16,
         "idCard": 10,
         "minOrder": 1
       },
       "status": "online",
-      "activePrinter": "Microsoft Print to PDF",
+      "activePrinter": "Default Windows Printer",
       "createdAt": "2026-11-15T18:14:28.608Z",
       "lastSeen": "2026-11-16T11:05:20.127Z",
       "updatedAt": "2026-11-16T12:52:52.814Z"
@@ -101,6 +101,38 @@
       },
       "createdAt": "2026-11-16T13:06:19.515Z",
       "updatedAt": "2026-11-16T13:07:37.485Z"
+    },
+    {
+      "id": "honey-hub",
+      "name": "honey hub",
+      "ownerName": "sds",
+      "phone": "",
+      "upiId": "fdf",
+      "rates": {
+        "bwSingle": 2,
+        "bwDouble": 3,
+        "colorSingle": 10,
+        "colorDouble": 16,
+        "idCard": 10,
+        "minOrder": 2
+      },
+      "createdAt": "2026-11-16T18:00:38.075Z"
+    },
+    {
+      "id": "shivam-cyberhub",
+      "name": "Shivam Cyberhub",
+      "ownerName": "Shivam ",
+      "phone": "6299446452",
+      "upiId": "6299446452-2@axl",
+      "rates": {
+        "bwSingle": 2,
+        "bwDouble": 3,
+        "colorSingle": 10,
+        "colorDouble": 16,
+        "idCard": 10,
+        "minOrder": 2
+      },
+      "createdAt": "2026-11-16T19:32:50.197Z"
     }
   ],
   "orders": [

@@ -7,7 +7,10 @@ import {
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
 
-export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegisterModal }) {
+export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterModal }) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const effectiveShopId = urlParams.get('shop') || shopId || localStorage.getItem('printo_shopId') || 'shivam';
+
   const [shop, setShop] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +27,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     colorSingle: 10,
     colorDouble: 16,
     idCard: 10,
-    minOrder: 2
+    minOrder: 1
   });
   const [upiId, setUpiId] = useState('');
   const [shopName, setShopName] = useState('');
@@ -33,7 +36,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
   useEffect(() => {
     const socket = io(SOCKET_URL);
 
-    socket.emit('join_shop', shopId);
+    socket.emit('join_shop', effectiveShopId);
 
     socket.on('agent_status', (data) => {
       console.log('Agent status update:', data);
@@ -52,15 +55,15 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     return () => {
       socket.disconnect();
     };
-  }, [shopId]);
+  }, [effectiveShopId]);
 
   // Load Initial Data
   const fetchData = async () => {
     setLoading(true);
     try {
       const [shopRes, ordersRes] = await Promise.all([
-        fetch(`${API_BASE}/api/shops/${shopId}`),
-        fetch(`${API_BASE}/api/shops/${shopId}/orders`)
+        fetch(`${API_BASE}/api/shops/${effectiveShopId}`),
+        fetch(`${API_BASE}/api/shops/${effectiveShopId}/orders`)
       ]);
 
       const shopData = await shopRes.json();
@@ -95,7 +98,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: shopId,
+          id: effectiveShopId,
           name: shopName,
           upiId,
           rates: {

@@ -10,7 +10,10 @@ import { API_BASE } from './config';
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState('landing'); // 'landing', 'customer', 'dashboard', 'standee', '404'
   const [shops, setShops] = useState([]);
-  const [selectedShopId, setSelectedShopId] = useState('demo-shop');
+  const [selectedShopId, setSelectedShopId] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('shop') || localStorage.getItem('printo_shopId') || 'shivam';
+  });
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   // Load all registered shops
@@ -62,12 +65,17 @@ export default function App() {
       setCurrentRoute('landing');
       document.title = 'Printo — Smart Self-Service Printing SaaS | Automate Xerox & Cyber Cafes';
     } else if (path.startsWith('/dashboard') || path.startsWith('/admin')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const shopParam = urlParams.get('shop') || localStorage.getItem('printo_shopId') || 'shivam';
+      setSelectedShopId(shopParam);
+      localStorage.setItem('printo_shopId', shopParam);
       setCurrentRoute('dashboard');
-      document.title = 'Shopkeeper Dashboard | Printo.tech';
+      document.title = 'Shopkeeper Dashboard | Printo';
     } else if (path.startsWith('/standee')) {
       const parts = path.split('/');
       if (parts[2]) {
         setSelectedShopId(parts[2]);
+        localStorage.setItem('printo_shopId', parts[2]);
         setCurrentRoute('standee');
       } else {
         setCurrentRoute('404');
@@ -76,6 +84,7 @@ export default function App() {
       const parts = path.split('/');
       if (parts[2]) {
         setSelectedShopId(parts[2]);
+        localStorage.setItem('printo_shopId', parts[2]);
         setCurrentRoute('customer');
       } else {
         setCurrentRoute('404');

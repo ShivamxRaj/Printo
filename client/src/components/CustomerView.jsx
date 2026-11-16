@@ -8,7 +8,7 @@ import confetti from 'canvas-confetti';
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
 
-export default function CustomerView({ shopId = 'demo-shop' }) {
+export default function CustomerView({ shopId = 'shivam' }) {
   const [shop, setShop] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState('doc'); // 'doc' or 'id_card'
@@ -318,11 +318,9 @@ export default function CustomerView({ shopId = 'demo-shop' }) {
         
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-          <a href="/" className="hover:text-[#b84b00] transition-colors">Home</a>
+          <a href="/" className="hover:text-[#b84b00] transition-colors">Printo</a>
           <ChevronRight className="w-3 h-3 text-slate-400" />
-          <a href="/dashboard" className="hover:text-[#b84b00] transition-colors">Shops</a>
-          <ChevronRight className="w-3 h-3 text-slate-400" />
-          <span className="text-slate-800 font-semibold truncate">{shop.name}</span>
+          <span className="text-slate-800 font-semibold truncate">{shop?.name || 'Smart Print'}</span>
         </nav>
 
         {/* ORDER IN PROGRESS / TRACKER MODAL */}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Printer, Smartphone, UploadCloud, CreditCard, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { API_BASE } from '../config';
 
-export default function StandeePoster({ shopId = 'demo-shop' }) {
+export default function StandeePoster({ shopId = 'shivam' }) {
   const [shop, setShop] = useState(null);
 
   useEffect(() => {
