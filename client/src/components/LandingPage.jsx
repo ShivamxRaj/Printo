@@ -51,8 +51,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-9 text-sm font-semibold text-slate-600">
-            <a href="#how-it-works" className="hover:text-[#b84b00] transition-colors">How It Works</a>
             <a href="#features" className="hover:text-[#b84b00] transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-[#b84b00] transition-colors">How It Works</a>
             <a href="#pricing" className="hover:text-[#b84b00] transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-[#b84b00] transition-colors">FAQ</a>
           </nav>
@@ -81,8 +81,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white/98 backdrop-blur-md border-t border-slate-100 px-6 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-150 shadow-lg">
-            <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">How It Works</a>
             <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">Features</a>
+            <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">How It Works</a>
             <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">Pricing</a>
             <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">FAQ</a>
           </div>
@@ -184,8 +184,90 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
         </div>
       </section>
 
-      {/* 2.5 DEDICATED HOW IT WORKS SECTION (KARLSON-INSPIRED WITH FLAT TECH ILLUSTRATION) */}
-      <section id="how-it-works" className="py-16 sm:py-24 border-t border-slate-100 bg-slate-50/60 overflow-hidden">
+      {/* 2.5 FEATURES SECTION */}
+      <section id="features" className="py-14 sm:py-20 border-t border-slate-100 bg-slate-50/60">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+            <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase">Built for Real Xerox Shops</span>
+            <h2 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight">Everything You Need to Run on Autopilot</h2>
+            <p className="text-sm text-slate-500">Zero complex setups. No expensive kiosk hardware required.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            
+            {/* Feature 1 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
+                <CreditCard className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Direct Personal UPI</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Money comes directly into your Paytm/PhonePe/GPay soundbox. No middleman hold, no gateway delays, and 0% platform commission on prints.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <FileText className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Smart Aadhaar Auto-Merge</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Customers upload Front &amp; Back ID photos from their phone. Our engine automatically aligns and formats both sides onto a single A4 page with cutting guides.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                <Printer className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Works with ANY Printer</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Whether it is a 10-year-old HP LaserJet 1020, Canon LBP2900, or a modern Epson EcoTank — if it prints on Windows, it works 100% silently with Printo.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Zero-Storage Privacy Purge</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Customer files are permanently deleted 30 seconds after printing. Complete privacy guaranteed, and zero risk of computer viruses from unknown USBs.
+              </p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                <QrCode className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Free Printable Counter Poster</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Automatically generates a high-resolution, branded A4 standee poster with your shop QR code, rates, and UPI handle. Just print and paste on your desk.
+              </p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center">
+                <Clock className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Paper Jam 4-Digit PIN Reprint</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                If paper jams or ink runs out, customers never pay twice. Re-trigger the exact print job with 1 click using their unique 4-digit order PIN.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 3. DEDICATED HOW IT WORKS SECTION (KARLSON-INSPIRED WITH FLAT TECH ILLUSTRATION) */}
+      <section id="how-it-works" className="py-16 sm:py-24 border-t border-slate-100 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             
@@ -204,12 +286,12 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </div>
 
               {/* Horizontal Progress Stepper (Matching Hand-Drawn Workflow: Scan QR -> Upload -> Pay using UPI) */}
-              <div className="bg-white p-6 sm:p-8 rounded-3xl">
+              <div className="bg-slate-50/80 p-6 sm:p-8 rounded-3xl border border-slate-100">
                 <div className="flex items-center justify-between relative">
                   
                   {/* Step 1: Scan QR */}
                   <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-50 border-2 border-[#b84b00] text-[#b84b00] flex items-center justify-center shadow-md shadow-amber-500/10 ring-4 ring-amber-100/70 transition-transform hover:scale-105">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-[#b84b00] text-[#b84b00] flex items-center justify-center shadow-md shadow-amber-500/10 ring-4 ring-amber-100/70 transition-transform hover:scale-105">
                       <QrCode className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
@@ -233,7 +315,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
                   {/* Step 2: Upload */}
                   <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-50 border-2 border-emerald-600 text-emerald-700 flex items-center justify-center shadow-md shadow-emerald-500/10 ring-4 ring-emerald-100/70 transition-transform hover:scale-105">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-emerald-600 text-emerald-700 flex items-center justify-center shadow-md shadow-emerald-500/10 ring-4 ring-emerald-100/70 transition-transform hover:scale-105">
                       <UploadCloud className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
@@ -257,7 +339,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
                   {/* Step 3: Pay using UPI */}
                   <div className="flex flex-col items-center text-center space-y-2 z-10 flex-1">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-indigo-50 border-2 border-indigo-600 text-indigo-700 flex items-center justify-center shadow-md shadow-indigo-500/10 ring-4 ring-indigo-100/70 transition-transform hover:scale-105">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-indigo-600 text-indigo-700 flex items-center justify-center shadow-md shadow-indigo-500/10 ring-4 ring-indigo-100/70 transition-transform hover:scale-105">
                       <CreditCard className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
@@ -285,88 +367,6 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                   className="w-full h-auto object-contain select-none"
                 />
               </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 3. FEATURES SECTION */}
-      <section id="features" className="py-14 sm:py-20 border-t border-slate-100 bg-white">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10">
-          
-          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-            <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase">Built for Real Xerox Shops</span>
-            <h2 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight">Everything You Need to Run on Autopilot</h2>
-            <p className="text-sm text-slate-500">Zero complex setups. No expensive kiosk hardware required.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            
-            {/* Feature 1 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
-                <CreditCard className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Direct Personal UPI</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Money comes directly into your Paytm/PhonePe/GPay soundbox. No middleman hold, no gateway delays, and 0% platform commission on prints.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <FileText className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Smart Aadhaar Auto-Merge</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Customers upload Front &amp; Back ID photos from their phone. Our engine automatically aligns and formats both sides onto a single A4 page with cutting guides.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                <Printer className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Works with ANY Printer</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Whether it is a 10-year-old HP LaserJet 1020, Canon LBP2900, or a modern Epson EcoTank — if it prints on Windows, it works 100% silently with Printo.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Zero-Storage Privacy Purge</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Customer files are permanently deleted 30 seconds after printing. Complete privacy guaranteed, and zero risk of computer viruses from unknown USBs.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
-                <QrCode className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Free Printable Counter Poster</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Automatically generates a high-resolution, branded A4 standee poster with your shop QR code, rates, and UPI handle. Just print and paste on your desk.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center">
-                <Clock className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">Paper Jam 4-Digit PIN Reprint</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                If paper jams or ink runs out, customers never pay twice. Re-trigger the exact print job with 1 click using their unique 4-digit order PIN.
-              </p>
             </div>
 
           </div>
