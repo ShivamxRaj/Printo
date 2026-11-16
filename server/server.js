@@ -117,7 +117,22 @@ io.on('connection', (socket) => {
   });
 });
 
-// Serve frontend static build and SEO root files
+// Fallback redirects to production frontend when client/dist is not bundled (e.g. on Railway)
+const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://printo-seven.vercel.app';
+
+app.get('/s/:shopId', (req, res) => {
+  res.redirect(`${FRONTEND_ORIGIN}/s/${req.params.shopId}`);
+});
+
+app.get('/standee/:shopId', (req, res) => {
+  res.redirect(`${FRONTEND_ORIGIN}/standee/${req.params.shopId}`);
+});
+
+app.get('/dashboard', (req, res) => {
+  res.redirect(`${FRONTEND_ORIGIN}/dashboard`);
+});
+
+// Serve frontend static build and SEO root files (when client/dist exists)
 const CLIENT_DIST = path.join(__dirname, '../client/dist');
 if (fs.existsSync(CLIENT_DIST)) {
   // Explicit SEO routes with exact Content-Type headers

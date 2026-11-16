@@ -65,7 +65,7 @@ export default function StandeePoster({ shopId = 'demo-shop' }) {
         <div className="my-6 flex flex-col items-center text-center space-y-4">
           <div className="p-4 bg-white border-4 border-slate-900 rounded-3xl shadow-xl">
             <img
-              src={`${API_BASE}/api/standee/${shop.id}/qr`}
+              src={`${API_BASE}/api/standee/${shop.id}/qr?origin=${encodeURIComponent(window.location.origin)}`}
               alt={`High resolution QR code to scan and print documents directly at ${shop.name}`}
               className="w-64 h-64 object-contain"
             />

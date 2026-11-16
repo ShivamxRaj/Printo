@@ -444,9 +444,24 @@ pause
       if (!shop) return res.status(404).send('Shop not found');
 
       // The URL that customer mobile will open upon scanning
-      const host = req.get('host');
-      const protocol = req.protocol;
-      const targetUrl = `${protocol}://${host}/s/${shop.id}`;
+      let frontendOrigin = process.env.FRONTEND_URL;
+      if (!frontendOrigin && req.query.origin) {
+        frontendOrigin = req.query.origin;
+      }
+      if (!frontendOrigin && req.get('referer')) {
+        try {
+          frontendOrigin = new URL(req.get('referer')).origin;
+        } catch (e) {}
+      }
+      if (!frontendOrigin) {
+        const host = req.get('host');
+        if (host && host.includes('railway.app')) {
+          frontendOrigin = 'https://printo-seven.vercel.app';
+        } else {
+          frontendOrigin = `${req.protocol}://${host}`;
+        }
+      }
+      const targetUrl = `${frontendOrigin}/s/${shop.id}`;
 
       const qrBuffer = await QRCode.toBuffer(targetUrl, {
         width: 600,
