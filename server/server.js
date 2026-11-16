@@ -159,7 +159,7 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000); // Check every 5 minutes
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4986;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`====================================================`);
   console.log(`🚀 PrintKwik SaaS Gateway running on port ${PORT}`);
@@ -168,3 +168,14 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`🖨️  Print Standee Poster: http://localhost:${PORT}/standee/demo-shop`);
   console.log(`====================================================`);
 });
+
+// Also bind port 5000 for local dev if PORT is not 5000
+if (String(PORT) !== '5000') {
+  try {
+    const localDevServer = http.createServer(app);
+    io.attach(localDevServer);
+    localDevServer.listen(5000, '0.0.0.0', () => {
+      console.log(`🔌 Dual listener active on port 5000`);
+    }).on('error', () => {});
+  } catch (e) {}
+}
