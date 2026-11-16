@@ -3,11 +3,12 @@ import {
   Printer, Smartphone, QrCode, ArrowRight, CheckCircle2, 
   ShieldCheck, IndianRupee, Zap, Clock, Users, Sparkles, 
   Download, ChevronRight, ChevronDown, FileText, CreditCard,
-  Check, HelpCircle, Star, ArrowUpRight, Layers
+  Check, HelpCircle, Star, ArrowUpRight, Layers, Menu, X
 } from 'lucide-react';
 
 export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDemo }) {
   const [openFaq, setOpenFaq] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleFaq = (idx) => {
     setOpenFaq(prev => prev === idx ? null : idx);
@@ -33,7 +34,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-[#b84b00] selection:text-white">
+    <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-[#b84b00] selection:text-white overflow-x-hidden">
       
       {/* 1. TOP NAVBAR */}
       <header className="border-b border-slate-100 sticky top-0 z-50 bg-white/95 backdrop-blur-md">
@@ -58,20 +59,39 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           </nav>
 
           {/* Header Action Buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={onOpenRegister}
-              className="px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-2"
+              className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2"
             >
               <span>Get Started</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
+
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-[#b84b00] hover:bg-slate-100 transition-colors focus:outline-hidden"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white/98 backdrop-blur-md border-t border-slate-100 px-6 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-150 shadow-lg">
+            <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">How It Works</a>
+            <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">Features</a>
+            <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">Pricing</a>
+            <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">FAQ</a>
+          </div>
+        )}
       </header>
 
       {/* 2. HERO SECTION (KARLSON-INSPIRED WITH FLAT TECH ILLUSTRATION) */}
-      <section className="pt-6 pb-4 sm:pt-8 sm:pb-8 bg-gradient-to-b from-slate-50/70 via-white to-white relative">
+      <section id="how-it-works" className="pt-6 pb-4 sm:pt-8 sm:pb-8 bg-gradient-to-b from-slate-50/70 via-white to-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
             
@@ -86,7 +106,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </div>
 
               {/* Clean Bold Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-[1.18]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-[1.18]">
                 Say Goodbye to WhatsApp Prints.{' '}
                 <span className="text-[#b84b00]">
                   Automate Your Shop
@@ -94,7 +114,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </h1>
 
               {/* Sub-headline: Single efficient line */}
-              <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+              <p className="text-sm sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
                 Customers scan your counter QR, pay directly via UPI, and your printer spits out their pages automatically — zero queues, zero manual file transfers.
               </p>
 
@@ -110,8 +130,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                   </button>
                 </div>
 
-                {/* Karlson Paper Airplane & Dashed Flight Loop (Positioned in left gutter, never overlapping text) */}
-                <div className="hidden sm:block absolute top-6 -left-20 w-48 pointer-events-none select-none z-10">
+                {/* Karlson Paper Airplane & Dashed Flight Loop (Positioned in left gutter on large desktop screens only) */}
+                <div className="hidden xl:block absolute top-6 -left-20 w-48 pointer-events-none select-none z-10">
                   <img
                     src="/karlson-paper-plane.svg"
                     alt=""
@@ -122,40 +142,39 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
             </div>
 
-            {/* Right Column: Karlson-style full-bleed illustration, no box/shadow constraints */}
-            <div className="lg:col-span-6 relative flex items-center justify-center min-h-[360px] lg:min-h-[460px]">
+            {/* Right Column: Karlson-style illustration, responsive bounds */}
+            <div className="lg:col-span-6 relative flex items-center justify-center min-h-[320px] sm:min-h-[360px] lg:min-h-[460px] w-full">
 
               {/* Floating Top-Left Badge: Printer Connected */}
-              <div className="absolute top-4 left-0 sm:-left-4 z-20 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-slate-200/80 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                  <Printer className="w-5 h-5" />
+              <div className="absolute top-2 sm:top-4 left-0 sm:-left-4 z-20 bg-white/95 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-xl border border-slate-200/80 flex items-center gap-2.5 sm:gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <h4 className="text-xs font-bold text-slate-900 leading-tight">Printer Online</h4>
+                    <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">Printer Online</h4>
                   </div>
-                  <p className="text-[10px] text-slate-500">HP LaserJet 1020 Ready</p>
+                  <p className="text-[9px] sm:text-[10px] text-slate-500">HP LaserJet 1020 Ready</p>
                 </div>
               </div>
 
-              {/* Main Illustration — full-bleed, oversized, no container box */}
+              {/* Main Illustration — contained on mobile, generous on desktop */}
               <img
                 src="/karlson-print-illustration.svg"
                 alt="Printo smart automated print station workflow"
-                className="w-[115%] sm:w-[120%] lg:w-[130%] max-w-none h-auto object-contain select-none pointer-events-none"
-                style={{ marginRight: '-8%' }}
+                className="w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-[125%] h-auto object-contain select-none pointer-events-none"
               />
 
               {/* Floating Bottom-Right Badge: UPI Payment Received */}
-              <div className="absolute bottom-4 right-0 sm:-right-4 z-20 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-slate-200/80 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
-                  <IndianRupee className="w-5 h-5" />
+              <div className="absolute bottom-2 sm:bottom-4 right-0 sm:-right-4 z-20 bg-white/95 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-3 rounded-2xl shadow-xl border border-slate-200/80 flex items-center gap-2.5 sm:gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center shrink-0">
+                  <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900 leading-tight">₹10 UPI Received</h4>
-                  <p className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
-                    <span>✓</span> Soundbox Auto-Print Triggered
+                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 leading-tight">₹10 UPI Received</h4>
+                  <p className="text-[9px] sm:text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                    <span>✓</span> Soundbox Auto-Print
                   </p>
                 </div>
               </div>
@@ -176,10 +195,10 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             <p className="text-sm text-slate-500">Zero complex setups. No expensive kiosk hardware required.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
                 <CreditCard className="w-6 h-6" />
               </div>
@@ -190,7 +209,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
                 <FileText className="w-6 h-6" />
               </div>
@@ -201,7 +220,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 3 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
                 <Printer className="w-6 h-6" />
               </div>
@@ -212,7 +231,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 4 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6" />
               </div>
@@ -223,7 +242,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 5 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
                 <QrCode className="w-6 h-6" />
               </div>
@@ -234,7 +253,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 6 */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
+            <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 border border-slate-100 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center">
                 <Clock className="w-6 h-6" />
               </div>
@@ -249,19 +268,19 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
       </section>
 
       {/* 4. PRICING SECTION */}
-      <section id="pricing" className="py-24 sm:py-32 bg-white">
+      <section id="pricing" className="py-16 sm:py-24 lg:py-32 bg-white">
         <div className="max-w-6xl mx-auto px-6 sm:px-10">
           
-          <div className="text-center max-w-2xl mx-auto space-y-3 mb-20">
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
             <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase">Affordable For Every Shop</span>
             <h2 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight">Simple, Transparent Pricing</h2>
             <p className="text-sm text-slate-500">0% platform commission on prints. 100% of customer payments go directly to your personal UPI.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
             
             {/* Free Plan */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <h4 className="font-bold text-slate-900 text-lg">Starter</h4>
                 <p className="text-xs text-slate-500">Free forever for testing and small counters</p>
@@ -282,7 +301,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Pro Plan */}
-            <div className="p-8 rounded-3xl bg-[#b84b00] text-white shadow-xl shadow-[#b84b00]/25 space-y-6 flex flex-col justify-between relative">
+            <div className="p-6 sm:p-8 rounded-3xl bg-[#b84b00] text-white shadow-xl shadow-[#b84b00]/25 space-y-6 flex flex-col justify-between relative">
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-300 text-slate-950 font-extrabold text-[10px] uppercase px-3 py-1 rounded-full shadow-sm">
                 Most Popular for Shops
               </span>
@@ -309,7 +328,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Annual Plan */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="font-bold text-slate-900 text-lg">Yearly Pro</h4>
