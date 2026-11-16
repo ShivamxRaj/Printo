@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 
   ExternalLink, Shield, Power, Play, Download, PlusCircle
 } from 'lucide-react';
 import { io } from 'socket.io-client';
+import { API_BASE, SOCKET_URL } from '../config';
 
 export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegisterModal }) {
   const [shop, setShop] = useState(null);
@@ -30,7 +31,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
   // Socket
   useEffect(() => {
-    const socket = io();
+    const socket = io(SOCKET_URL);
 
     socket.emit('join_shop', shopId);
 
@@ -58,8 +59,8 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     setLoading(true);
     try {
       const [shopRes, ordersRes] = await Promise.all([
-        fetch(`/api/shops/${shopId}`),
-        fetch(`/api/shops/${shopId}/orders`)
+        fetch(`${API_BASE}/api/shops/${shopId}`),
+        fetch(`${API_BASE}/api/shops/${shopId}/orders`)
       ]);
 
       const shopData = await shopRes.json();
@@ -67,7 +68,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
       setShop(shopData);
       setShopName(shopData.name || '');
-      document.title = `Shop Dashboard — ${shopData.name || 'Admin'} | Printo`;
+      document.title = `Shop Dashboard â€” ${shopData.name || 'Admin'} | Printo`;
       setUpiId(shopData.upiId || '');
       if (shopData.rates) setRates(shopData.rates);
       setAgentStatus(shopData.status || 'offline');
@@ -90,7 +91,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     setIsSavingRates(true);
 
     try {
-      const res = await fetch('/api/shops', {
+      const res = await fetch(`${API_BASE}/api/shops`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -124,14 +125,14 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
   const handleTriggerReprint = async () => {
     if (!reprintModalOrder) return;
     try {
-      const res = await fetch(`/api/orders/${reprintModalOrder.id}/reprint`, {
+      const res = await fetch(`${API_BASE}/api/orders/${reprintModalOrder.id}/reprint`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderCode: reprintCode })
       });
       const data = await res.json();
       if (res.ok) {
-        alert(`✓ Reprint command sent to ${activePrinter || 'printer'}!`);
+        alert(`âœ“ Reprint command sent to ${activePrinter || 'printer'}!`);
         setReprintModalOrder(null);
         setReprintCode('');
       } else {
@@ -270,7 +271,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                 Double-click to start
               </span>
               <span className="flex items-center gap-1.5 font-medium">
-                <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-[10px] font-bold">✓</span>
+                <span className="w-4 h-4 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-[10px] font-bold">âœ“</span>
                 Zero setup: All printers detected automatically!
               </span>
             </div>
@@ -300,7 +301,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
           <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-500">Today's Revenue</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1">₹{totalRevenue}</h3>
+              <h3 className="text-2xl font-black text-slate-900 mt-1">â‚¹{totalRevenue}</h3>
               <p className="text-[11px] text-emerald-600 font-semibold mt-1">Direct to your bank UPI</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -368,7 +369,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 1-Side (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 1-Side (â‚¹)</label>
                   <input
                     type="number"
                     step="0.5"
@@ -378,7 +379,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 2-Sides (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">B&W 2-Sides (â‚¹)</label>
                   <input
                     type="number"
                     step="0.5"
@@ -391,7 +392,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 1-Side (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 1-Side (â‚¹)</label>
                   <input
                     type="number"
                     step="1"
@@ -401,7 +402,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 2-Sides (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Color 2-Sides (â‚¹)</label>
                   <input
                     type="number"
                     step="1"
@@ -414,7 +415,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Aadhaar/ID Card (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Aadhaar/ID Card (â‚¹)</label>
                   <input
                     type="number"
                     step="1"
@@ -424,7 +425,7 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Min Order (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Min Order (â‚¹)</label>
                   <input
                     type="number"
                     step="1"
@@ -492,17 +493,17 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
                           <span className="text-[10px] text-slate-400 uppercase">{o.docType === 'id_card' ? 'Smart ID Card' : 'Standard Doc'}</span>
                         </td>
                         <td className="py-3 text-slate-600">
-                          <span>{o.totalPages}p × {o.copies}c</span>
-                          <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} • {o.sides}</span>
+                          <span>{o.totalPages}p Ã— {o.copies}c</span>
+                          <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} â€¢ {o.sides}</span>
                         </td>
                         <td className="py-3 font-bold text-slate-900">
-                          ₹{o.totalAmount}
+                          â‚¹{o.totalAmount}
                         </td>
                         <td className="py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             o.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                           }`}>
-                            {o.paymentStatus === 'paid' ? '✓ PAID' : 'PENDING'}
+                            {o.paymentStatus === 'paid' ? 'âœ“ PAID' : 'PENDING'}
                           </span>
                         </td>
                         <td className="py-3">
@@ -590,4 +591,5 @@ export default function ShopkeeperDashboard({ shopId = 'demo-shop', onOpenRegist
     </div>
   );
 }
+
 

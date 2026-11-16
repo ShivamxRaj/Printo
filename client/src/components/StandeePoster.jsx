@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Printer, Smartphone, UploadCloud, CreditCard, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { API_BASE } from '../config';
 
 export default function StandeePoster({ shopId = 'demo-shop' }) {
   const [shop, setShop] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/shops/${shopId}`)
+    fetch(`${API_BASE}/api/shops/${shopId}`)
       .then(res => res.json())
       .then(data => {
         setShop(data);
@@ -64,7 +65,7 @@ export default function StandeePoster({ shopId = 'demo-shop' }) {
         <div className="my-6 flex flex-col items-center text-center space-y-4">
           <div className="p-4 bg-white border-4 border-slate-900 rounded-3xl shadow-xl">
             <img
-              src={`/api/standee/${shop.id}/qr`}
+              src={`${API_BASE}/api/standee/${shop.id}/qr`}
               alt={`High resolution QR code to scan and print documents directly at ${shop.name}`}
               className="w-64 h-64 object-contain"
             />

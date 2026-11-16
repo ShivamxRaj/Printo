@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Store, User, Phone, IndianRupee, QrCode, X, CheckCircle, ArrowRight } from 'lucide-react';
+import { API_BASE } from '../config';
 
 export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
   const [shopName, setShopName] = useState('');
@@ -27,7 +28,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/shops', {
+      const res = await fetch(`${API_BASE}/api/shops`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

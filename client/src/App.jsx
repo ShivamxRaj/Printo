@@ -5,7 +5,7 @@ import ShopkeeperDashboard from './components/ShopkeeperDashboard';
 import StandeePoster from './components/StandeePoster';
 import RegisterShopModal from './components/RegisterShopModal';
 import NotFoundPage from './components/NotFoundPage';
-// Icons cleaned up
+import { API_BASE } from './config';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState('landing'); // 'landing', 'customer', 'dashboard', 'standee', '404'
@@ -15,7 +15,7 @@ export default function App() {
 
   // Load all registered shops
   const fetchShops = () => {
-    fetch('/api/shops')
+    fetch(`${API_BASE}/api/shops`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
