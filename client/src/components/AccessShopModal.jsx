@@ -1,20 +1,43 @@
 import React, { useState } from 'react';
-import { Store, Phone, Search, ArrowRight, X, CheckCircle, ExternalLink } from 'lucide-react';
+import { Store, Phone, ArrowRight, X, AlertCircle } from 'lucide-react';
 
 export default function AccessShopModal({ isOpen, onClose, shops = [], onSelectShop, onOpenRegister }) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [error, setError] = useState('');
+  const [matchedShops, setMatchedShops] = useState(null);
 
   if (!isOpen) return null;
 
-  const q = searchQuery.trim().toLowerCase();
-  const filteredShops = shops.filter(s => {
-    if (!q) return true;
-    const nameMatch = (s.name || '').toLowerCase().includes(q);
-    const idMatch = (s.id || '').toLowerCase().includes(q);
-    const phoneMatch = (s.phone || '').includes(q);
-    const ownerMatch = (s.ownerName || '').toLowerCase().includes(q);
-    return nameMatch || idMatch || phoneMatch || ownerMatch;
-  });
+  const handleLookup = (e) => {
+    e.preventDefault();
+    setError('');
+    setMatchedShops(null);
+
+    const cleanInput = phoneNumber.trim().replace(/\D/g, '').slice(-10);
+    if (!cleanInput || cleanInput.length < 10) {
+      setError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    // Match shops strictly linked to this phone number
+    const matches = shops.filter(s => {
+      const p = (s.phone || '').trim().replace(/\D/g, '').slice(-10);
+      return p && p === cleanInput;
+    });
+
+    if (matches.length === 0) {
+      setError(`No shop found linked to +91 ${cleanInput}. Please check the number or register a new shop.`);
+      return;
+    }
+
+    // If exactly 1 shop matches, open it immediately
+    if (matches.length === 1) {
+      handleChoose(matches[0]);
+    } else {
+      // If multiple shops are linked to this same number, let the owner choose
+      setMatchedShops(matches);
+    }
+  };
 
   const handleChoose = (shop) => {
     localStorage.setItem('printo_shopId', shop.id);
@@ -22,9 +45,15 @@ export default function AccessShopModal({ isOpen, onClose, shops = [], onSelectS
     onClose();
   };
 
+  const handleReset = () => {
+    setMatchedShops(null);
+    setError('');
+    setPhoneNumber('');
+  };
+
   return (
     <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
         
         {/* Close Button */}
         <button
@@ -34,74 +63,100 @@ export default function AccessShopModal({ isOpen, onClose, shops = [], onSelectS
           <X className="w-4 h-4" />
         </button>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#b84b00] border border-amber-200 flex items-center justify-center">
-              <Store className="w-6 h-6" />
+        <div className="space-y-5">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 text-[#b84b00] border border-amber-200/80 flex items-center justify-center mx-auto shadow-xs">
+              <Store className="w-7 h-7" />
             </div>
-            <div>
-              <h2 className="text-xl font-black text-slate-900">Access Your Shop Dashboard</h2>
-              <p className="text-xs text-slate-500">Search by your mobile number or shop name</p>
-            </div>
+            <h2 className="text-xl font-black text-slate-900">Owner Dashboard Login</h2>
+            <p className="text-xs text-slate-500">
+              Enter your registered mobile number to open your shop dashboard.
+            </p>
           </div>
 
-          {/* Search Input */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              autoFocus
-              placeholder="Enter phone number or shop name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-[#b84b00] font-medium"
-            />
-          </div>
-
-          {/* Shop List */}
-          <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
-            {filteredShops.length > 0 ? (
-              filteredShops.map((s) => (
-                <div
-                  key={s.id}
-                  onClick={() => handleChoose(s)}
-                  className="p-3.5 rounded-xl border border-slate-200 hover:border-[#b84b00] hover:bg-amber-50/50 transition-all cursor-pointer flex items-center justify-between gap-3 group"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-xs sm:text-sm truncate group-hover:text-[#b84b00]">
-                        {s.name}
-                      </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
-                        {s.id}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-1">
-                      {s.phone && (
-                        <span className="flex items-center gap-1 font-mono">
-                          <Phone className="w-3 h-3 text-slate-400" />
-                          {s.phone}
-                        </span>
-                      )}
-                      <span>UPI: {s.upiId}</span>
-                    </div>
+          {!matchedShops ? (
+            /* PHONE INPUT FORM */
+            <form onSubmit={handleLookup} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                  Registered Mobile Number
+                </label>
+                <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden focus-within:border-[#b84b00] focus-within:ring-1 focus-within:ring-[#b84b00] bg-slate-50/60">
+                  <div className="px-3.5 py-3 text-xs font-bold text-slate-500 bg-slate-100 border-r border-slate-200 select-none">
+                    +91
                   </div>
-                  <div className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#b84b00] group-hover:translate-x-0.5 transition-transform">
-                    <span>Open</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    autoFocus
+                    placeholder="Enter 10-digit mobile number"
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      setPhoneNumber(e.target.value);
+                      if (error) setError('');
+                    }}
+                    className="w-full text-sm font-semibold tracking-wider font-mono px-3.5 py-3 bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400 placeholder:font-sans placeholder:tracking-normal placeholder:font-normal"
+                    required
+                  />
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-6 text-slate-500 text-xs">
-                No registered shop found matching "{searchQuery}".
+                {error && (
+                  <div className="flex items-start gap-1.5 text-xs text-rose-600 font-medium mt-2 bg-rose-50 p-2.5 rounded-lg border border-rose-200">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{error}</span>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* Bottom Switch to Register */}
+              <button
+                type="submit"
+                className="w-full py-3.5 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Access Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+          ) : (
+            /* MULTIPLE SHOPS SELECTION (IF SENDER HAS 2+ SHOPS ON SAME PHONE) */
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-700">Select which shop to open:</span>
+                <button
+                  onClick={handleReset}
+                  className="text-xs text-[#b84b00] hover:underline font-semibold cursor-pointer"
+                >
+                  Change number
+                </button>
+              </div>
+
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {matchedShops.map((s) => (
+                  <div
+                    key={s.id}
+                    onClick={() => handleChoose(s)}
+                    className="p-3.5 rounded-xl border border-slate-200 hover:border-[#b84b00] hover:bg-amber-50/60 transition-all cursor-pointer flex items-center justify-between gap-3 group"
+                  >
+                    <div>
+                      <div className="font-bold text-slate-900 text-sm group-hover:text-[#b84b00]">
+                        {s.name}
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        ID: <span className="font-mono text-slate-700">{s.id}</span> • UPI: {s.upiId}
+                      </div>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#b84b00] group-hover:translate-x-0.5 transition-transform">
+                      <span>Open</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Footer Navigation */}
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span className="text-slate-500">Need to register a new shop?</span>
+            <span className="text-slate-500">New to Printo?</span>
             <button
               type="button"
               onClick={() => {
