@@ -97,7 +97,7 @@ export default function RegisterShopModal({
     });
 
     if (matches.length === 0) {
-      setLoginError(`No shop registered with +91 ${cleanInput}. Please check the number or register your shop.`);
+      setLoginError('No shop linked with this number');
       return;
     }
 
@@ -212,10 +212,9 @@ export default function RegisterShopModal({
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer text-center"
                 >
-                  <span>Open Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
+                  Open Dashboard
                 </button>
               </form>
             ) : (
@@ -246,9 +245,8 @@ export default function RegisterShopModal({
                           ID: <span className="font-mono text-slate-700">{s.id}</span> • UPI: {s.upiId}
                         </div>
                       </div>
-                      <div className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#b84b00] group-hover:translate-x-0.5 transition-transform">
-                        <span>Open</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                      <div className="shrink-0 text-xs font-bold text-[#b84b00]">
+                        Open
                       </div>
                     </div>
                   ))}
