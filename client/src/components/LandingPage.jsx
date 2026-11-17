@@ -61,10 +61,9 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onOpenRegister}
-              className="px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 shrink-0"
+              className="px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-xs shadow-sm transition-all cursor-pointer shrink-0"
             >
-              <span>Get Started</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              Get Started
             </button>
 
             {/* Mobile Hamburger Toggle Button */}
@@ -122,10 +121,9 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 <div className="flex items-center justify-center lg:justify-start relative z-10">
                   <button
                     onClick={onOpenRegister}
-                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wider"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center uppercase tracking-wider"
                   >
-                    <span>Get Started Free</span>
-                    <ArrowRight className="w-4 h-4" />
+                    Get Started Free
                   </button>
                 </div>
 
@@ -514,10 +512,9 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           <div className="pt-2">
             <button
               onClick={onOpenRegister}
-              className="px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer inline-flex items-center gap-2"
+              className="px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer inline-flex items-center justify-center"
             >
-              <span>Register Your Shop Free</span>
-              <ArrowRight className="w-4 h-4" />
+              Register Your Shop Free
             </button>
           </div>
         </div>
