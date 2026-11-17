@@ -97,6 +97,8 @@ export default function App() {
   const handleShopCreated = (newShop) => {
     fetchShops();
     setSelectedShopId(newShop.id);
+    localStorage.setItem('printo_shopId', newShop.id);
+    localStorage.setItem(`printo_auth_${newShop.id}`, 'true');
     navigateTo('dashboard', newShop.id);
   };
 

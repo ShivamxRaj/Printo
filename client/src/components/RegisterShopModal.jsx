@@ -8,6 +8,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
   const [phone, setPhone] = useState('');
   const [upiId, setUpiId] = useState('');
   const [shopId, setShopId] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [createdShop, setCreatedShop] = useState(null);
 
@@ -37,6 +38,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
           ownerName,
           phone,
           upiId,
+          pin: pin || (phone ? phone.slice(-4) : '1234'),
           rates: {
             bwSingle: 2,
             bwDouble: 3,
@@ -183,6 +185,22 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
                 required
               />
               <p className="text-[10px] text-slate-500 mt-1">Customers pay directly to this UPI. Zero commission, zero delay.</p>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-slate-700 block mb-1">
+                Owner Security PIN (4-Digits) *
+              </label>
+              <input
+                type="password"
+                maxLength={6}
+                placeholder="Set 4-digit PIN (e.g. 1234)"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-[#b84b00] font-mono font-medium"
+                required
+              />
+              <p className="text-[10px] text-slate-500 mt-1">This PIN protects your owner dashboard & revenue from walk-in customers.</p>
             </div>
 
             <div>

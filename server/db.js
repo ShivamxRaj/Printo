@@ -12,6 +12,7 @@ const defaultData = {
       ownerName: 'Shivam Raj',
       phone: '6299446452',
       upiId: '6299446452-2@yb1',
+      pin: '4652',
       rates: {
         bwSingle: 2.0,       // ₹2 / page B&W single side
         bwDouble: 3.0,       // ₹3 / sheet B&W both sides

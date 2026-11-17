@@ -43,37 +43,28 @@ export default function CustomerView({ shopId = 'shivam' }) {
   // Socket
   const [socket, setSocket] = useState(null);
 
-  // 1. Fetch Shop details
+  // 1. Fetch Shop details strictly from database
   useEffect(() => {
+    setLoading(true);
     fetch(`${API_BASE}/api/shops/${shopId}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Shop not found');
+        return res.json();
+      })
       .then(data => {
         if (!data || data.error || !data.name) {
-          console.warn('Shop not found from API, using default shop data');
-          setShop({
-            id: shopId,
-            name: 'Shivam',
-            rates: { bwSingle: 2, bwDouble: 3, colorSingle: 10, colorDouble: 16, idCard: 10, minOrder: 1 },
-            upiId: '6299446452-2@yb1',
-            status: 'online'
-          });
+          setShop(null);
         } else {
           setShop(data);
+          if (data.name) {
+            document.title = `${data.name} — Self-Service Instant Print | Printo`;
+          }
         }
         setLoading(false);
-        if (data?.name) {
-          document.title = `${data.name} — Self-Service Instant Print | Printo`;
-        }
       })
       .catch(err => {
         console.error('Failed to load shop:', err);
-        setShop({
-          id: shopId,
-          name: 'Shivam',
-          rates: { bwSingle: 2, bwDouble: 3, colorSingle: 10, colorDouble: 16, idCard: 10, minOrder: 1 },
-          upiId: '6299446452-2@yb1',
-          status: 'online'
-        });
+        setShop(null);
         setLoading(false);
       });
   }, [shopId]);
@@ -112,17 +103,10 @@ export default function CustomerView({ shopId = 'shivam' }) {
     };
   }, [socket, currentOrder?.id]);
 
-  // Instant synchronous price calculation (Zero delay, 60fps responsive)
+  // Instant synchronous price calculation based strictly on real shop rates
   const calculateEstimate = (m, c, s, cp, p) => {
-    if (!shop) return { totalAmount: 0, breakdown: '' };
-    const rates = shop.rates || {
-      bwSingle: 2,
-      bwDouble: 3,
-      colorSingle: 10,
-      colorDouble: 16,
-      idCard: 10,
-      minOrder: 1
-    };
+    if (!shop || !shop.rates) return { totalAmount: 0, breakdown: '' };
+    const rates = shop.rates;
     const copyCount = Math.max(1, parseInt(cp) || 1);
     if (m === 'id_card') {
       const singlePrice = rates.idCard || 10;
@@ -344,7 +328,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
-                  {shop?.name || 'Shivam'}
+                  {shop?.name}
                 </h1>
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online"></span>
               </div>
@@ -372,7 +356,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
           <a href="/" className="hover:text-[#b84b00] transition-colors">Printo</a>
           <ChevronRight className="w-3 h-3 text-slate-400" />
-          <span className="text-slate-800 font-semibold truncate">{shop?.name || 'Smart Print'}</span>
+          <span className="text-slate-800 font-semibold truncate">{shop?.name}</span>
         </nav>
 
         {/* ORDER IN PROGRESS / TRACKER MODAL */}
@@ -742,7 +726,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
                       <span>Black & White</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.bwSingle ?? 2}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.bwSingle}/page</span>
                   </button>
                   <button
                     type="button"
@@ -757,7 +741,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
                       <span>Full Color</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.colorSingle ?? 10}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.colorSingle}/page</span>
                   </button>
                 </div>
               </div>

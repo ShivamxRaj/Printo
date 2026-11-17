@@ -21,23 +21,16 @@ const upload = multer({
 
 // Helper to calculate pricing based on shop rates
 function calculatePrice(shop, { docType, colorMode, copies, sides, pageCount, selectedPagesCount }) {
-  const rates = shop.rates || {
-    bwSingle: 2,
-    bwDouble: 3,
-    colorSingle: 10,
-    colorDouble: 16,
-    idCard: 10,
-    minOrder: 2
-  };
-
+  const rates = shop.rates || {};
   const copyCount = Math.max(1, parseInt(copies) || 1);
 
   if (docType === 'id_card') {
-    const singlePrice = rates.idCard || 10;
+    const singlePrice = rates.idCard !== undefined ? Number(rates.idCard) : 10;
     const total = singlePrice * copyCount;
+    const minOrder = rates.minOrder !== undefined ? Number(rates.minOrder) : 1;
     return {
       unitPrice: singlePrice,
-      totalAmount: Math.max(total, rates.minOrder || 0),
+      totalAmount: Math.max(total, minOrder),
       totalPages: 1,
       totalSheets: 1 * copyCount,
       breakdown: `${copyCount} copy x ₹${singlePrice}`
@@ -54,15 +47,20 @@ function calculatePrice(shop, { docType, colorMode, copies, sides, pageCount, se
 
   if (isDouble) {
     totalSheets = Math.ceil(activePages / 2);
-    unitRate = isColor ? (rates.colorDouble || 16) : (rates.bwDouble || 3);
+    unitRate = isColor 
+      ? (rates.colorDouble !== undefined ? Number(rates.colorDouble) : 16) 
+      : (rates.bwDouble !== undefined ? Number(rates.bwDouble) : 3);
     rawAmount = totalSheets * unitRate * copyCount;
   } else {
     totalSheets = activePages;
-    unitRate = isColor ? (rates.colorSingle || 10) : (rates.bwSingle || 2);
+    unitRate = isColor 
+      ? (rates.colorSingle !== undefined ? Number(rates.colorSingle) : 10) 
+      : (rates.bwSingle !== undefined ? Number(rates.bwSingle) : 2);
     rawAmount = activePages * unitRate * copyCount;
   }
 
-  const totalAmount = Math.max(rawAmount, rates.minOrder || 0);
+  const minOrder = rates.minOrder !== undefined ? Number(rates.minOrder) : 1;
+  const totalAmount = Math.max(rawAmount, minOrder);
 
   return {
     unitPrice: unitRate,
@@ -82,10 +80,7 @@ module.exports = function (io, connectedAgents) {
 
   // 1. Get Shop Details
   router.get('/shops/:shopId', (req, res) => {
-    let shop = db.getShop(req.params.shopId);
-    if (!shop && (req.params.shopId === 'shivam' || req.params.shopId === 'demo-shop')) {
-      shop = db.getShop('shivam') || db.getShop('demo-shop') || db.getAllShops()[0];
-    }
+    const shop = db.getShop(req.params.shopId);
     if (!shop) {
       return res.status(404).json({ error: 'Shop not found' });
     }
@@ -94,6 +89,20 @@ module.exports = function (io, connectedAgents) {
       ...shop,
       status: isAgentConnected ? 'online' : (shop.status || 'offline')
     });
+  });
+
+  // 1a. Verify Owner PIN for authenticated access
+  router.post('/shops/:shopId/verify-pin', (req, res) => {
+    const { pin } = req.body;
+    const shop = db.getShop(req.params.shopId);
+    if (!shop) {
+      return res.status(404).json({ error: 'Shop not found' });
+    }
+    const expectedPin = shop.pin || (shop.phone ? shop.phone.slice(-4) : '1234');
+    if (String(pin).trim() === String(expectedPin).trim()) {
+      return res.json({ success: true, shopName: shop.name });
+    }
+    return res.status(401).json({ error: 'Incorrect Owner PIN. Please try again.' });
   });
 
   // 1b. Download 1-Click Agent Launcher for this specific shop
@@ -122,23 +131,25 @@ pause
 
   // 2. Save / Update Shop
   router.post('/shops', (req, res) => {
-    const { id, name, ownerName, phone, upiId, rates } = req.body;
+    const { id, name, ownerName, phone, upiId, rates, pin } = req.body;
     if (!id || !name || !upiId) {
       return res.status(400).json({ error: 'Shop ID, Name, and UPI ID are required' });
     }
+    const existing = db.getShop(id.toLowerCase().replace(/[^a-z0-9-_]/g, '-'));
     const updated = db.saveShop({
       id: id.toLowerCase().replace(/[^a-z0-9-_]/g, '-'),
       name,
       ownerName: ownerName || '',
       phone: phone || '',
       upiId: upiId.trim(),
+      pin: pin ? String(pin).trim() : (existing?.pin || (phone ? phone.slice(-4) : '1234')),
       rates: rates || {
         bwSingle: 2,
         bwDouble: 3,
         colorSingle: 10,
         colorDouble: 16,
         idCard: 10,
-        minOrder: 2
+        minOrder: 1
       }
     });
     res.json(updated);
@@ -261,10 +272,7 @@ pause
         customerPhone
       } = req.body;
 
-      let shop = db.getShop(shopId);
-      if (!shop && (shopId === 'shivam' || shopId === 'demo-shop')) {
-        shop = db.getShop('shivam') || db.getShop('demo-shop') || db.getAllShops()[0];
-      }
+      const shop = db.getShop(shopId);
       if (!shop) {
         return res.status(404).json({ error: 'Shop not found' });
       }
