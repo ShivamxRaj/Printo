@@ -218,8 +218,8 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             </div>
 
             <a
-              href={`/api/shops/${shopId}/download-launcher`}
-              download={`start-${shopId}-agent.bat`}
+              href={`${API_BASE}/api/shops/${effectiveShopId}/download-launcher`}
+              download={`start-${effectiveShopId}-agent.bat`}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
               title="Download 1-click agent launcher for this shop"
             >
@@ -228,7 +228,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             </a>
 
             <a
-              href={`/standee/${shopId}`}
+              href={`/standee/${effectiveShopId}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white text-xs font-bold transition-all shadow-sm"
@@ -271,8 +271,8 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
 
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <a
-                  href={`/api/shops/${shopId}/download-launcher`}
-                  download={`start-${shopId}-agent.bat`}
+                  href={`${API_BASE}/api/shops/${effectiveShopId}/download-launcher`}
+                  download={`start-${effectiveShopId}-agent.bat`}
                   className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs shadow-sm transition-all"
                 >
                   <Download className="w-4 h-4" />

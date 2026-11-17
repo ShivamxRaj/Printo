@@ -110,18 +110,32 @@ module.exports = function (io, connectedAgents) {
     const shop = db.getShop(req.params.shopId);
     if (!shop) return res.status(404).send('Shop not found');
 
-    const serverUrl = `${req.protocol}://${req.get('host')}`;
+    const serverUrl = process.env.PUBLIC_SERVER_URL || 'https://printo-production-7fad6f69.up.railway.app';
     const batContent = `@echo off
-title PrintKwik Agent - ${shop.name}
+title Printo Desktop Print Agent - ${shop.name}
 echo ========================================================
-echo   PrintKwik Desktop Print Agent
+echo   Printo Desktop Auto-Print Agent
 echo   Shop: ${shop.name} (${shop.id})
 echo ========================================================
 echo.
 set SHOP_ID=${shop.id}
 set SERVER_URL=${serverUrl}
 cd /d "%~dp0"
-node agent.js
+if exist "agent.js" (
+  node agent.js
+) else if exist "agent\\agent.js" (
+  cd agent
+  node agent.js
+) else if exist "..\\agent\\agent.js" (
+  cd ..\\agent
+  node agent.js
+) else if exist "D:\\printer\\agent\\agent.js" (
+  cd /d "D:\\printer\\agent"
+  node agent.js
+) else (
+  echo [ERROR] agent.js not found in this folder!
+  echo Please make sure this .bat file is placed in your Printo folder or run D:\\printer\\start-printkwik.bat
+)
 pause
 `;
     res.setHeader('Content-Type', 'application/x-bat');
