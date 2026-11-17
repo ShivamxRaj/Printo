@@ -98,7 +98,6 @@ export default function App() {
     fetchShops();
     setSelectedShopId(newShop.id);
     localStorage.setItem('printo_shopId', newShop.id);
-    localStorage.setItem(`printo_auth_${newShop.id}`, 'true');
     navigateTo('dashboard', newShop.id);
   };
 
