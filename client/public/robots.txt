@@ -7,4 +7,4 @@ Disallow: /api/
 Disallow: /uploads/
 
 # Sitemap location
-Sitemap: https://printo.tech/sitemap.xml
+Sitemap: https://www.getprinto.in/sitemap.xml
