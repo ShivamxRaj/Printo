@@ -378,10 +378,9 @@ export default function RegisterShopModal({
               <button
                 type="button"
                 onClick={() => { setMode('login'); setLoginError(''); }}
-                className="font-bold text-[#b84b00] hover:underline cursor-pointer flex items-center gap-1"
+                className="font-bold text-[#b84b00] hover:underline cursor-pointer"
               >
-                <span>Login</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                Login
               </button>
             </div>
           </form>
