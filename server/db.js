@@ -7,11 +7,29 @@ const DB_FILE = path.join(__dirname, 'data.json');
 const defaultData = {
   shops: [
     {
+      id: 'shivam',
+      name: 'Shivam',
+      ownerName: 'Shivam Raj',
+      phone: '6299446452',
+      upiId: '6299446452-2@yb1',
+      rates: {
+        bwSingle: 2.0,       // ₹2 / page B&W single side
+        bwDouble: 3.0,       // ₹3 / sheet B&W both sides
+        colorSingle: 10.0,   // ₹10 / page Color single side
+        colorDouble: 16.0,   // ₹16 / sheet Color both sides
+        idCard: 10.0,        // ₹10 per smart ID/Aadhaar card
+        minOrder: 1.0        // Minimum order ₹1
+      },
+      status: 'online',
+      activePrinter: 'Default Windows Printer',
+      createdAt: new Date().toISOString()
+    },
+    {
       id: 'demo-shop',
       name: 'Shivam',
       ownerName: 'Shivam Raj',
       phone: '6299446452',
-      upiId: '6299446452-2@axl',
+      upiId: '6299446452-2@yb1',
       rates: {
         bwSingle: 2.0,       // ₹2 / page B&W single side
         bwDouble: 3.0,       // ₹3 / sheet B&W both sides

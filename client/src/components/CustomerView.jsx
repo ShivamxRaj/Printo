@@ -48,7 +48,18 @@ export default function CustomerView({ shopId = 'shivam' }) {
     fetch(`${API_BASE}/api/shops/${shopId}`)
       .then(res => res.json())
       .then(data => {
-        setShop(data);
+        if (!data || data.error || !data.name) {
+          console.warn('Shop not found from API, using default shop data');
+          setShop({
+            id: shopId,
+            name: 'Shivam',
+            rates: { bwSingle: 2, bwDouble: 3, colorSingle: 10, colorDouble: 16, idCard: 10, minOrder: 1 },
+            upiId: '6299446452-2@yb1',
+            status: 'online'
+          });
+        } else {
+          setShop(data);
+        }
         setLoading(false);
         if (data?.name) {
           document.title = `${data.name} — Self-Service Instant Print | Printo`;
@@ -56,6 +67,13 @@ export default function CustomerView({ shopId = 'shivam' }) {
       })
       .catch(err => {
         console.error('Failed to load shop:', err);
+        setShop({
+          id: shopId,
+          name: 'Shivam',
+          rates: { bwSingle: 2, bwDouble: 3, colorSingle: 10, colorDouble: 16, idCard: 10, minOrder: 1 },
+          upiId: '6299446452-2@yb1',
+          status: 'online'
+        });
         setLoading(false);
       });
   }, [shopId]);
@@ -326,7 +344,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
-                  {shop.name}
+                  {shop?.name || 'Shivam'}
                 </h1>
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online"></span>
               </div>
@@ -724,7 +742,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
                       <span>Black & White</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop.rates?.bwSingle}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.bwSingle ?? 2}/page</span>
                   </button>
                   <button
                     type="button"
@@ -739,7 +757,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
                       <span>Full Color</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop.rates?.colorSingle}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.colorSingle ?? 10}/page</span>
                   </button>
                 </div>
               </div>

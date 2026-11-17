@@ -82,7 +82,10 @@ module.exports = function (io, connectedAgents) {
 
   // 1. Get Shop Details
   router.get('/shops/:shopId', (req, res) => {
-    const shop = db.getShop(req.params.shopId);
+    let shop = db.getShop(req.params.shopId);
+    if (!shop && (req.params.shopId === 'shivam' || req.params.shopId === 'demo-shop')) {
+      shop = db.getShop('shivam') || db.getShop('demo-shop') || db.getAllShops()[0];
+    }
     if (!shop) {
       return res.status(404).json({ error: 'Shop not found' });
     }
@@ -258,7 +261,10 @@ pause
         customerPhone
       } = req.body;
 
-      const shop = db.getShop(shopId);
+      let shop = db.getShop(shopId);
+      if (!shop && (shopId === 'shivam' || shopId === 'demo-shop')) {
+        shop = db.getShop('shivam') || db.getShop('demo-shop') || db.getAllShops()[0];
+      }
       if (!shop) {
         return res.status(404).json({ error: 'Shop not found' });
       }

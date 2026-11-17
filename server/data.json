@@ -1,11 +1,29 @@
 {
   "shops": [
     {
+      "id": "shivam",
+      "name": "Shivam",
+      "ownerName": "Shivam Raj",
+      "phone": "6299446452",
+      "upiId": "6299446452-2@yb1",
+      "rates": {
+        "bwSingle": 2,
+        "bwDouble": 3,
+        "colorSingle": 10,
+        "colorDouble": 16,
+        "idCard": 10,
+        "minOrder": 1
+      },
+      "status": "online",
+      "activePrinter": "Default Windows Printer",
+      "createdAt": "2026-11-17T10:00:00.000Z"
+    },
+    {
       "id": "demo-shop",
       "name": "Shivam",
       "ownerName": "Shivam Raj",
       "phone": "6299446452",
-      "upiId": "6299446452-2@axl",
+      "upiId": "6299446452-2@yb1",
       "rates": {
         "bwSingle": 2,
         "bwDouble": 3,
