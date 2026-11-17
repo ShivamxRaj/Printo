@@ -257,14 +257,14 @@ export default function RegisterShopModal({
             )}
 
             {/* Switch to Register */}
-            <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-500">
-              Don't have a shop registered yet?{' '}
+            <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-slate-500">Don't have a shop registered yet?</span>
               <button
                 type="button"
                 onClick={() => { setMode('register'); setLoginError(''); }}
                 className="font-bold text-[#b84b00] hover:underline cursor-pointer"
               >
-                Register New Shop
+                + Register New Shop
               </button>
             </div>
           </div>
@@ -373,14 +373,15 @@ export default function RegisterShopModal({
             </div>
 
             {/* Switch to Login */}
-            <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-500">
-              Already registered your shop?{' '}
+            <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span className="text-slate-500">Already registered your shop?</span>
               <button
                 type="button"
                 onClick={() => { setMode('login'); setLoginError(''); }}
-                className="font-bold text-[#b84b00] hover:underline cursor-pointer"
+                className="font-bold text-[#b84b00] hover:underline cursor-pointer flex items-center gap-1"
               >
-                Login with Mobile Number
+                <span>Login</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </form>
