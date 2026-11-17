@@ -754,24 +754,30 @@ export default function CustomerView({ shopId = 'shivam' }) {
                     <button
                       type="button"
                       onClick={() => setSides('single')}
-                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
+                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 cursor-pointer ${
                         sides === 'single'
                           ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
                           : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                       }`}
                     >
-                      Single-Sided (1 Side)
+                      <span>Single-Sided (1 Side)</span>
+                      <span className="text-[11px] font-medium text-slate-500">
+                        ₹{colorMode === 'color' ? (shop?.rates?.colorSingle || 10) : (shop?.rates?.bwSingle || 2)}/page
+                      </span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setSides('double')}
-                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
+                      className={`py-2.5 px-2 rounded-xl border text-xs font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 cursor-pointer ${
                         sides === 'double'
                           ? 'border-[#b84b00] bg-amber-50/80 text-[#b84b00] ring-1 ring-[#b84b00]'
                           : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
                       }`}
                     >
-                      Double-Sided (Both Sides)
+                      <span>Double-Sided (Both Sides)</span>
+                      <span className="text-[11px] font-medium text-slate-500">
+                        ₹{colorMode === 'color' ? (shop?.rates?.colorDouble || 16) : (shop?.rates?.bwDouble || 3)}/sheet
+                      </span>
                     </button>
                   </div>
                 </div>

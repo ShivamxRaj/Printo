@@ -21,7 +21,14 @@ export default function StandeePoster({ shopId = 'shivam' }) {
     return <div className="p-10 text-center font-bold">Loading Standee Poster...</div>;
   }
 
-  const rates = shop.rates || { bwSingle: 2, colorSingle: 10, idCard: 10 };
+  const rates = {
+    bwSingle: shop.rates?.bwSingle ?? 2,
+    bwDouble: shop.rates?.bwDouble ?? 3,
+    colorSingle: shop.rates?.colorSingle ?? 10,
+    colorDouble: shop.rates?.colorDouble ?? 16,
+    idCard: shop.rates?.idCard ?? 10,
+    minOrder: shop.rates?.minOrder ?? 1,
+  };
 
   return (
     <div className="min-h-screen bg-slate-200 py-8 px-4 flex flex-col items-center">
@@ -116,21 +123,53 @@ export default function StandeePoster({ shopId = 'shivam' }) {
           </div>
         </div>
 
-        {/* Pricing Banner Card */}
-        <div className="bg-slate-950 text-white rounded-2xl p-4 flex items-center justify-around text-center my-2">
-          <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">BLACK & WHITE</span>
-            <span className="text-xl font-black text-white">₹{rates.bwSingle} / page</span>
+        {/* Pricing Banner Card - Matches Dashboard 1-Side & 2-Sides Exactly */}
+        <div className="bg-slate-950 text-white rounded-2xl p-4 grid grid-cols-3 divide-x divide-slate-800 text-center my-2 shadow-inner">
+          {/* Black & White */}
+          <div className="px-2">
+            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider block mb-1">
+              Black & White
+            </span>
+            <div className="flex items-center justify-center gap-2.5">
+              <div>
+                <span className="text-[9px] text-slate-500 font-semibold block uppercase">1-Side</span>
+                <span className="text-lg font-black text-white">₹{rates.bwSingle}</span>
+              </div>
+              <div className="text-slate-700 text-sm font-light">/</div>
+              <div>
+                <span className="text-[9px] text-slate-500 font-semibold block uppercase">2-Sides</span>
+                <span className="text-lg font-black text-white">₹{rates.bwDouble}</span>
+              </div>
+            </div>
           </div>
-          <div className="w-px h-8 bg-slate-800"></div>
-          <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">FULL COLOR</span>
-            <span className="text-xl font-black text-amber-400">₹{rates.colorSingle} / page</span>
+
+          {/* Full Color */}
+          <div className="px-2">
+            <span className="text-[11px] text-amber-400 font-bold uppercase tracking-wider block mb-1">
+              Full Color
+            </span>
+            <div className="flex items-center justify-center gap-2.5">
+              <div>
+                <span className="text-[9px] text-amber-400/70 font-semibold block uppercase">1-Side</span>
+                <span className="text-lg font-black text-amber-400">₹{rates.colorSingle}</span>
+              </div>
+              <div className="text-amber-500/40 text-sm font-light">/</div>
+              <div>
+                <span className="text-[9px] text-amber-400/70 font-semibold block uppercase">2-Sides</span>
+                <span className="text-lg font-black text-amber-400">₹{rates.colorDouble}</span>
+              </div>
+            </div>
           </div>
-          <div className="w-px h-8 bg-slate-800"></div>
-          <div>
-            <span className="text-[11px] text-slate-400 font-semibold block">AADHAAR / ID 2-SIDED</span>
-            <span className="text-xl font-black text-emerald-400">₹{rates.idCard} / card</span>
+
+          {/* Smart ID / Aadhaar */}
+          <div className="px-2 flex flex-col justify-center">
+            <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              Smart ID / Aadhaar
+            </span>
+            <div className="flex items-center justify-center gap-1.5">
+              <span className="text-lg font-black text-emerald-400">₹{rates.idCard}</span>
+              <span className="text-[10px] text-slate-400 font-medium">/ card (Front+Back)</span>
+            </div>
           </div>
         </div>
 
