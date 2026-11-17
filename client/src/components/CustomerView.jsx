@@ -94,26 +94,60 @@ export default function CustomerView({ shopId = 'shivam' }) {
     };
   }, [socket, currentOrder?.id]);
 
-  // 3. Recalculate price whenever options change
-  useEffect(() => {
-    if (!shop || !tempFileId) return;
+  // Instant synchronous price calculation (Zero delay, 60fps responsive)
+  const calculateEstimate = (m, c, s, cp, p) => {
+    if (!shop) return { totalAmount: 0, breakdown: '' };
+    const rates = shop.rates || {
+      bwSingle: 2,
+      bwDouble: 3,
+      colorSingle: 10,
+      colorDouble: 16,
+      idCard: 10,
+      minOrder: 1
+    };
+    const copyCount = Math.max(1, parseInt(cp) || 1);
+    if (m === 'id_card') {
+      const singlePrice = rates.idCard || 10;
+      const total = singlePrice * copyCount;
+      return {
+        unitPrice: singlePrice,
+        totalAmount: Math.max(total, rates.minOrder || 0),
+        totalPages: 1,
+        totalSheets: copyCount,
+        breakdown: `${copyCount} ${copyCount === 1 ? 'copy' : 'copies'} × ₹${singlePrice}`
+      };
+    }
+    const pages = p || 1;
+    const isColor = c === 'color';
+    const isDouble = s === 'double';
+    let unitRate = 0;
+    let totalSheets = 0;
+    let rawAmount = 0;
+    if (isDouble) {
+      totalSheets = Math.ceil(pages / 2);
+      unitRate = isColor ? (rates.colorDouble || 16) : (rates.bwDouble || 3);
+      rawAmount = totalSheets * unitRate * copyCount;
+    } else {
+      totalSheets = pages;
+      unitRate = isColor ? (rates.colorSingle || 10) : (rates.bwSingle || 2);
+      rawAmount = pages * unitRate * copyCount;
+    }
+    const totalAmount = Math.max(rawAmount, rates.minOrder || 0);
+    return {
+      unitPrice: unitRate,
+      totalAmount,
+      totalPages: pages,
+      totalSheets: totalSheets * copyCount,
+      breakdown: `${pages} ${pages === 1 ? 'page' : 'pages'} (${isColor ? 'Color' : 'B&W'}, ${isDouble ? '2-Sides' : '1-Side'}) × ${copyCount} ${copyCount === 1 ? 'copy' : 'copies'}`
+    };
+  };
 
-    fetch(`${API_BASE}/api/orders/calculate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        shopId: shop.id,
-        docType: mode,
-        colorMode,
-        copies,
-        sides,
-        pageCount: docPageCount
-      })
-    })
-      .then(res => res.json())
-      .then(data => setCalculation(data))
-      .catch(err => console.error('Calculation error:', err));
-  }, [shop, tempFileId, mode, colorMode, copies, sides, docPageCount]);
+  // 3. Recalculate price INSTANTLY whenever options change (0ms delay)
+  useEffect(() => {
+    if (!shop) return;
+    const calc = calculateEstimate(mode, colorMode, sides, copies, docPageCount);
+    setCalculation(calc);
+  }, [shop, mode, colorMode, copies, sides, docPageCount]);
 
   // Handle document file upload
   const handleDocUpload = async (e) => {
@@ -411,40 +445,50 @@ export default function CustomerView({ shopId = 'shivam' }) {
                   </button>
                 </div>
 
-                {/* 1-Tap Mobile UPI Intent Buttons */}
+                {/* 1-Tap Mobile UPI Intent Buttons with Official Logos */}
                 <div className="grid grid-cols-2 gap-2">
                   <a
                     href={paymentData.intents.gpay}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs transition-all active:scale-98"
                   >
-                    <span>🔵</span> Google Pay
+                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                      <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                    </svg>
+                    <span>Google Pay</span>
                   </a>
                   <a
                     href={paymentData.intents.phonepe}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs transition-all active:scale-98"
                   >
-                    <span>🟣</span> PhonePe
+                    <svg className="w-4 h-4 shrink-0 rounded-full" viewBox="0 0 48 48">
+                      <circle cx="24" cy="24" r="24" fill="#5f259f"/>
+                      <path fill="#ffffff" d="M33.6 16.2h-3.4c-.4 0-.8.2-1 .5l-6.8 9.6-3.8-4.5c-.3-.3-.7-.5-1.1-.5h-2.8c-.6 0-1 .7-.6 1.2l6.2 7.6c.5.6 1.4.6 1.9 0l8.9-12.7c.3-.5 0-1.2-.6-1.2z"/>
+                      <path fill="#ffffff" d="M22.5 13.5v7.3l4.2-6c.2-.3.6-.5 1-.5h3.4c.5 0 .8.6.5 1l-7.7 11v8.2c0 .6-.4 1-1 1s-1-.4-1-1v-21c0-.6.4-1 1-1s1 .4 1 1z"/>
+                    </svg>
+                    <span>PhonePe</span>
                   </a>
                   <a
                     href={paymentData.intents.paytm}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white hover:bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs transition-all active:scale-98"
                   >
-                    <span>🔷</span> Paytm
+                    <svg className="w-5 h-3.5 shrink-0" viewBox="0 0 50 16" fill="none">
+                      <text x="0" y="13" fill="#002970" fontSize="13" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">Pay</text>
+                      <text x="26" y="13" fill="#00baf2" fontSize="13" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">tm</text>
+                    </svg>
+                    <span>Paytm</span>
                   </a>
                   <a
                     href={paymentData.intents.generic}
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-lg text-xs font-semibold shadow-2xs transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-xl text-xs font-bold shadow-2xs transition-all active:scale-98"
                   >
-                    <span>⚡</span> Other UPI
+                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 14l8-10 2 6h6L12 20l2-6H4z" fill="#ffffff"/>
+                    </svg>
+                    <span>Other UPI</span>
                   </a>
-                </div>
-
-                {/* Helper notice for SBI / Bank Limit error */}
-                <div className="bg-amber-100/50 border border-amber-200/80 rounded-lg p-2 text-[10px] text-amber-900 flex items-start gap-1.5">
-                  <span className="text-amber-600 font-bold shrink-0">💡</span>
-                  <span>
-                    Agar aapke bank (jaise <strong>SBI</strong>) me <em>"Exceeded bank limit"</em> aaye, to upar se <strong>Copy UPI</strong> dabayein aur PhonePe / GPay me direct transfer karein ya neeche ka <strong>QR scan</strong> karein.
-                  </span>
                 </div>
 
                 {/* Fallback QR Code for cross-device scanning */}
@@ -551,11 +595,25 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       {uploading ? <RefreshCw className="w-6 h-6 animate-spin text-[#b84b00]" /> : <UploadCloud className="w-6 h-6 text-[#b84b00]" />}
                     </div>
                     {docFile ? (
-                      <div>
-                        <p className="font-bold text-slate-900 text-sm">{docFile.name}</p>
-                        <p className="text-xs text-emerald-700 font-semibold mt-0.5">
-                          ✓ {docPageCount} {docPageCount === 1 ? 'Page' : 'Pages'} detected
+                      <div className="w-full max-w-[280px] sm:max-w-xs mx-auto px-1">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-emerald-300 rounded-xl shadow-2xs max-w-full">
+                          <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span className="font-bold text-slate-800 text-xs truncate block max-w-[200px] sm:max-w-[230px]" title={docFile.name}>
+                            {docFile.name}
+                          </span>
+                        </div>
+                        <p className="text-xs text-emerald-700 font-bold mt-1.5 flex items-center justify-center gap-1">
+                          <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+                          <span>{docPageCount} {docPageCount === 1 ? 'Page' : 'Pages'} detected</span>
+                          {docFile.size ? (
+                            <span className="text-slate-400 font-medium ml-1">
+                              • {(docFile.size / 1024).toFixed(0)} KB
+                            </span>
+                          ) : null}
                         </p>
+                        <span className="inline-block text-[10px] text-slate-400 font-medium hover:text-[#b84b00] mt-1 transition-colors">
+                          Tap to change file
+                        </span>
                       </div>
                     ) : (
                       <div>
