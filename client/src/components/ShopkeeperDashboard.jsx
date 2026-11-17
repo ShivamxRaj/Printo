@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 
-  ExternalLink, Shield, Power, Play, Download, PlusCircle
+  ExternalLink, Shield, Power, Play, Download, PlusCircle, Store
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
 
-export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterModal }) {
+export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterModal, onOpenAccessModal }) {
   const urlParams = new URLSearchParams(window.location.search);
   const effectiveShopId = urlParams.get('shop') || shopId || localStorage.getItem('printo_shopId') || 'shivam';
 
@@ -236,6 +236,17 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
               <QrCode className="w-3.5 h-3.5" />
               <span>Print Standee</span>
             </a>
+
+            {onOpenAccessModal && (
+              <button
+                onClick={onOpenAccessModal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
+                title="Switch to another registered shop"
+              >
+                <Store className="w-3.5 h-3.5 text-amber-400" />
+                <span>Switch Shop</span>
+              </button>
+            )}
 
             {onOpenRegisterModal && (
               <button
