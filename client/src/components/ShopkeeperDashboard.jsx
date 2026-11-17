@@ -237,17 +237,6 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
               <span>Print Standee</span>
             </a>
 
-            {onOpenAccessModal && (
-              <button
-                onClick={onOpenAccessModal}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
-                title="Switch to another registered shop"
-              >
-                <Store className="w-3.5 h-3.5 text-amber-400" />
-                <span>Switch Shop</span>
-              </button>
-            )}
-
             {onOpenRegisterModal && (
               <button
                 onClick={onOpenRegisterModal}

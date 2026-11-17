@@ -60,13 +60,6 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           {/* Header Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
-              onClick={onOpenAccess || onGoToDashboard}
-              className="px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs shadow-2xs transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-            >
-              <span>Shop Login</span>
-            </button>
-
-            <button
               onClick={onOpenRegister}
               className="px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-xs shadow-sm transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 shrink-0"
             >
@@ -92,12 +85,6 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">How It Works</a>
             <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">Pricing</a>
             <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 text-sm font-semibold text-slate-700 hover:text-[#b84b00] transition-colors">FAQ</a>
-            <button 
-              onClick={() => { setMobileMenuOpen(false); if (onOpenAccess) onOpenAccess(); else onGoToDashboard(); }} 
-              className="w-full text-left py-2 text-sm font-bold text-[#b84b00] border-t border-slate-100 mt-2 pt-3"
-            >
-              🔑 Shop Login / My Dashboard
-            </button>
           </div>
         )}
       </header>

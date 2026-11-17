@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { Store, User, Phone, IndianRupee, QrCode, X, CheckCircle, ArrowRight } from 'lucide-react';
+import { Store, User, Phone, IndianRupee, QrCode, X, CheckCircle, ArrowRight, AlertCircle } from 'lucide-react';
 import { API_BASE } from '../config';
 
-export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
+export default function RegisterShopModal({ 
+  isOpen, 
+  onClose, 
+  onShopCreated, 
+  shops = [], 
+  onSelectShop,
+  initialMode = 'register'
+}) {
+  const [mode, setMode] = useState(initialMode); // 'register' or 'login'
+
+  // Registration Form State
   const [shopName, setShopName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -10,6 +20,13 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
   const [shopId, setShopId] = useState('');
   const [loading, setLoading] = useState(false);
   const [createdShop, setCreatedShop] = useState(null);
+
+  // Login Form State
+  const [loginPhone, setLoginPhone] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [matchedShops, setMatchedShops] = useState(null);
+
+  if (!isOpen) return null;
 
   // Auto-generate slug when shop name changes
   const handleNameChange = (e) => {
@@ -19,7 +36,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
     setShopId(slug);
   };
 
-  const handleSubmit = async (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (!shopName || !upiId || !shopId) {
       alert('Please fill all required fields');
@@ -62,7 +79,40 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
     }
   };
 
-  if (!isOpen) return null;
+  // Login handler
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setMatchedShops(null);
+
+    const cleanInput = loginPhone.trim().replace(/\D/g, '').slice(-10);
+    if (!cleanInput || cleanInput.length < 10) {
+      setLoginError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    const matches = shops.filter(s => {
+      const p = (s.phone || '').trim().replace(/\D/g, '').slice(-10);
+      return p && p === cleanInput;
+    });
+
+    if (matches.length === 0) {
+      setLoginError(`No shop registered with +91 ${cleanInput}. Please check the number or register your shop.`);
+      return;
+    }
+
+    if (matches.length === 1) {
+      handleChooseShop(matches[0]);
+    } else {
+      setMatchedShops(matches);
+    }
+  };
+
+  const handleChooseShop = (shop) => {
+    localStorage.setItem('printo_shopId', shop.id);
+    if (onSelectShop) onSelectShop(shop.id);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
@@ -71,7 +121,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center transition-all"
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center transition-all cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -96,83 +146,191 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Customer Link:</span>
-                <span className="font-mono text-slate-800">/s/{createdShop.id}</span>
+                <span className="font-mono text-slate-700">getprinto.in/s/{createdShop.id}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Your UPI VPA:</span>
-                <span className="font-mono text-emerald-700 font-bold">{createdShop.upiId}</span>
+                <span className="text-slate-500">Payout UPI ID:</span>
+                <span className="font-mono text-emerald-600 font-bold">{createdShop.upiId}</span>
               </div>
             </div>
 
-            <div className="pt-2 flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  window.location.href = `/standee/${createdShop.id}`;
-                }}
-                className="w-full py-3 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
-              >
-                <QrCode className="w-4 h-4" />
-                <span>Print Counter QR Standee</span>
-              </button>
+            <div className="pt-2">
               <button
                 onClick={onClose}
-                className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl cursor-pointer"
+                className="w-full py-3 bg-[#b84b00] hover:bg-[#9f4000] text-white rounded-xl text-xs font-bold shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer"
               >
-                Open Dashboard Now
+                Go to Dashboard
+              </button>
+            </div>
+          </div>
+        ) : mode === 'login' ? (
+          /* ======================================================== */
+          /* LOGIN WITH MOBILE NUMBER VIEW                            */
+          /* ======================================================== */
+          <div className="space-y-5">
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 rounded-2xl bg-amber-50 text-[#b84b00] border border-amber-200/80 flex items-center justify-center mx-auto shadow-xs">
+                <Store className="w-7 h-7" />
+              </div>
+              <h2 className="text-xl font-black text-slate-900">Owner Dashboard Login</h2>
+              <p className="text-xs text-slate-500">
+                Enter your registered mobile number to open your shop dashboard.
+              </p>
+            </div>
+
+            {!matchedShops ? (
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                    Registered Mobile Number
+                  </label>
+                  <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden focus-within:border-[#b84b00] focus-within:ring-1 focus-within:ring-[#b84b00] bg-slate-50/60">
+                    <div className="px-3.5 py-3 text-xs font-bold text-slate-500 bg-slate-100 border-r border-slate-200 select-none">
+                      +91
+                    </div>
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      autoFocus
+                      placeholder="Enter 10-digit mobile number"
+                      value={loginPhone}
+                      onChange={(e) => {
+                        setLoginPhone(e.target.value);
+                        if (loginError) setLoginError('');
+                      }}
+                      className="w-full text-sm font-semibold tracking-wider font-mono px-3.5 py-3 bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400 placeholder:font-sans placeholder:tracking-normal placeholder:font-normal"
+                      required
+                    />
+                  </div>
+                  {loginError && (
+                    <div className="flex items-start gap-1.5 text-xs text-rose-600 font-medium mt-2 bg-rose-50 p-2.5 rounded-lg border border-rose-200">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <span>{loginError}</span>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>Open Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
+            ) : (
+              /* If multiple shops found for this mobile number */
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-700">Select which shop to open:</span>
+                  <button
+                    onClick={() => { setMatchedShops(null); setLoginError(''); }}
+                    className="text-xs text-[#b84b00] hover:underline font-semibold cursor-pointer"
+                  >
+                    Change number
+                  </button>
+                </div>
+
+                <div className="space-y-2 max-h-60 overflow-y-auto">
+                  {matchedShops.map((s) => (
+                    <div
+                      key={s.id}
+                      onClick={() => handleChooseShop(s)}
+                      className="p-3.5 rounded-xl border border-slate-200 hover:border-[#b84b00] hover:bg-amber-50/60 transition-all cursor-pointer flex items-center justify-between gap-3 group"
+                    >
+                      <div>
+                        <div className="font-bold text-slate-900 text-sm group-hover:text-[#b84b00]">
+                          {s.name}
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-0.5">
+                          ID: <span className="font-mono text-slate-700">{s.id}</span> • UPI: {s.upiId}
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-1 text-xs font-bold text-[#b84b00] group-hover:translate-x-0.5 transition-transform">
+                        <span>Open</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Switch to Register */}
+            <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-500">
+              Don't have a shop registered yet?{' '}
+              <button
+                type="button"
+                onClick={() => { setMode('register'); setLoginError(''); }}
+                className="font-bold text-[#b84b00] hover:underline cursor-pointer"
+              >
+                Register New Shop
               </button>
             </div>
           </div>
         ) : (
-          /* REGISTRATION FORM */
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
-                <Store className="w-5 h-5" />
+          /* ======================================================== */
+          /* REGISTER NEW SHOP VIEW                                   */
+          /* ======================================================== */
+          <form onSubmit={handleRegisterSubmit} className="space-y-4">
+            <div className="text-center space-y-1 pb-1">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#b84b00] flex items-center justify-center mx-auto mb-2 border border-amber-200">
+                <Store className="w-6 h-6" />
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">Register New Print Shop</h3>
-                <p className="text-xs text-slate-500">Start automated QR self-service printing in 60 seconds</p>
-              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">Register Your Xerox Shop</h2>
+              <p className="text-xs text-slate-500">Automate customer prints in less than 2 minutes</p>
             </div>
 
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">Shop / Cyber Cafe Name *</label>
-              <input
-                type="text"
-                placeholder="e.g. Gupta Xerox & Cyber Cafe"
-                value={shopName}
-                onChange={handleNameChange}
-                className="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-[#b84b00] font-medium"
-                required
-              />
+              <div className="flex items-center border border-slate-200 rounded-xl px-3 bg-slate-50 focus-within:border-[#b84b00] focus-within:bg-white transition-all">
+                <Store className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="e.g. Gupta Xerox & Cyber Cafe"
+                  value={shopName}
+                  onChange={handleNameChange}
+                  className="w-full text-xs py-2.5 bg-transparent focus:outline-none font-medium"
+                  required
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">Owner Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Amit Gupta"
-                  value={ownerName}
-                  onChange={(e) => setOwnerName(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-[#b84b00]"
-                />
+                <div className="flex items-center border border-slate-200 rounded-xl px-3 bg-slate-50 focus-within:border-[#b84b00] focus-within:bg-white transition-all">
+                  <User className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="e.g. Rajesh Gupta"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    className="w-full text-xs py-2.5 bg-transparent focus:outline-none"
+                  />
+                </div>
               </div>
+
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Mobile Number</label>
-                <input
-                  type="tel"
-                  placeholder="e.g. 9876543210"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 border border-slate-200 rounded-xl focus:outline-[#b84b00]"
-                />
+                <label className="text-xs font-bold text-slate-700 block mb-1">Owner Mobile No. *</label>
+                <div className="flex items-center border border-slate-200 rounded-xl px-3 bg-slate-50 focus-within:border-[#b84b00] focus-within:bg-white transition-all">
+                  <Phone className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    placeholder="e.g. 9876543210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full text-xs py-2.5 bg-transparent focus:outline-none font-mono"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">
-                Personal UPI ID / VPA * <span className="text-emerald-600 font-semibold">(Direct to your Bank)</span>
+                Your UPI ID (For Direct Customer Payments) *
               </label>
               <input
                 type="text"
@@ -188,7 +346,7 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">Custom Shop ID / Slug</label>
               <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden px-3 bg-slate-50 focus-within:border-[#b84b00]">
-                <span className="text-xs text-slate-400 font-mono">printo.tech/s/</span>
+                <span className="text-xs text-slate-400 font-mono">getprinto.in/s/</span>
                 <input
                   type="text"
                   value={shopId}
@@ -213,6 +371,18 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
                 )}
               </button>
             </div>
+
+            {/* Switch to Login */}
+            <div className="pt-3 border-t border-slate-100 text-center text-xs text-slate-500">
+              Already registered your shop?{' '}
+              <button
+                type="button"
+                onClick={() => { setMode('login'); setLoginError(''); }}
+                className="font-bold text-[#b84b00] hover:underline cursor-pointer"
+              >
+                Login with Mobile Number
+              </button>
+            </div>
           </form>
         )}
 
@@ -220,4 +390,3 @@ export default function RegisterShopModal({ isOpen, onClose, onShopCreated }) {
     </div>
   );
 }
-

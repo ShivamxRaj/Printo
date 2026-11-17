@@ -4,7 +4,6 @@ import CustomerView from './components/CustomerView';
 import ShopkeeperDashboard from './components/ShopkeeperDashboard';
 import StandeePoster from './components/StandeePoster';
 import RegisterShopModal from './components/RegisterShopModal';
-import AccessShopModal from './components/AccessShopModal';
 import NotFoundPage from './components/NotFoundPage';
 import { API_BASE } from './config';
 
@@ -16,7 +15,6 @@ export default function App() {
     return urlParams.get('shop') || localStorage.getItem('printo_shopId') || 'shivam';
   });
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
 
   // Load all registered shops
   const fetchShops = () => {
@@ -116,13 +114,12 @@ export default function App() {
         {currentRoute === 'landing' && (
           <LandingPage
             onOpenRegister={() => setIsRegisterModalOpen(true)}
-            onOpenAccess={() => setIsAccessModalOpen(true)}
             onGoToDashboard={() => {
               const saved = localStorage.getItem('printo_shopId');
               if (saved) {
                 navigateTo('dashboard', saved);
               } else {
-                setIsAccessModalOpen(true);
+                setIsRegisterModalOpen(true);
               }
             }}
             onGoToDemo={() => navigateTo('customer')}
@@ -134,7 +131,6 @@ export default function App() {
             key={selectedShopId}
             shopId={selectedShopId}
             onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
-            onOpenAccessModal={() => setIsAccessModalOpen(true)}
           />
         )}
         {currentRoute === 'standee' && <StandeePoster key={selectedShopId} shopId={selectedShopId} />}
@@ -146,20 +142,13 @@ export default function App() {
         )}
       </div>
 
-      {/* Access / Login Existing Shop Modal */}
-      <AccessShopModal
-        isOpen={isAccessModalOpen}
-        onClose={() => setIsAccessModalOpen(false)}
-        shops={shops}
-        onSelectShop={handleSelectShop}
-        onOpenRegister={() => setIsRegisterModalOpen(true)}
-      />
-
-      {/* Register New Shop Modal */}
+      {/* Unified Register & Login Shop Modal */}
       <RegisterShopModal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         onShopCreated={handleShopCreated}
+        shops={shops}
+        onSelectShop={handleSelectShop}
       />
     </div>
   );
