@@ -514,7 +514,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               onClick={onOpenRegister}
               className="px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer inline-flex items-center justify-center"
             >
-              Register Your Shop Free
+              Get started free
             </button>
           </div>
         </div>
