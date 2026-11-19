@@ -522,12 +522,26 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
       {/* 7. FOOTER */}
       <footer className="py-10 bg-white border-t border-slate-100 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
             <img src="/printo-logo-transparent.png" alt="Printo" className="h-8 w-auto object-contain" />
+            <span className="text-slate-300">|</span>
+            <span className="text-[11px] text-slate-500">Smart Automated Printing</span>
           </div>
-          <p className="text-xs text-slate-500 sm:text-right">
-            © 2026 Printo Technologies. Made for Indian Cyber Cafes &amp; Xerox Hubs.
+
+          {/* Razorpay Compliance Mandatory Legal Links */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-slate-600">
+            <a href="/privacy" className="hover:text-[#b84b00] transition-colors">Privacy Policy</a>
+            <span className="text-slate-300">•</span>
+            <a href="/terms" className="hover:text-[#b84b00] transition-colors">Terms &amp; Conditions</a>
+            <span className="text-slate-300">•</span>
+            <a href="/refund" className="hover:text-[#b84b00] transition-colors">Refund &amp; Cancellation</a>
+            <span className="text-slate-300">•</span>
+            <a href="/contact" className="hover:text-[#b84b00] transition-colors">Contact Us</a>
+          </div>
+
+          <p className="text-xs text-slate-500 md:text-right">
+            © 2026 Printo Technologies. All rights reserved.
           </p>
         </div>
       </footer>
