@@ -451,7 +451,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </div>
               <button
                 onClick={onOpenRegister}
-                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all cursor-pointer"
+                className="w-full py-3 rounded-xl border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-xs transition-all cursor-pointer"
               >
                 Get Annual Pass (₹499/yr)
               </button>
