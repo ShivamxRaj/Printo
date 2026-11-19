@@ -195,8 +195,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             
             {/* Feature 1 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center shrink-0">
                 <CreditCard className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Direct Personal UPI</h3>
@@ -206,8 +206,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 2 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
                 <FileText className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Smart Aadhaar Auto-Merge</h3>
@@ -217,8 +217,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 3 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
                 <Printer className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Works with ANY Printer</h3>
@@ -228,8 +228,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 4 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Zero-Storage Privacy Purge</h3>
@@ -239,8 +239,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 5 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
                 <QrCode className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Free Printable Counter Poster</h3>
@@ -250,8 +250,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
             </div>
 
             {/* Feature 6 */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center">
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all space-y-4 text-left flex flex-col items-start">
+              <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center shrink-0">
                 <Clock className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Paper Jam 4-Digit PIN Reprint</h3>
@@ -463,7 +463,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
       {/* 5. FREQUENTLY ASKED QUESTIONS (FAQ) */}
       <section id="faq" className="py-16 sm:py-24 bg-slate-50 border-t border-slate-100">
-        <div className="max-w-4xl mx-auto px-6 sm:px-10">
+        <div className="max-w-3xl mx-auto px-6 sm:px-10">
           
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
             <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase">Got Questions?</span>
