@@ -411,11 +411,11 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </span>
               <div className="space-y-4">
                 <h3 className="font-bold text-white text-lg">Monthly Pro</h3>
-                <p className="text-xs text-amber-100">Busy cyber cafes &amp; college xerox shops</p>
+                <p className="text-xs text-white/90">Busy cyber cafes &amp; college xerox shops</p>
                 <div className="text-4xl font-extrabold text-white">
-                  ₹49 <span className="text-xs font-normal text-amber-200">/ month</span>
+                  ₹49 <span className="text-xs font-normal text-white">/ month</span>
                 </div>
-                <ul className="space-y-3 text-xs text-amber-50 pt-2 border-t border-amber-600/50">
+                <ul className="space-y-3 text-xs text-white pt-2 border-t border-amber-600/50">
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-white" /> Unlimited Automated Prints</li>
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-white" /> Smart Aadhaar &amp; ID Auto-Merge</li>
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-white" /> 0% Platform Commission</li>
