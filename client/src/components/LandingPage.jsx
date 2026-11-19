@@ -254,7 +254,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center shrink-0">
                 <Clock className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Paper Jam 4-Digit PIN Reprint</h3>
+              <h3 className="text-lg font-bold text-slate-900">Easy Reprints for Paper Jams</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 If paper jams or ink runs out, customers never pay twice. Re-trigger the exact print job with 1 click using their unique 4-digit order PIN.
               </p>
@@ -446,14 +446,14 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#b84b00]" /> Everything in Monthly Pro</li>
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#b84b00]" /> ₹89 Annual Discount (vs ₹49/mo)</li>
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#b84b00]" /> Multi-Printer Dispatch (B&amp;W + Color)</li>
-                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#b84b00]" /> Free Acrylic Standee Poster File</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#b84b00]" /> Acrylic Standee Design File</li>
                 </ul>
               </div>
               <button
                 onClick={onOpenRegister}
                 className="w-full py-3 rounded-xl border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-xs transition-all cursor-pointer"
               >
-                Get Annual Pass (₹499/yr)
+                Start Yearly Pro (₹499/yr)
               </button>
             </div>
 
