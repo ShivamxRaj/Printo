@@ -5,7 +5,6 @@ import ShopkeeperDashboard from './components/ShopkeeperDashboard';
 import StandeePoster from './components/StandeePoster';
 import RegisterShopModal from './components/RegisterShopModal';
 import NotFoundPage from './components/NotFoundPage';
-import LegalPolicies from './components/LegalPolicies';
 import { API_BASE } from './config';
 
 export default function App() {
@@ -90,18 +89,6 @@ export default function App() {
       } else {
         setCurrentRoute('404');
       }
-    } else if (path.startsWith('/privacy')) {
-      setCurrentRoute('privacy');
-      document.title = 'Privacy Policy | Printo';
-    } else if (path.startsWith('/terms')) {
-      setCurrentRoute('terms');
-      document.title = 'Terms & Conditions | Printo';
-    } else if (path.startsWith('/refund')) {
-      setCurrentRoute('refund');
-      document.title = 'Refund & Cancellation Policy | Printo';
-    } else if (path.startsWith('/contact')) {
-      setCurrentRoute('contact');
-      document.title = 'Contact Us | Printo';
     } else {
       setCurrentRoute('404');
     }
@@ -147,12 +134,6 @@ export default function App() {
           />
         )}
         {currentRoute === 'standee' && <StandeePoster key={selectedShopId} shopId={selectedShopId} />}
-        {(currentRoute === 'privacy' || currentRoute === 'terms' || currentRoute === 'refund' || currentRoute === 'contact') && (
-          <LegalPolicies
-            policyType={currentRoute}
-            onBack={() => navigateTo('landing')}
-          />
-        )}
         {currentRoute === '404' && (
           <NotFoundPage
             onGoHome={() => navigateTo('landing')}
