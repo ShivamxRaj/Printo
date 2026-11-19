@@ -113,7 +113,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
               {/* Sub-headline: Single efficient line */}
               <p className="text-sm sm:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                Customers scan your counter QR, pay directly via UPI, and your printer spits out their pages automatically — zero queues, zero manual file transfers.
+                Customers scan your counter QR, pay directly via UPI, and your printer spits out their pages automatically, with zero queues and zero manual file transfers.
               </p>
 
               {/* Action Button with Karlson Paper Plane */}
@@ -223,7 +223,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               </div>
               <h3 className="text-lg font-bold text-slate-900">Works with ANY Printer</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Whether it is a 10-year-old HP LaserJet 1020, Canon LBP2900, or a modern Epson EcoTank — if it prints on Windows, it works 100% silently with Printo.
+                Whether it is a 10-year-old HP LaserJet 1020, Canon LBP2900, or a modern Epson EcoTank. If it prints on Windows, it works 100% silently with Printo.
               </p>
             </div>
 
@@ -232,7 +232,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
               <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Zero-Storage Privacy Purge</h3>
+              <h3 className="text-lg font-bold text-slate-900">Zero-Storage Privacy Protection</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Customer files are permanently deleted 30 seconds after printing. Complete privacy guaranteed, and zero risk of computer viruses from unknown USBs.
               </p>
@@ -427,7 +427,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 onClick={onOpenRegister}
                 className="w-full py-3 rounded-xl bg-white hover:bg-amber-50 text-[#b84b00] font-extrabold text-xs shadow-md transition-all cursor-pointer"
               >
-                Get Started Pro (₹49/mo)
+                Start Monthly Pro (₹49/mo)
               </button>
             </div>
 
