@@ -463,7 +463,7 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
 
       {/* 5. FREQUENTLY ASKED QUESTIONS (FAQ) */}
       <section id="faq" className="py-16 sm:py-24 bg-slate-50 border-t border-slate-100">
-        <div className="max-w-3xl mx-auto px-6 sm:px-10">
+        <div className="max-w-2xl mx-auto px-6 sm:px-8">
           
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
             <span className="text-xs font-bold text-[#b84b00] tracking-wider uppercase">Got Questions?</span>
