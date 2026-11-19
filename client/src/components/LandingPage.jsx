@@ -121,9 +121,9 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
                 <div className="flex items-center justify-center lg:justify-start relative z-10">
                   <button
                     onClick={onOpenRegister}
-                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs sm:text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center uppercase tracking-wider"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-sm shadow-xl shadow-[#b84b00]/25 transition-all cursor-pointer flex items-center justify-center"
                   >
-                    Get Started Free
+                    Get started free
                   </button>
                 </div>
 
