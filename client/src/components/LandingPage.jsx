@@ -3,7 +3,7 @@ import {
   Printer, Smartphone, QrCode, ArrowRight, CheckCircle2, 
   ShieldCheck, IndianRupee, Zap, Clock, Users, Sparkles, 
   Download, ChevronRight, ChevronDown, FileText, CreditCard,
-  Check, HelpCircle, Star, ArrowUpRight, Layers, Menu, X, UploadCloud
+  Check, HelpCircle, Star, ArrowUpRight, Layers, Menu, X, UploadCloud, Mail
 } from 'lucide-react';
 
 export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDemo, onOpenAccess }) {
@@ -526,9 +526,17 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
           <div className="flex items-center">
             <img src="/printo-logo-transparent.png" alt="Printo" className="h-8 w-auto object-contain" />
           </div>
-          <p className="text-xs text-slate-500 sm:text-right">
-            © 2026 Printo Technologies. Made for Indian Cyber Cafes &amp; Xerox Hubs.
-          </p>
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2 sm:gap-4 text-xs text-slate-500">
+            <span>© 2026 Printo Technologies</span>
+            <span className="text-slate-300">•</span>
+            <a 
+              href="mailto:support@getprinto.in" 
+              className="inline-flex items-center gap-1.5 text-[#b84b00] hover:text-[#9f4000] font-semibold transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>support@getprinto.in</span>
+            </a>
+          </div>
         </div>
       </footer>
 
