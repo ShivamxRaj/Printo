@@ -489,37 +489,24 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                 <p className="text-xs text-slate-500 mt-1">Walk-in customers will appear here the moment they scan your QR code.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-100 text-slate-500 font-semibold">
-                      <th className="pb-2.5">PIN / Order</th>
-                      <th className="pb-2.5">Document</th>
-                      <th className="pb-2.5">Details</th>
-                      <th className="pb-2.5">Amount</th>
-                      <th className="pb-2.5">Payment</th>
-                      <th className="pb-2.5">Printer Status</th>
-                      <th className="pb-2.5 text-right">Reprint</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {orders.map((o) => (
-                      <tr key={o.id} className="hover:bg-slate-50/60">
-                        <td className="py-3 font-mono font-bold text-[#b84b00]">
-                          #{o.orderCode}
-                        </td>
-                        <td className="py-3">
-                          <p className="font-semibold text-slate-800 max-w-[140px] truncate">{o.fileName}</p>
-                          <span className="text-[10px] text-slate-400 uppercase">{o.docType === 'id_card' ? 'Smart ID Card' : 'Standard Doc'}</span>
-                        </td>
-                        <td className="py-3 text-slate-600">
-                          <span>{o.totalPages}p × {o.copies}c</span>
-                          <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} • {o.sides}</span>
-                        </td>
-                        <td className="py-3 font-bold text-slate-900">
-                          ₹{o.totalAmount}
-                        </td>
-                        <td className="py-3">
+              <>
+                {/* MOBILE VIEW: Clean, organized order cards */}
+                <div className="md:hidden space-y-3">
+                  {orders.map((o) => (
+                    <div key={o.id} className="p-3.5 bg-slate-50/80 hover:bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                      {/* Top Header: PIN, Badge, Amount & Payment */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-xs bg-amber-100/80 text-[#b84b00] px-2.5 py-0.5 rounded-md border border-amber-200">
+                            #{o.orderCode}
+                          </span>
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 bg-slate-200/70 px-2 py-0.5 rounded-md">
+                            {o.docType === 'id_card' ? 'Smart ID' : 'Doc'}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-black text-slate-900">₹{o.totalAmount}</span>
                           {o.paymentStatus === 'paid' ? (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                               ✓ PAID
@@ -527,54 +514,157 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                           ) : (
                             <button
                               onClick={() => handleMarkPaid(o.id)}
-                              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 hover:bg-emerald-600 text-amber-900 hover:text-white border border-amber-300 hover:border-emerald-600 transition-all cursor-pointer"
-                              title="Click to mark as Paid (Cash / Direct UPI received)"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 hover:bg-emerald-600 text-amber-900 hover:text-white border border-amber-300 transition-all cursor-pointer"
+                              title="Click to mark as Paid"
                             >
                               <span>PENDING</span>
-                              <span className="text-[9px] underline">Mark Paid</span>
+                              <span className="text-[9px] underline font-normal">Mark Paid</span>
                             </button>
                           )}
-                        </td>
-                        <td className="py-3">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            o.printStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' :
-                            o.printStatus === 'printing' ? 'bg-amber-100 text-[#b84b00] animate-pulse' :
-                            o.printStatus === 'sent_to_printer' ? 'bg-amber-50 text-amber-700' :
-                            'bg-slate-100 text-slate-600'
-                          }`}>
-                            {o.printStatus}
-                          </span>
-                        </td>
-                        <td className="py-3 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            {o.fileUrl && (
-                              <a
-                                href={o.fileUrl.startsWith('http') ? o.fileUrl : `${API_BASE}${o.fileUrl}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-[#b84b00] font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1"
-                                title="Open document in browser to view or print manually"
-                              >
-                                <Printer className="w-3 h-3" />
-                                <span>Print</span>
-                              </a>
-                            )}
-                            <button
-                              onClick={() => {
-                                setReprintModalOrder(o);
-                                setReprintCode(o.orderCode);
-                              }}
-                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-all text-[11px] cursor-pointer"
+                        </div>
+                      </div>
+
+                      {/* Middle: File Name & Spec Details */}
+                      <div className="text-xs">
+                        <p className="font-semibold text-slate-800 truncate" title={o.fileName}>
+                          {o.fileName}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
+                          <span className="font-medium text-slate-700">{o.totalPages}p × {o.copies}c</span>
+                          <span>•</span>
+                          <span className="capitalize">{o.colorMode === 'color' ? 'Color' : 'B&W'}</span>
+                          <span>•</span>
+                          <span className="capitalize">{o.sides}</span>
+                        </div>
+                      </div>
+
+                      {/* Footer: Printer Status & Actions */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/70 text-xs">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          o.printStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' :
+                          o.printStatus === 'printing' ? 'bg-amber-100 text-[#b84b00] animate-pulse' :
+                          o.printStatus === 'sent_to_printer' ? 'bg-amber-50 text-amber-700' :
+                          'bg-slate-200/70 text-slate-600'
+                        }`}>
+                          {o.printStatus}
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          {o.fileUrl && (
+                            <a
+                              href={o.fileUrl.startsWith('http') ? o.fileUrl : `${API_BASE}${o.fileUrl}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-[#b84b00] font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1 border border-amber-200/60"
+                              title="Open document in browser to view or print manually"
                             >
-                              Reprint
-                            </button>
-                          </div>
-                        </td>
+                              <Printer className="w-3 h-3" />
+                              <span>Print</span>
+                            </a>
+                          )}
+                          <button
+                            onClick={() => {
+                              setReprintModalOrder(o);
+                              setReprintCode(o.orderCode);
+                            }}
+                            className="px-2.5 py-1 bg-slate-200/80 hover:bg-slate-300 text-slate-700 font-bold rounded-lg transition-all text-[11px] cursor-pointer"
+                          >
+                            Reprint
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* DESKTOP VIEW: Full Structured Table */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-xs min-w-[650px]">
+                    <thead>
+                      <tr className="border-b border-slate-100 text-slate-500 font-semibold">
+                        <th className="pb-2.5">PIN / Order</th>
+                        <th className="pb-2.5">Document</th>
+                        <th className="pb-2.5">Details</th>
+                        <th className="pb-2.5">Amount</th>
+                        <th className="pb-2.5">Payment</th>
+                        <th className="pb-2.5">Printer Status</th>
+                        <th className="pb-2.5 text-right">Reprint</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {orders.map((o) => (
+                        <tr key={o.id} className="hover:bg-slate-50/60">
+                          <td className="py-3 font-mono font-bold text-[#b84b00]">
+                            #{o.orderCode}
+                          </td>
+                          <td className="py-3">
+                            <p className="font-semibold text-slate-800 max-w-[140px] truncate">{o.fileName}</p>
+                            <span className="text-[10px] text-slate-400 uppercase">{o.docType === 'id_card' ? 'Smart ID Card' : 'Standard Doc'}</span>
+                          </td>
+                          <td className="py-3 text-slate-600">
+                            <span>{o.totalPages}p × {o.copies}c</span>
+                            <span className="text-[10px] text-slate-400 block">{o.colorMode === 'color' ? 'Color' : 'B&W'} • {o.sides}</span>
+                          </td>
+                          <td className="py-3 font-bold text-slate-900">
+                            ₹{o.totalAmount}
+                          </td>
+                          <td className="py-3">
+                            {o.paymentStatus === 'paid' ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                ✓ PAID
+                              </span>
+                            ) : (
+                              <button
+                                onClick={() => handleMarkPaid(o.id)}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 hover:bg-emerald-600 text-amber-900 hover:text-white border border-amber-300 hover:border-emerald-600 transition-all cursor-pointer"
+                                title="Click to mark as Paid (Cash / Direct UPI received)"
+                              >
+                                <span>PENDING</span>
+                                <span className="text-[9px] underline">Mark Paid</span>
+                              </button>
+                            )}
+                          </td>
+                          <td className="py-3">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              o.printStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' :
+                              o.printStatus === 'printing' ? 'bg-amber-100 text-[#b84b00] animate-pulse' :
+                              o.printStatus === 'sent_to_printer' ? 'bg-amber-50 text-amber-700' :
+                              'bg-slate-100 text-slate-600'
+                            }`}>
+                              {o.printStatus}
+                            </span>
+                          </td>
+                          <td className="py-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {o.fileUrl && (
+                                <a
+                                  href={o.fileUrl.startsWith('http') ? o.fileUrl : `${API_BASE}${o.fileUrl}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-[#b84b00] font-bold rounded-lg transition-all text-[11px] inline-flex items-center gap-1"
+                                  title="Open document in browser to view or print manually"
+                                >
+                                  <Printer className="w-3 h-3" />
+                                  <span>Print</span>
+                                </a>
+                              )}
+                              <button
+                                onClick={() => {
+                                  setReprintModalOrder(o);
+                                  setReprintCode(o.orderCode);
+                                }}
+                                className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-all text-[11px] cursor-pointer"
+                              >
+                                Reprint
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>
