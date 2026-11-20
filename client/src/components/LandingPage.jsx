@@ -521,22 +521,18 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
       </section>
 
       {/* 7. FOOTER */}
-      <footer className="py-10 bg-white border-t border-slate-100 text-xs text-slate-500">
+      <footer className="py-8 bg-white border-t border-slate-100 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center">
             <img src="/printo-logo-transparent.png" alt="Printo" className="h-8 w-auto object-contain" />
           </div>
-          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2 sm:gap-4 text-xs text-slate-500">
-            <span>© 2026 Printo Technologies</span>
-            <span className="text-slate-300">•</span>
-            <a 
-              href="mailto:support@getprinto.in" 
-              className="inline-flex items-center gap-1.5 text-[#b84b00] hover:text-[#9f4000] font-semibold transition-colors"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>support@getprinto.in</span>
-            </a>
-          </div>
+          <a 
+            href="mailto:support@getprinto.in" 
+            className="inline-flex items-center gap-1.5 text-[#b84b00] hover:text-[#9f4000] font-semibold transition-colors text-xs"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>support@getprinto.in</span>
+          </a>
         </div>
       </footer>
 
