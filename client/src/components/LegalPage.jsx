@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Mail, ShieldCheck, FileText, RefreshCw, MapPin, Clock } from 'lucide-react';
+import { Mail, ShieldCheck, FileText, RefreshCw, MapPin, Clock } from 'lucide-react';
 
 export default function LegalPage({ type = 'terms', onBack }) {
   const configs = {
@@ -101,9 +101,8 @@ export default function LegalPage({ type = 'terms', onBack }) {
           </a>
           <button
             onClick={() => onBack ? onBack() : (window.location.href = '/')}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#b84b00] transition-colors cursor-pointer"
+            className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-[#b84b00] transition-colors cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" />
             <span>Back to Home</span>
           </button>
         </div>
@@ -150,3 +149,4 @@ export default function LegalPage({ type = 'terms', onBack }) {
     </div>
   );
 }
+
