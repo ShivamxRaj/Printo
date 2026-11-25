@@ -430,7 +430,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                     href={`mailto:support@getprinto.in?subject=Request%20to%20update%20Shop%20UPI%20ID%20(${effectiveShopId})&body=Hi%20Printo%20Support,%0A%0APlease%20update%20the%20UPI%20ID%20for%20my%20shop:%0AShop%20ID:%20${effectiveShopId}%0ACurrent%20UPI:%20${upiId}%0ANew%20UPI%20ID:%20%0A%0AThank%20you.`}
                     className="text-[10px] text-[#b84b00] hover:underline font-bold"
                   >
-                    Need change? Email Support
+                    Need Support
                   </a>
                 </div>
                 <div className="relative">
