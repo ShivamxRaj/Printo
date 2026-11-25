@@ -5,6 +5,7 @@ import ShopkeeperDashboard from './components/ShopkeeperDashboard';
 import StandeePoster from './components/StandeePoster';
 import RegisterShopModal from './components/RegisterShopModal';
 import NotFoundPage from './components/NotFoundPage';
+import LegalPage from './components/LegalPage';
 import { API_BASE } from './config';
 
 export default function App() {
@@ -49,6 +50,15 @@ export default function App() {
     } else if (route === 'standee') {
       targetPath = `/standee/${shopId}`;
       document.title = `Counter Standee Poster | Printo`;
+    } else if (['terms', 'privacy', 'refund', 'contact'].includes(route)) {
+      targetPath = `/${route}`;
+      const titles = {
+        terms: 'Terms & Conditions | Printo',
+        privacy: 'Privacy Policy | Printo',
+        refund: 'Refund & Cancellation Policy | Printo',
+        contact: 'Contact Us | Printo'
+      };
+      document.title = titles[route];
     } else if (route === '404') {
       document.title = 'Page Not Found | Printo';
     }
@@ -89,6 +99,16 @@ export default function App() {
       } else {
         setCurrentRoute('404');
       }
+    } else if (path === '/terms' || path === '/privacy' || path === '/refund' || path === '/contact') {
+      const legalKey = path.slice(1);
+      setCurrentRoute(legalKey);
+      const titles = {
+        terms: 'Terms & Conditions | Printo',
+        privacy: 'Privacy Policy | Printo',
+        refund: 'Refund & Cancellation Policy | Printo',
+        contact: 'Contact Us | Printo'
+      };
+      document.title = titles[legalKey];
     } else {
       setCurrentRoute('404');
     }
@@ -134,6 +154,9 @@ export default function App() {
           />
         )}
         {currentRoute === 'standee' && <StandeePoster key={selectedShopId} shopId={selectedShopId} />}
+        {['terms', 'privacy', 'refund', 'contact'].includes(currentRoute) && (
+          <LegalPage type={currentRoute} onBack={() => navigateTo('landing')} />
+        )}
         {currentRoute === '404' && (
           <NotFoundPage
             onGoHome={() => navigateTo('landing')}
