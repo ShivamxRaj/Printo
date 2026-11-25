@@ -3,7 +3,7 @@ import {
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 
   ExternalLink, Shield, Power, Play, Download, PlusCircle, Store,
-  Lock, Unlock, KeyRound, Eye, EyeOff
+  Lock
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
@@ -20,14 +20,6 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
   const [isSavingRates, setIsSavingRates] = useState(false);
   const [reprintModalOrder, setReprintModalOrder] = useState(null);
   const [reprintCode, setReprintCode] = useState('');
-
-  // Authentication & Security State
-  const [token, setToken] = useState(() => sessionStorage.getItem(`printo_token_${effectiveShopId}`) || '');
-  const [isUnlocked, setIsUnlocked] = useState(() => !!sessionStorage.getItem(`printo_token_${effectiveShopId}`));
-  const [ownerPinInput, setOwnerPinInput] = useState('');
-  const [pinError, setPinError] = useState('');
-  const [isVerifyingPin, setIsVerifyingPin] = useState(false);
-  const [showPin, setShowPin] = useState(false);
   const [claimedAlertOrder, setClaimedAlertOrder] = useState(null);
 
   // Editable Rates State
@@ -73,12 +65,17 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     };
   }, [effectiveShopId]);
 
-  // Load Initial Data
+  // Load Initial Data directly (0-friction, no PIN)
   const fetchData = async () => {
     setLoading(true);
     try {
-      const shopRes = await fetch(`${API_BASE}/api/shops/${effectiveShopId}`);
+      const [shopRes, ordersRes] = await Promise.all([
+        fetch(`${API_BASE}/api/shops/${effectiveShopId}`),
+        fetch(`${API_BASE}/api/shops/${effectiveShopId}/orders`)
+      ]);
+
       const shopData = await shopRes.json();
+      const ordersData = await ordersRes.json();
 
       setShop(shopData);
       setShopName(shopData.name || '');
@@ -87,13 +84,8 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       if (shopData.rates) setRates(shopData.rates);
       setAgentStatus(shopData.status || 'offline');
       if (shopData.activePrinter) setActivePrinter(shopData.activePrinter);
-
-      // Attempt to load orders with saved token if available
-      const savedToken = sessionStorage.getItem(`printo_token_${effectiveShopId}`);
-      if (savedToken) {
-        await fetchOrders(savedToken);
-      } else {
-        setIsUnlocked(false);
+      if (Array.isArray(ordersData)) {
+        setOrders(ordersData);
       }
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
@@ -102,77 +94,11 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     }
   };
 
-  const fetchOrders = async (authToken) => {
-    try {
-      const ordersRes = await fetch(`${API_BASE}/api/shops/${effectiveShopId}/orders`, {
-        headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
-      });
-
-      if (ordersRes.status === 401 || ordersRes.status === 403) {
-        setIsUnlocked(false);
-        setToken('');
-        sessionStorage.removeItem(`printo_token_${effectiveShopId}`);
-        setOrders([]);
-        return;
-      }
-
-      const ordersData = await ordersRes.json();
-      if (Array.isArray(ordersData)) {
-        setOrders(ordersData);
-        setIsUnlocked(true);
-      }
-    } catch (err) {
-      console.error('Error fetching orders:', err);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, [effectiveShopId]);
 
-  // Handle PIN Unlock
-  const handleUnlockDashboard = async (e) => {
-    e.preventDefault();
-    if (!ownerPinInput.trim()) {
-      setPinError('Please enter your 4-digit Owner PIN');
-      return;
-    }
-
-    setPinError('');
-    setIsVerifyingPin(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/shops/${effectiveShopId}/verify-pin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pin: ownerPinInput.trim() })
-      });
-
-      const data = await res.json();
-      if (res.ok && data.token) {
-        sessionStorage.setItem(`printo_token_${effectiveShopId}`, data.token);
-        setToken(data.token);
-        setIsUnlocked(true);
-        setOwnerPinInput('');
-        await fetchOrders(data.token);
-      } else {
-        setPinError(data.error || 'Incorrect Owner PIN. Please try again.');
-      }
-    } catch (err) {
-      setPinError('Network error verifying PIN. Please check your connection.');
-    } finally {
-      setIsVerifyingPin(false);
-    }
-  };
-
-  // Handle Lock / Logout
-  const handleLockDashboard = () => {
-    sessionStorage.removeItem(`printo_token_${effectiveShopId}`);
-    setToken('');
-    setIsUnlocked(false);
-    setOrders([]);
-  };
-
-  // Save Settings / Rates (Authenticated with Bearer Token)
+  // Save Settings / Rates (UPI is frozen and protected)
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSavingRates(true);
@@ -180,14 +106,10 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     try {
       const res = await fetch(`${API_BASE}/api/shops`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: effectiveShopId,
           name: shopName,
-          upiId,
           rates: {
             bwSingle: parseFloat(rates.bwSingle) || 2,
             bwDouble: parseFloat(rates.bwDouble) || 3,
@@ -201,10 +123,10 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       });
 
       if (res.ok) {
-        alert('✓ Shop settings and rates saved securely!');
+        alert('✓ Shop settings and printing rates updated successfully!');
       } else {
         const data = await res.json();
-        alert(data.error || 'Failed to save settings. Please verify Owner PIN.');
+        alert(data.error || 'Failed to save settings.');
       }
     } catch (err) {
       alert('Network error saving settings');
@@ -338,17 +260,6 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
               <span>Print Standee</span>
             </a>
 
-            {isUnlocked && (
-              <button
-                onClick={handleLockDashboard}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
-                title="Lock Dashboard Session"
-              >
-                <Lock className="w-3.5 h-3.5 text-rose-400" />
-                <span>Lock</span>
-              </button>
-            )}
-
             {onOpenRegisterModal && (
               <button
                 onClick={onOpenRegisterModal}
@@ -365,95 +276,31 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       {/* Main Content Area */}
       <main className="max-w-6xl mx-auto p-4 space-y-6">
 
-        {!isUnlocked ? (
-          <div className="bg-white rounded-3xl p-8 max-w-md mx-auto border border-slate-200 shadow-xl text-center space-y-5 my-12 animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center mx-auto shadow-inner">
-              <Lock className="w-8 h-8" />
-            </div>
-            <div className="space-y-1.5">
-              <h2 className="text-xl font-black text-slate-900">Owner Dashboard Locked</h2>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                This dashboard contains customer documents, orders, and UPI payment settings. Enter your 4-digit Owner PIN to unlock.
-              </p>
-            </div>
-
-            <form onSubmit={handleUnlockDashboard} className="space-y-4 pt-2">
-              <div className="relative max-w-[200px] mx-auto">
-                <input
-                  type={showPin ? 'text' : 'password'}
-                  maxLength={10}
-                  autoFocus
-                  placeholder="••••"
-                  value={ownerPinInput}
-                  onChange={(e) => setOwnerPinInput(e.target.value)}
-                  className="w-full text-center text-2xl font-mono font-black tracking-widest py-3 px-4 rounded-xl border-2 border-slate-200 focus:border-[#b84b00] focus:ring-2 focus:ring-amber-200 outline-none transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                >
-                  {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+        {/* Live Customer Claim Notification Toast */}
+        {claimedAlertOrder && (
+          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5 text-white" />
               </div>
-
-              {pinError && (
-                <div className="flex items-center justify-center gap-1.5 text-xs text-rose-600 font-semibold bg-rose-50 py-2 px-3 rounded-lg border border-rose-200">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{pinError}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isVerifyingPin}
-                className="w-full py-3 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {isVerifyingPin ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Verifying PIN...</span>
-                  </>
-                ) : (
-                  <>
-                    <KeyRound className="w-4 h-4" />
-                    <span>Unlock Dashboard</span>
-                  </>
-                )}
-              </button>
-
-              <p className="text-[11px] text-slate-500">
-                Default PIN is <span className="font-mono font-bold text-slate-700">4652</span> (or the last 4 digits of your registered phone number).
-              </p>
-            </form>
+              <div>
+                <h4 className="font-bold text-xs">Customer Reported UPI Payment!</h4>
+                <p className="text-[11px] opacity-90">
+                  Order #{claimedAlertOrder.orderCode} (₹{claimedAlertOrder.totalAmount}) is waiting for verification.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleMarkPaid(claimedAlertOrder.id)}
+              className="bg-white text-slate-900 px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:bg-slate-100 cursor-pointer"
+            >
+              Verify & Release Print
+            </button>
           </div>
-        ) : (
-          <>
-            {/* Live Customer Claim Notification Toast */}
-            {claimedAlertOrder && (
-              <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <AlertTriangle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-xs">Customer Reported UPI Payment!</h4>
-                    <p className="text-[11px] opacity-90">
-                      Order #{claimedAlertOrder.orderCode} (₹{claimedAlertOrder.totalAmount}) is waiting for verification.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleMarkPaid(claimedAlertOrder.id)}
-                  className="bg-white text-slate-900 px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:bg-slate-100 cursor-pointer"
-                >
-                  Verify & Release Print
-                </button>
-              </div>
-            )}
+        )}
 
-            {/* Connection Status Banner */}
-            {agentStatus === 'offline' ? (
+        {/* Connection Status Banner */}
+        {agentStatus === 'offline' ? (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
@@ -574,16 +421,35 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-600 block mb-1">Your Shop / Business UPI ID (VPA)</label>
-                <input
-                  type="text"
-                  value={upiId}
-                  onChange={(e) => setUpiId(e.target.value)}
-                  placeholder="e.g. q12345678@ybl (PhonePe Business) or paytmqr...@paytm"
-                  className="w-full text-xs font-mono font-medium px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
-                  required
-                />
-                <p className="text-[10px] text-slate-500 mt-0.5">Use your PhonePe Business / Paytm QR UPI ID for zero bank restrictions.</p>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Settlement UPI ID (Frozen)</span>
+                  </label>
+                  <a
+                    href="https://wa.me/916299446452?text=Hi%20Printo,%20I%20want%20to%20update%20my%20shop%20UPI%20ID"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-[#b84b00] hover:underline font-bold"
+                  >
+                    Need change? WhatsApp Support
+                  </a>
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={upiId}
+                    readOnly
+                    disabled
+                    className="w-full text-xs font-mono font-bold px-3 py-2 bg-slate-100 text-slate-700 border border-slate-200 rounded-lg cursor-not-allowed select-all"
+                  />
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                    ✓ Verified Bank VPA
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Customer payments go directly to this bank account. Locked to protect against unauthorized changes.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1">
@@ -877,8 +743,6 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             )}
           </div>
         </div>
-        </>
-      )}
 
       </main>
 

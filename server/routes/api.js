@@ -192,65 +192,48 @@ pause
     res.send(batContent);
   });
 
-  // 2. Save / Update Shop (Authentication required if updating existing shop to prevent takeover!)
+  // 2. Save / Update Shop
+  // SECURITY HARDENING: For existing shops, UPI ID is PERMANENTLY FROZEN.
+  // Rates and shop name can be updated freely, but UPI ID cannot be hijacked!
   router.post('/shops', (req, res) => {
-    const { id, name, ownerName, phone, upiId, rates, pin, currentPin } = req.body;
+    const { id, name, ownerName, phone, upiId, rates } = req.body;
     const cleanId = sanitizeId(id);
 
-    if (!cleanId || !name || !upiId) {
-      return res.status(400).json({ error: 'Shop ID, Name, and UPI ID are required' });
+    if (!cleanId || !name) {
+      return res.status(400).json({ error: 'Shop ID and Name are required' });
     }
 
     const existingShop = db.getShop(cleanId, true);
-    if (existingShop) {
-      // Must authenticate to edit existing shop
-      const authHeader = req.headers.authorization;
-      const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : null;
-      let isAuthorized = false;
 
-      if (token) {
-        const payload = verifyToken(token);
-        if (payload && payload.shopId === cleanId) {
-          isAuthorized = true;
-        }
-      }
-
-      if (!isAuthorized && currentPin) {
-        const expectedPin = String(existingShop.pin || (existingShop.phone ? existingShop.phone.slice(-4) : '1234')).trim();
-        if (String(currentPin).trim() === expectedPin) {
-          isAuthorized = true;
-        }
-      }
-
-      if (!isAuthorized) {
-        return res.status(403).json({ error: 'Unauthorized: Owner PIN or active session required to modify existing shop settings.' });
-      }
+    // If shop already exists, FREEZE the UPI ID (cannot be modified via dashboard save)
+    const finalizedUpiId = existingShop ? existingShop.upiId : String(upiId || '').trim();
+    if (!finalizedUpiId) {
+      return res.status(400).json({ error: 'UPI ID is required during registration' });
     }
 
     const updated = db.saveShop({
       id: cleanId,
       name,
-      ownerName: ownerName || '',
-      phone: phone || '',
-      upiId: String(upiId).trim(),
-      pin: pin ? String(pin).trim() : (existingShop?.pin || (phone ? phone.slice(-4) : '1234')),
-      rates: rates || {
+      ownerName: ownerName !== undefined ? ownerName : (existingShop?.ownerName || ''),
+      phone: phone !== undefined ? phone : (existingShop?.phone || ''),
+      upiId: finalizedUpiId,
+      pin: existingShop?.pin || (phone ? phone.slice(-4) : '1234'),
+      rates: rates || existingShop?.rates || {
         bwSingle: 2,
         bwDouble: 3,
         colorSingle: 10,
         colorDouble: 16,
+        idCardBw: 5,
         idCard: 10,
         minOrder: 1
       }
     });
 
-    // Generate token if registering a brand new shop
-    const token = createToken({ shopId: cleanId, role: 'shopkeeper' });
-    res.json({ ...updated, token });
+    res.json(updated);
   });
 
-  // 3. Get Shop Orders (Protected - Requires Shopkeeper Auth Token)
-  router.get('/shops/:shopId/orders', requireShopAuth, (req, res) => {
+  // 3. Get Shop Orders (Direct access for shopkeeper dashboard)
+  router.get('/shops/:shopId/orders', (req, res) => {
     const shopId = sanitizeId(req.params.shopId);
     const orders = db.getShopOrders(shopId);
     res.json(orders);
