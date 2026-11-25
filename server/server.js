@@ -8,6 +8,7 @@ const db = require('./db');
 const { securityHeaders, sanitizeId, sanitizeText, getAgentAuthKey } = require('./security');
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 // Apply Security HTTP headers

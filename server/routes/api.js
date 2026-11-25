@@ -528,7 +528,9 @@ pause
     // Trigger Desktop Print Agent!
     const agentSocket = connectedAgents[order.shopId];
     if (agentSocket) {
-      const fullPdfUrl = `${req.protocol}://${req.get('host')}${order.fileUrl}`;
+      const host = req.get('host') || '';
+      const protocol = req.headers['x-forwarded-proto'] || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
+      const fullPdfUrl = `${protocol}://${host}${order.fileUrl}`;
       const printJob = {
         orderId: order.id,
         orderCode: order.orderCode,
@@ -573,7 +575,9 @@ pause
       return res.status(503).json({ error: 'Desktop Print Agent is offline on the shopkeeper PC' });
     }
 
-    const fullPdfUrl = `${req.protocol}://${req.get('host')}${order.fileUrl}`;
+    const host = req.get('host') || '';
+    const protocol = req.headers['x-forwarded-proto'] || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
+    const fullPdfUrl = `${protocol}://${host}${order.fileUrl}`;
     const printJob = {
       orderId: order.id,
       orderCode: order.orderCode,

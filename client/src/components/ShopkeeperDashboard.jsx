@@ -146,14 +146,18 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
         },
         body: JSON.stringify({ transactionId: 'MANUAL_' + Date.now() })
       });
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.order) {
+        setOrders(prev => prev.map(o => o.id === orderId ? data.order : o));
+        if (claimedAlertOrder?.id === orderId) {
+          setClaimedAlertOrder(null);
+        }
+      } else if (data.alreadyPaid && data.order) {
         setOrders(prev => prev.map(o => o.id === orderId ? data.order : o));
         if (claimedAlertOrder?.id === orderId) {
           setClaimedAlertOrder(null);
         }
       } else {
-        const data = await res.json();
         alert(data.error || 'Payment verification failed');
       }
     } catch (err) {

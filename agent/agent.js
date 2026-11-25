@@ -125,7 +125,16 @@ function downloadFile(url, destPath) {
     const client = parsed.protocol === 'https:' ? https : http;
 
     client.get(url, (response) => {
+      // Follow 301 / 302 redirects automatically (e.g. HTTP to HTTPS)
+      if ((response.statusCode === 301 || response.statusCode === 302) && response.headers.location) {
+        file.close();
+        fs.unlink(destPath, () => {});
+        return downloadFile(response.headers.location, destPath).then(resolve).catch(reject);
+      }
+
       if (response.statusCode !== 200) {
+        file.close();
+        fs.unlink(destPath, () => {});
         return reject(new Error(`Failed to download file, status code: ${response.statusCode}`));
       }
       response.pipe(file);
