@@ -588,6 +588,15 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                               ✓ PAID
                             </span>
+                          ) : o.paymentClaimed ? (
+                            <button
+                              onClick={() => handleMarkPaid(o.id)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all cursor-pointer animate-pulse"
+                              title="Customer claimed payment! Verify Soundbox & click to print"
+                            >
+                              <Printer className="w-3 h-3" />
+                              <span>Verify & Print</span>
+                            </button>
                           ) : (
                             <button
                               onClick={() => handleMarkPaid(o.id)}
@@ -690,6 +699,15 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                                 ✓ PAID
                               </span>
+                            ) : o.paymentClaimed ? (
+                              <button
+                                onClick={() => handleMarkPaid(o.id)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all cursor-pointer animate-pulse"
+                                title="Customer claimed payment! Verify Soundbox & click to print"
+                              >
+                                <Printer className="w-3.5 h-3.5" />
+                                <span>Verify & Print</span>
+                              </button>
                             ) : (
                               <button
                                 onClick={() => handleMarkPaid(o.id)}

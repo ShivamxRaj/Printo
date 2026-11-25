@@ -297,31 +297,20 @@ export default function CustomerView({ shopId = 'shivam' }) {
     }
   };
 
-  // Payment confirmation callback
+  // Payment claim callback (Reports payment to counter queue safely)
   const handleConfirmPayment = async () => {
     if (!currentOrder) return;
     try {
-      const res = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/verify-payment`, {
+      const claimRes = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/claim-payment`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactionId: 'UPI_' + Date.now() })
+        headers: { 'Content-Type': 'application/json' }
       });
-      const data = await res.json();
-      if (res.ok && data.order) {
-        setCurrentOrder(data.order);
-      } else {
-        // Fallback claim-payment to alert the shopkeeper dashboard in real-time
-        const claimRes = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/claim-payment`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        const claimData = await claimRes.json();
-        if (claimData.order) {
-          setCurrentOrder(claimData.order);
-        }
+      const claimData = await claimRes.json();
+      if (claimData.order) {
+        setCurrentOrder(claimData.order);
       }
     } catch (err) {
-      console.error('Payment verification failed:', err);
+      console.error('Payment claim failed:', err);
     }
   };
 
@@ -406,10 +395,18 @@ export default function CustomerView({ shopId = 'shivam' }) {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900 text-sm">
-                    {currentOrder.paymentStatus === 'paid' ? 'Payment Verified' : 'Awaiting Payment'}
+                    {currentOrder.paymentStatus === 'paid' 
+                      ? 'Payment Verified & Released' 
+                      : currentOrder.paymentClaimed 
+                      ? 'Payment Reported (Ready at Counter)' 
+                      : 'Awaiting Payment'}
                   </h4>
                   <p className="text-xs text-slate-500">
-                    {currentOrder.paymentStatus === 'paid' ? 'Received via UPI' : `Total to pay: ₹${currentOrder.totalAmount}`}
+                    {currentOrder.paymentStatus === 'paid' 
+                      ? 'Received via UPI' 
+                      : currentOrder.paymentClaimed 
+                      ? `Show PIN #${currentOrder.orderCode} at the counter` 
+                      : `Total to pay: ₹${currentOrder.totalAmount}`}
                   </p>
                 </div>
               </div>
@@ -529,19 +526,31 @@ export default function CustomerView({ shopId = 'shivam' }) {
                   />
                 </div>
 
-                {/* Direct Verification Button */}
-                <div className="pt-2">
-                  <button
-                    onClick={handleConfirmPayment}
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    I Have Paid ₹{currentOrder.totalAmount} (Auto-Verify & Print)
-                  </button>
-                  <p className="text-[10px] text-center text-slate-500 mt-1.5">
-                    Clicking confirms payment with the shopkeeper's account & triggers instant printing.
-                  </p>
-                </div>
+                {/* Direct Verification Button or Waiting Card */}
+                {currentOrder.paymentClaimed ? (
+                  <div className="bg-amber-50 border border-amber-200/90 rounded-xl p-3.5 text-center space-y-1.5 shadow-2xs">
+                    <span className="text-xs font-bold text-amber-900 block flex items-center justify-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                      Order Sent to Shop Counter Queue!
+                    </span>
+                    <p className="text-[11px] text-slate-600">
+                      Please tell Pickup PIN <strong className="text-[#b84b00] font-mono font-black text-xs">#{currentOrder.orderCode}</strong> to the shopkeeper. Your fresh prints will be released instantly!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="pt-2">
+                    <button
+                      onClick={handleConfirmPayment}
+                      className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      I Have Paid ₹{currentOrder.totalAmount} • Get Pickup PIN
+                    </button>
+                    <p className="text-[10px] text-center text-slate-500 mt-1.5">
+                      Sends your order to the counter queue. Show your PIN to collect your print.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

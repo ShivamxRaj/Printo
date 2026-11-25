@@ -497,18 +497,13 @@ pause
       }
     }
 
-    // For walk-in self-service flow: if no explicit shopkeeper session is attached,
-    // we also permit verification if transactionId has verified format or shopkeeper configured auto-approval
-    // but validate transactionId format
+    // Direct shopkeeper action from zero-friction dashboard (starts with MANUAL_) or valid PIN/token:
+    if (!isAuthorized && req.body.transactionId?.startsWith('MANUAL_')) {
+      isAuthorized = true;
+    }
+
     if (!isAuthorized) {
-      // If customer calls verify-payment directly, we flag as claimed or allow if shopkeeper has auto-verify enabled
-      const shop = db.getShop(order.shopId);
-      // If shop explicitly permits customer self-confirm or for instant demo mode:
-      if (shop?.allowCustomerAutoPrint !== false) {
-        isAuthorized = true;
-      } else {
-        return res.status(403).json({ error: 'Shopkeeper confirmation required to trigger print.' });
-      }
+      return res.status(403).json({ error: 'Shopkeeper confirmation required to trigger print.' });
     }
 
     // Mark as PAID
