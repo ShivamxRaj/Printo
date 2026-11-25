@@ -523,9 +523,8 @@ export default function LandingPage({ onOpenRegister, onGoToDashboard, onGoToDem
       {/* 7. FOOTER */}
       <footer className="py-8 bg-white border-t border-slate-100 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <img src="/printo-logo-transparent.png" alt="Printo" className="h-8 w-auto object-contain" />
-            <span className="text-slate-400">© {new Date().getFullYear()} Printo</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-5 font-medium text-slate-600">
             <a href="/terms" className="hover:text-[#b84b00] transition-colors">Terms & Conditions</a>
