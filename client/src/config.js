@@ -4,6 +4,6 @@
 
 const isDev = import.meta.env.DEV;
 
-export const API_BASE = import.meta.env.VITE_API_URL || '';
+export const API_BASE = import.meta.env.VITE_API_URL || (isDev ? '' : 'https://printo-production-7fad6f69.up.railway.app');
 export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || (isDev ? window.location.origin : 'https://printo-production-7fad6f69.up.railway.app');
 
