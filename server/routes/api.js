@@ -149,7 +149,23 @@ module.exports = function (io, connectedAgents) {
     return res.status(401).json({ error: 'Incorrect Owner PIN. Please try again.' });
   });
 
-  // 1b. Download 1-Click Agent Launcher for this specific shop (Secured with Agent Key)
+  // 1a. Serve standalone bundled agent script (zero external dependencies)
+  router.get('/agent/bundle', (req, res) => {
+    const bundlePath = path.join(__dirname, '..', 'agent-bundle.js');
+    if (fs.existsSync(bundlePath)) {
+      res.setHeader('Content-Type', 'application/javascript');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+      return res.sendFile(bundlePath);
+    }
+    const distPath = path.join(__dirname, '..', '..', 'agent', 'dist', 'index.js');
+    if (fs.existsSync(distPath)) {
+      res.setHeader('Content-Type', 'application/javascript');
+      return res.sendFile(distPath);
+    }
+    res.status(404).send('Agent bundle not found');
+  });
+
+  // 1b. Download 1-Click Smart Self-Bootstrapping Agent Launcher for this specific shop
   router.get('/shops/:shopId/download-launcher', (req, res) => {
     const shopId = sanitizeId(req.params.shopId);
     const shop = db.getShop(shopId, true);
@@ -161,31 +177,77 @@ module.exports = function (io, connectedAgents) {
 
     const batContent = `@echo off
 title Printo Desktop Print Agent - ${shop.name}
+color 0A
 echo ========================================================
 echo   Printo Desktop Auto-Print Agent
 echo   Shop: ${shop.name} (${shop.id})
 echo ========================================================
 echo.
+
 set SHOP_ID=${shop.id}
 set AGENT_KEY=${agentKey}
 set SERVER_URL=${serverUrl}
+
 cd /d "%~dp0"
-if exist "agent.js" (
-  node agent.js
-) else if exist "agent\\agent.js" (
-  cd agent
-  node agent.js
-) else if exist "..\\agent\\agent.js" (
-  cd ..\\agent
-  node agent.js
-) else if exist "D:\\printer\\agent\\agent.js" (
-  cd /d "D:\\printer\\agent"
-  node agent.js
+
+:: 1. Check or download standalone Printo Agent bundle
+if not exist "agent.bundle.js" (
+  if exist "agent.js" (
+    set AGENT_FILE=agent.js
+  ) else if exist "agent\\agent.js" (
+    set AGENT_FILE=agent\\agent.js
+  ) else if exist "..\\agent\\agent.js" (
+    set AGENT_FILE=..\\agent\\agent.js
+  ) else if exist "D:\\printer\\agent\\agent.js" (
+    set AGENT_FILE=D:\\printer\\agent\\agent.js
+  ) else (
+    echo [SETUP] First time launch detected.
+    echo [SETUP] Downloading Printo Agent bundle from server...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { (New-Object Net.WebClient).DownloadFile('%SERVER_URL%/api/agent/bundle', 'agent.bundle.js'); Write-Host '[OK] Printo Agent downloaded successfully.' -ForegroundColor Green } catch { Write-Host '[ERROR] Could not download agent from server.' -ForegroundColor Red; exit 1 }"
+    set AGENT_FILE=agent.bundle.js
+  )
 ) else (
-  echo [ERROR] agent.js not found in this folder!
-  echo Please make sure this .bat file is placed in your Printo folder or run D:\\printer\\start-printo.bat
+  set AGENT_FILE=agent.bundle.js
 )
-pause
+
+:: 2. Check if Node.js runtime exists
+where node >nul 2>nul
+if %errorlevel% neq 0 (
+  if exist "bin\\node.exe" (
+    set NODE_CMD=bin\\node.exe
+  ) else (
+    echo.
+    echo [SETUP] Node.js engine not found on this PC.
+    echo [SETUP] Downloading lightweight portable engine (1-time setup, ~10 seconds)...
+    echo.
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { if (!(Test-Path 'bin')) { New-Item -ItemType Directory -Path 'bin' | Out-Null }; Write-Host 'Fetching lightweight Node runtime...' -ForegroundColor Cyan; (New-Object Net.WebClient).DownloadFile('https://nodejs.org/dist/v20.18.0/win-x64/node.exe', 'bin\\node.exe'); Write-Host '[OK] Engine ready!' -ForegroundColor Green } catch { Write-Host '[WARN] Trying winget silent install...' -ForegroundColor Yellow; winget install OpenJS.NodeJS.LTS -e --silent --accept-source-agreements --accept-package-agreements }"
+    if exist "bin\\node.exe" (
+      set NODE_CMD=bin\\node.exe
+    ) else (
+      where node >nul 2>nul
+      if %errorlevel% equ 0 (
+        set NODE_CMD=node
+      ) else (
+        echo [ERROR] Failed to automatically setup Node.js engine.
+        echo Please install Node.js from https://nodejs.org and re-run this file.
+        pause
+        exit /b 1
+      )
+    )
+  )
+) else (
+  set NODE_CMD=node
+)
+
+:: 3. Launch Print Agent
+echo.
+echo [LAUNCH] Starting Printo Desktop Agent for ${shop.name}...
+%NODE_CMD% %AGENT_FILE%
+if %errorlevel% neq 0 (
+  echo.
+  echo [ERROR] Agent stopped unexpectedly (Exit code: %errorlevel%).
+  pause
+)
 `;
     res.setHeader('Content-Type', 'application/x-bat');
     res.setHeader('Content-Disposition', `attachment; filename="start-${shop.id}-agent.bat"`);
