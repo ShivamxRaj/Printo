@@ -280,28 +280,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       {/* Main Content Area */}
       <main className="max-w-6xl mx-auto p-4 space-y-6">
 
-        {/* Live Customer Claim Notification Toast */}
-        {claimedAlertOrder && (
-          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-lg">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h4 className="font-bold text-xs">Customer Reported UPI Payment!</h4>
-                <p className="text-[11px] opacity-90">
-                  Order #{claimedAlertOrder.orderCode} (₹{claimedAlertOrder.totalAmount}) is waiting for verification.
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => handleMarkPaid(claimedAlertOrder.id)}
-              className="bg-white text-slate-900 px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:bg-slate-100 cursor-pointer"
-            >
-              Verify & Release Print
-            </button>
-          </div>
-        )}
+
 
         {/* Connection Status Banner */}
         {agentStatus === 'offline' ? (
