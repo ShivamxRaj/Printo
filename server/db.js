@@ -20,7 +20,8 @@ const defaultData = {
         bwDouble: 3.0,       // ₹3 / sheet B&W both sides
         colorSingle: 10.0,   // ₹10 / page Color single side
         colorDouble: 16.0,   // ₹16 / sheet Color both sides
-        idCard: 10.0,        // ₹10 per smart ID/Aadhaar card
+        idCardBw: 5.0,       // ₹5 per B&W ID/Aadhaar card
+        idCard: 10.0,        // ₹10 per Color ID/Aadhaar card
         minOrder: 1.0        // Minimum order ₹1
       },
       status: 'online',
@@ -120,6 +121,7 @@ const db = {
         bwDouble: Number(cleanInput.rates?.bwDouble) || 3,
         colorSingle: Number(cleanInput.rates?.colorSingle) || 10,
         colorDouble: Number(cleanInput.rates?.colorDouble) || 16,
+        idCardBw: Number(cleanInput.rates?.idCardBw) || 5,
         idCard: Number(cleanInput.rates?.idCard) || 10,
         minOrder: Number(cleanInput.rates?.minOrder) || 1
       },

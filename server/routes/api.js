@@ -42,7 +42,13 @@ function calculatePrice(shop, { docType, colorMode, copies, sides, pageCount, se
   const copyCount = sanitizePositiveInt(copies, 1, 500, 1);
 
   if (docType === 'id_card') {
-    const singlePrice = rates.idCard !== undefined ? Math.max(0, Number(rates.idCard)) : 10;
+    const isColor = colorMode === 'color';
+    let singlePrice;
+    if (isColor) {
+      singlePrice = rates.idCard !== undefined ? Math.max(0, Number(rates.idCard)) : (rates.colorSingle !== undefined ? Number(rates.colorSingle) : 10);
+    } else {
+      singlePrice = rates.idCardBw !== undefined ? Math.max(0, Number(rates.idCardBw)) : (rates.bwSingle !== undefined ? Number(rates.bwSingle) : 5);
+    }
     const total = singlePrice * copyCount;
     const minOrder = rates.minOrder !== undefined ? Math.max(0, Number(rates.minOrder)) : 1;
     return {
@@ -50,7 +56,7 @@ function calculatePrice(shop, { docType, colorMode, copies, sides, pageCount, se
       totalAmount: Math.max(total, minOrder),
       totalPages: 1,
       totalSheets: 1 * copyCount,
-      breakdown: `${copyCount} copy x ₹${singlePrice}`
+      breakdown: `${copyCount} copy (${isColor ? 'Color' : 'B&W'}) x ₹${singlePrice}`
     };
   }
 

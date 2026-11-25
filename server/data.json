@@ -12,6 +12,7 @@
         "bwDouble": 3,
         "colorSingle": 10,
         "colorDouble": 16,
+        "idCardBw": 5,
         "idCard": 10,
         "minOrder": 1
       },
@@ -31,6 +32,7 @@
         "bwDouble": 3,
         "colorSingle": 10,
         "colorDouble": 16,
+        "idCardBw": 5,
         "idCard": 10,
         "minOrder": 1
       },

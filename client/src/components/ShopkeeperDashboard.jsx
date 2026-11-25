@@ -36,6 +36,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     bwDouble: 3,
     colorSingle: 10,
     colorDouble: 16,
+    idCardBw: 5,
     idCard: 10,
     minOrder: 1
   });
@@ -192,6 +193,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             bwDouble: parseFloat(rates.bwDouble) || 3,
             colorSingle: parseFloat(rates.colorSingle) || 10,
             colorDouble: parseFloat(rates.colorDouble) || 16,
+            idCardBw: parseFloat(rates.idCardBw) || 5,
             idCard: parseFloat(rates.idCard) || 10,
             minOrder: parseFloat(rates.minOrder) || 1
           }
@@ -630,9 +632,19 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">Aadhaar/ID Card (₹)</label>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">ID Card B&W (₹)</label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={rates.idCardBw || 5}
+                    onChange={(e) => setRates({ ...rates, idCardBw: e.target.value })}
+                    className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">ID Card Color (₹)</label>
                   <input
                     type="number"
                     step="1"

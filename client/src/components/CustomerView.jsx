@@ -43,9 +43,23 @@ export default function CustomerView({ shopId = 'shivam' }) {
   // Socket
   const [socket, setSocket] = useState(null);
 
-  // 1. Fetch Shop details strictly from database
+  // 1. Fetch Shop details with Instant Cache (Fast 0ms loading)
   useEffect(() => {
-    setLoading(true);
+    // A. Check local cache first for instant render
+    const cacheKey = `printo_cached_shop_${shopId}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.name) {
+          setShop(parsed);
+          setLoading(false);
+          document.title = `${parsed.name} — Self-Service Instant Print | Printo`;
+        }
+      }
+    } catch (e) {}
+
+    // B. Revalidate from server
     fetch(`${API_BASE}/api/shops/${shopId}`)
       .then(res => {
         if (!res.ok) throw new Error('Shop not found');
@@ -56,6 +70,9 @@ export default function CustomerView({ shopId = 'shivam' }) {
           setShop(null);
         } else {
           setShop(data);
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+          } catch (e) {}
           if (data.name) {
             document.title = `${data.name} — Self-Service Instant Print | Printo`;
           }
@@ -64,7 +81,6 @@ export default function CustomerView({ shopId = 'shivam' }) {
       })
       .catch(err => {
         console.error('Failed to load shop:', err);
-        setShop(null);
         setLoading(false);
       });
   }, [shopId]);
@@ -108,19 +124,25 @@ export default function CustomerView({ shopId = 'shivam' }) {
     if (!shop || !shop.rates) return { totalAmount: 0, breakdown: '' };
     const rates = shop.rates;
     const copyCount = Math.max(1, parseInt(cp) || 1);
+    const isColor = c === 'color';
+
     if (m === 'id_card') {
-      const singlePrice = rates.idCard || 10;
+      let singlePrice;
+      if (isColor) {
+        singlePrice = rates.idCard !== undefined ? Number(rates.idCard) : (rates.colorSingle !== undefined ? Number(rates.colorSingle) : 10);
+      } else {
+        singlePrice = rates.idCardBw !== undefined ? Number(rates.idCardBw) : (rates.bwSingle !== undefined ? Number(rates.bwSingle) : 5);
+      }
       const total = singlePrice * copyCount;
       return {
         unitPrice: singlePrice,
         totalAmount: Math.max(total, rates.minOrder || 0),
         totalPages: 1,
         totalSheets: copyCount,
-        breakdown: `${copyCount} ${copyCount === 1 ? 'copy' : 'copies'} × ₹${singlePrice}`
+        breakdown: `${copyCount} ${copyCount === 1 ? 'copy' : 'copies'} (${isColor ? 'Color' : 'B&W'}) × ₹${singlePrice}`
       };
     }
     const pages = p || 1;
-    const isColor = c === 'color';
     const isDouble = s === 'double';
     let unitRate = 0;
     let totalSheets = 0;
@@ -738,7 +760,9 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block"></span>
                       <span>Black & White</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.bwSingle}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">
+                      ₹{mode === 'id_card' ? (shop?.rates?.idCardBw || shop?.rates?.bwSingle || 5) : (shop?.rates?.bwSingle || 2)}/page
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -753,7 +777,9 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-[#b84b00] inline-block"></span>
                       <span>Full Color</span>
                     </div>
-                    <span className="text-[11px] font-medium text-slate-500">₹{shop?.rates?.colorSingle}/page</span>
+                    <span className="text-[11px] font-medium text-slate-500">
+                      ₹{mode === 'id_card' ? (shop?.rates?.idCard || shop?.rates?.colorSingle || 10) : (shop?.rates?.colorSingle || 10)}/page
+                    </span>
                   </button>
                 </div>
               </div>
