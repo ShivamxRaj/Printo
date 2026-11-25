@@ -358,14 +358,11 @@ export default function CustomerView({ shopId = 'shivam' }) {
               <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5">
-                <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
-                  {shop?.name}
-                </h1>
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online"></span>
-              </div>
+              <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
+                {shop?.name || 'Smart Print'}
+              </h1>
               <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">
-                <span className="truncate">Smart Print</span>
+                <span className="truncate">Instant Print</span>
                 <span className="text-slate-300">•</span>
                 <span className="text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded text-[10px] shrink-0">
                   Ready
