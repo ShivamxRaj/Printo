@@ -370,10 +370,14 @@ export default function CustomerView({ shopId = 'shivam' }) {
               </div>
             </div>
           </div>
-          <div className="shrink-0">
-            <span className="text-[10px] sm:text-[11px] font-bold text-[#b84b00] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-              UPI Direct
-            </span>
+          <div className="shrink-0 flex items-center">
+            <a href="/" title="Printo — Instant Self-Service Print" className="flex items-center">
+              <img
+                src="/printo-logo-transparent.png"
+                alt="Printo Logo"
+                className="h-7 sm:h-8 w-auto object-contain hover:opacity-90 transition-opacity"
+              />
+            </a>
           </div>
         </div>
       </header>
