@@ -1,5 +1,5 @@
 const { io } = require('socket.io-client');
-const { exec, execSync } = require('child_process');
+const { exec, execFile, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -8,7 +8,9 @@ const https = require('https');
 
 // Configuration
 const SERVER_URL = process.env.SERVER_URL || 'http://localhost:5000';
-const SHOP_ID = process.env.SHOP_ID || 'demo-shop';
+const SHOP_ID = process.env.SHOP_ID || 'shivam';
+const AGENT_KEY = process.env.AGENT_KEY || '';
+const PIN = process.env.PIN || '4652';
 
 // Temp folder for downloaded print jobs
 const TEMP_DIR = path.join(__dirname, 'temp');
@@ -17,7 +19,7 @@ if (!fs.existsSync(TEMP_DIR)) {
 }
 
 console.log(`\n======================================================`);
-console.log(`🖨️  PrintKwik Windows Desktop Print Agent v1.0`);
+console.log(`🖨️  Printo Windows Desktop Print Agent v1.1 [Secured]`);
 console.log(`======================================================`);
 console.log(`[INIT] Hostname: ${os.hostname()} (${os.platform()} ${os.arch()})`);
 console.log(`[INIT] Server Target: ${SERVER_URL}`);
@@ -87,12 +89,40 @@ if (browserBinary) {
 }
 
 /**
- * Download file from URL to local path
+ * Download file from URL to local path with SSRF & domain validation (Security #21)
  */
 function downloadFile(url, destPath) {
   return new Promise((resolve, reject) => {
+    let parsed;
+    try {
+      parsed = new URL(url);
+    } catch (e) {
+      return reject(new Error('Invalid URL format: ' + url));
+    }
+
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return reject(new Error('Disallowed protocol: ' + parsed.protocol));
+    }
+
+    // SSRF Validation: verify host belongs to trusted server or configured server URL
+    try {
+      const serverHost = new URL(SERVER_URL).host;
+      const isAllowedHost = 
+        parsed.host === serverHost || 
+        parsed.host.endsWith('railway.app') || 
+        parsed.host.endsWith('getprinto.in') || 
+        parsed.host === 'localhost' || 
+        parsed.host === '127.0.0.1' ||
+        parsed.host.startsWith('localhost:') ||
+        parsed.host.startsWith('127.0.0.1:');
+
+      if (!isAllowedHost) {
+        return reject(new Error(`Security Alert: Untrusted download host rejected (${parsed.host})`));
+      }
+    } catch (e) {}
+
     const file = fs.createWriteStream(destPath);
-    const client = url.startsWith('https') ? https : http;
+    const client = parsed.protocol === 'https:' ? https : http;
 
     client.get(url, (response) => {
       if (response.statusCode !== 200) {
@@ -110,20 +140,26 @@ function downloadFile(url, destPath) {
 }
 
 /**
- * Silently print PDF using Windows Spooler with multi-strategy fallback
+ * Silently print PDF using Windows Spooler with command-injection defense (Security #01, #25)
  */
 function silentPrintPdf(filePath, printerName, copies = 1) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     console.log(`[WINDOWS SPOOLER] Sending file to printer "${printerName}" (${copies} ${copies === 1 ? 'copy' : 'copies'})...`);
 
-    // Strategy 1: Edge / Chrome headless silent print (fastest, zero extra software needed)
+    // Strategy 1: Edge / Chrome headless silent print via execFile (NO shell interpolation!)
     if (browserBinary) {
-      console.log(`[SPOOL ENGINE] Using Windows Native Silent Spooler...`);
+      console.log(`[SPOOL ENGINE] Using Windows Native Silent Spooler (execFile safe mode)...`);
       let completedCopies = 0;
 
       const printSingleCopy = () => {
-        const cmd = `"${browserBinary}" --headless --disable-gpu --print-to-printer="${printerName}" "${filePath}"`;
-        exec(cmd, { timeout: 25000 }, (error, stdout, stderr) => {
+        const args = [
+          '--headless',
+          '--disable-gpu',
+          `--print-to-printer=${printerName}`,
+          filePath
+        ];
+
+        execFile(browserBinary, args, { timeout: 25000 }, (error, stdout, stderr) => {
           completedCopies++;
           if (completedCopies < copies) {
             printSingleCopy();
@@ -140,7 +176,7 @@ function silentPrintPdf(filePath, printerName, copies = 1) {
 
     // Strategy 2: PowerShell Start-Process PrintTo
     const escapedFilePath = filePath.replace(/'/g, "''");
-    const escapedPrinter = printerName.replace(/"/g, '`"');
+    const escapedPrinter = printerName.replace(/[`"$]/g, '');
 
     const psCommand = `
       for ($i = 0; $i -lt ${copies}; $i++) {
@@ -162,8 +198,8 @@ function silentPrintPdf(filePath, printerName, copies = 1) {
   });
 }
 
-// Connect to PrintKwik Cloud Gateway via WebSocket
-console.log(`[CONNECTING] Connecting to PrintKwik Server at ${SERVER_URL}...`);
+// Connect to Printo Cloud Gateway via WebSocket
+console.log(`[CONNECTING] Connecting to Printo Server at ${SERVER_URL}...`);
 const socket = io(SERVER_URL, {
   reconnection: true,
   reconnectionDelay: 2000,
@@ -171,12 +207,14 @@ const socket = io(SERVER_URL, {
 });
 
 socket.on('connect', () => {
-  console.log(`\n🟢 [CONNECTED] Print Agent online and authenticated!`);
+  console.log(`\n🟢 [CONNECTED] Print Agent online. Authenticating with server...`);
   console.log(`   Socket ID: ${socket.id}`);
   
-  // Register with server
+  // Register with server using secure authentication credentials
   socket.emit('agent_register', {
     shopId: SHOP_ID,
+    agentKey: AGENT_KEY,
+    pin: PIN,
     printers: printers.map(p => p.name),
     activePrinter,
     machineName: os.hostname()
@@ -185,8 +223,13 @@ socket.on('connect', () => {
   console.log(`   Listening for walk-in customer print jobs... Stand by.\n`);
 });
 
+socket.on('agent_auth_failed', (data) => {
+  console.error(`\n❌ [AGENT AUTH REJECTED] ${data?.message || 'Authentication failed'}`);
+  console.error(`   Check that SHOP_ID and PIN/AGENT_KEY match the registered shopkeeper credentials.\n`);
+});
+
 socket.on('disconnect', () => {
-  console.log(`\n🔴 [DISCONNECTED] Lost connection to PrintKwik Server. Reconnecting in background...`);
+  console.log(`\n🔴 [DISCONNECTED] Lost connection to Printo Server. Reconnecting in background...`);
 });
 
 // Real-time print job listener!

@@ -76,6 +76,9 @@ export default function RegisterShopModal({
 
       const data = await res.json();
       if (res.ok) {
+        if (data.token && data.id) {
+          sessionStorage.setItem(`printo_token_${data.id}`, data.token);
+        }
         setCreatedShop(data);
         if (onShopCreated) onShopCreated(data);
       } else {

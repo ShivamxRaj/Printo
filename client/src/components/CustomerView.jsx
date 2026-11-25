@@ -275,18 +275,28 @@ export default function CustomerView({ shopId = 'shivam' }) {
     }
   };
 
-  // Simulate payment callback (in production, bank webhook triggers this)
+  // Payment confirmation callback
   const handleConfirmPayment = async () => {
     if (!currentOrder) return;
     try {
       const res = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/verify-payment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactionId: 'UPI_SIM_' + Date.now() })
+        body: JSON.stringify({ transactionId: 'UPI_' + Date.now() })
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.order) {
         setCurrentOrder(data.order);
+      } else {
+        // Fallback claim-payment to alert the shopkeeper dashboard in real-time
+        const claimRes = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/claim-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const claimData = await claimRes.json();
+        if (claimData.order) {
+          setCurrentOrder(claimData.order);
+        }
       }
     } catch (err) {
       console.error('Payment verification failed:', err);
@@ -557,7 +567,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                 }`}
               >
                 <FileText className="w-4 h-4 shrink-0 text-[#b84b00]" />
-                <span className="truncate">Document (PDF/Photo)</span>
+                <span className="text-[11px] sm:text-xs font-bold">Document (PDF)</span>
               </button>
               <button
                 type="button"
@@ -569,7 +579,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                 }`}
               >
                 <CreditCard className="w-4 h-4 shrink-0 text-[#b84b00]" />
-                <span className="truncate">Smart ID / Aadhaar</span>
+                <span className="text-[11px] sm:text-xs font-bold">ID / Aadhaar</span>
               </button>
             </div>
 
@@ -579,7 +589,7 @@ export default function CustomerView({ shopId = 'shivam' }) {
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 text-sm">Upload Document</h3>
                   <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">
-                    PDF, JPG, PNG, DOCX
+                    PDF, JPG, PNG
                   </span>
                 </div>
 
@@ -628,15 +638,17 @@ export default function CustomerView({ shopId = 'shivam' }) {
               </div>
             ) : (
               /* MODE B: SMART AADHAAR / ID CARD AUTO-MERGER */
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm">Smart ID / Aadhaar Auto-Merge</h3>
-                    <p className="text-[11px] text-slate-500">Upload both sides. We auto-align them on a single A4 page.</p>
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-slate-900 text-sm">Smart ID / Aadhaar Auto-Merge</h3>
+                      <span className="text-[10px] bg-amber-100 text-[#b84b00] font-bold px-2 py-0.5 rounded-full shrink-0">
+                        Auto-Stitch
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Upload both sides. We auto-align them on a single A4 page.</p>
                   </div>
-                  <span className="text-[10px] bg-amber-100 text-[#b84b00] font-bold px-2 py-0.5 rounded-full">
-                    Auto-Stitch
-                  </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">

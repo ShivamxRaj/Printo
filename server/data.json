@@ -16,8 +16,9 @@
         "minOrder": 1
       },
       "status": "online",
-      "activePrinter": "Default Windows Printer",
-      "createdAt": "2026-11-17T10:00:00.000Z"
+      "activePrinter": "Microsoft Print to PDF",
+      "createdAt": "2026-11-17T10:00:00.000Z",
+      "lastSeen": "2026-11-25T18:48:39.031Z"
     },
     {
       "id": "demo-shop",

@@ -10,6 +10,7 @@ server/uploads/*
 !server/uploads/.gitkeep
 agent/temp/*
 !agent/temp/.gitkeep
+temp_audio/
 
 # Environment variables
 .env

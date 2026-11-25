@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 
-  ExternalLink, Shield, Power, Play, Download, PlusCircle, Store
+  ExternalLink, Shield, Power, Play, Download, PlusCircle, Store,
+  Lock, Unlock, KeyRound, Eye, EyeOff
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
@@ -19,6 +20,15 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
   const [isSavingRates, setIsSavingRates] = useState(false);
   const [reprintModalOrder, setReprintModalOrder] = useState(null);
   const [reprintCode, setReprintCode] = useState('');
+
+  // Authentication & Security State
+  const [token, setToken] = useState(() => sessionStorage.getItem(`printo_token_${effectiveShopId}`) || '');
+  const [isUnlocked, setIsUnlocked] = useState(() => !!sessionStorage.getItem(`printo_token_${effectiveShopId}`));
+  const [ownerPinInput, setOwnerPinInput] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [isVerifyingPin, setIsVerifyingPin] = useState(false);
+  const [showPin, setShowPin] = useState(false);
+  const [claimedAlertOrder, setClaimedAlertOrder] = useState(null);
 
   // Editable Rates State
   const [rates, setRates] = useState({
@@ -48,6 +58,11 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       setOrders(prev => [newOrder, ...prev]);
     });
 
+    socket.on('order_claimed', (claimedOrder) => {
+      setClaimedAlertOrder(claimedOrder);
+      setOrders(prev => prev.map(o => o.id === claimedOrder.id ? claimedOrder : o));
+    });
+
     socket.on('order_updated', (updated) => {
       setOrders(prev => prev.map(o => o.id === updated.id ? updated : o));
     });
@@ -61,13 +76,8 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [shopRes, ordersRes] = await Promise.all([
-        fetch(`${API_BASE}/api/shops/${effectiveShopId}`),
-        fetch(`${API_BASE}/api/shops/${effectiveShopId}/orders`)
-      ]);
-
+      const shopRes = await fetch(`${API_BASE}/api/shops/${effectiveShopId}`);
       const shopData = await shopRes.json();
-      const ordersData = await ordersRes.json();
 
       setShop(shopData);
       setShopName(shopData.name || '');
@@ -76,7 +86,14 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       if (shopData.rates) setRates(shopData.rates);
       setAgentStatus(shopData.status || 'offline');
       if (shopData.activePrinter) setActivePrinter(shopData.activePrinter);
-      setOrders(ordersData);
+
+      // Attempt to load orders with saved token if available
+      const savedToken = sessionStorage.getItem(`printo_token_${effectiveShopId}`);
+      if (savedToken) {
+        await fetchOrders(savedToken);
+      } else {
+        setIsUnlocked(false);
+      }
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
     } finally {
@@ -84,11 +101,77 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     }
   };
 
+  const fetchOrders = async (authToken) => {
+    try {
+      const ordersRes = await fetch(`${API_BASE}/api/shops/${effectiveShopId}/orders`, {
+        headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
+      });
+
+      if (ordersRes.status === 401 || ordersRes.status === 403) {
+        setIsUnlocked(false);
+        setToken('');
+        sessionStorage.removeItem(`printo_token_${effectiveShopId}`);
+        setOrders([]);
+        return;
+      }
+
+      const ordersData = await ordersRes.json();
+      if (Array.isArray(ordersData)) {
+        setOrders(ordersData);
+        setIsUnlocked(true);
+      }
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+    }
+  };
+
   useEffect(() => {
     fetchData();
-  }, [shopId]);
+  }, [effectiveShopId]);
 
-  // Save Settings / Rates
+  // Handle PIN Unlock
+  const handleUnlockDashboard = async (e) => {
+    e.preventDefault();
+    if (!ownerPinInput.trim()) {
+      setPinError('Please enter your 4-digit Owner PIN');
+      return;
+    }
+
+    setPinError('');
+    setIsVerifyingPin(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/shops/${effectiveShopId}/verify-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: ownerPinInput.trim() })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.token) {
+        sessionStorage.setItem(`printo_token_${effectiveShopId}`, data.token);
+        setToken(data.token);
+        setIsUnlocked(true);
+        setOwnerPinInput('');
+        await fetchOrders(data.token);
+      } else {
+        setPinError(data.error || 'Incorrect Owner PIN. Please try again.');
+      }
+    } catch (err) {
+      setPinError('Network error verifying PIN. Please check your connection.');
+    } finally {
+      setIsVerifyingPin(false);
+    }
+  };
+
+  // Handle Lock / Logout
+  const handleLockDashboard = () => {
+    sessionStorage.removeItem(`printo_token_${effectiveShopId}`);
+    setToken('');
+    setIsUnlocked(false);
+    setOrders([]);
+  };
+
+  // Save Settings / Rates (Authenticated with Bearer Token)
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSavingRates(true);
@@ -96,7 +179,10 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     try {
       const res = await fetch(`${API_BASE}/api/shops`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({
           id: effectiveShopId,
           name: shopName,
@@ -107,15 +193,16 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             colorSingle: parseFloat(rates.colorSingle) || 10,
             colorDouble: parseFloat(rates.colorDouble) || 16,
             idCard: parseFloat(rates.idCard) || 10,
-            minOrder: parseFloat(rates.minOrder) || 2
+            minOrder: parseFloat(rates.minOrder) || 1
           }
         })
       });
 
       if (res.ok) {
-        alert('Shop settings and rates saved successfully!');
+        alert('✓ Shop settings and rates saved securely!');
       } else {
-        alert('Failed to save settings');
+        const data = await res.json();
+        alert(data.error || 'Failed to save settings. Please verify Owner PIN.');
       }
     } catch (err) {
       alert('Network error saving settings');
@@ -129,12 +216,21 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     try {
       const res = await fetch(`${API_BASE}/api/orders/${orderId}/verify-payment`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ transactionId: 'MANUAL_' + Date.now() })
       });
       if (res.ok) {
         const data = await res.json();
         setOrders(prev => prev.map(o => o.id === orderId ? data.order : o));
+        if (claimedAlertOrder?.id === orderId) {
+          setClaimedAlertOrder(null);
+        }
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Payment verification failed');
       }
     } catch (err) {
       alert('Error updating payment status');
@@ -147,7 +243,10 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     try {
       const res = await fetch(`${API_BASE}/api/orders/${reprintModalOrder.id}/reprint`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ orderCode: reprintCode })
       });
       const data = await res.json();
@@ -237,6 +336,17 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
               <span>Print Standee</span>
             </a>
 
+            {isUnlocked && (
+              <button
+                onClick={handleLockDashboard}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
+                title="Lock Dashboard Session"
+              >
+                <Lock className="w-3.5 h-3.5 text-rose-400" />
+                <span>Lock</span>
+              </button>
+            )}
+
             {onOpenRegisterModal && (
               <button
                 onClick={onOpenRegisterModal}
@@ -253,8 +363,95 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       {/* Main Content Area */}
       <main className="max-w-6xl mx-auto p-4 space-y-6">
 
-        {/* Connection Status Banner */}
-        {agentStatus === 'offline' ? (
+        {!isUnlocked ? (
+          <div className="bg-white rounded-3xl p-8 max-w-md mx-auto border border-slate-200 shadow-xl text-center space-y-5 my-12 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 rounded-2xl bg-amber-100 text-[#b84b00] flex items-center justify-center mx-auto shadow-inner">
+              <Lock className="w-8 h-8" />
+            </div>
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-black text-slate-900">Owner Dashboard Locked</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                This dashboard contains customer documents, orders, and UPI payment settings. Enter your 4-digit Owner PIN to unlock.
+              </p>
+            </div>
+
+            <form onSubmit={handleUnlockDashboard} className="space-y-4 pt-2">
+              <div className="relative max-w-[200px] mx-auto">
+                <input
+                  type={showPin ? 'text' : 'password'}
+                  maxLength={10}
+                  autoFocus
+                  placeholder="••••"
+                  value={ownerPinInput}
+                  onChange={(e) => setOwnerPinInput(e.target.value)}
+                  className="w-full text-center text-2xl font-mono font-black tracking-widest py-3 px-4 rounded-xl border-2 border-slate-200 focus:border-[#b84b00] focus:ring-2 focus:ring-amber-200 outline-none transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {pinError && (
+                <div className="flex items-center justify-center gap-1.5 text-xs text-rose-600 font-semibold bg-rose-50 py-2 px-3 rounded-lg border border-rose-200">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{pinError}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isVerifyingPin}
+                className="w-full py-3 bg-[#b84b00] hover:bg-[#9f4000] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isVerifyingPin ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Verifying PIN...</span>
+                  </>
+                ) : (
+                  <>
+                    <KeyRound className="w-4 h-4" />
+                    <span>Unlock Dashboard</span>
+                  </>
+                )}
+              </button>
+
+              <p className="text-[11px] text-slate-500">
+                Default PIN is <span className="font-mono font-bold text-slate-700">4652</span> (or the last 4 digits of your registered phone number).
+              </p>
+            </form>
+          </div>
+        ) : (
+          <>
+            {/* Live Customer Claim Notification Toast */}
+            {claimedAlertOrder && (
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs">Customer Reported UPI Payment!</h4>
+                    <p className="text-[11px] opacity-90">
+                      Order #{claimedAlertOrder.orderCode} (₹{claimedAlertOrder.totalAmount}) is waiting for verification.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleMarkPaid(claimedAlertOrder.id)}
+                  className="bg-white text-slate-900 px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:bg-slate-100 cursor-pointer"
+                >
+                  Verify & Release Print
+                </button>
+              </div>
+            )}
+
+            {/* Connection Status Banner */}
+            {agentStatus === 'offline' ? (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
@@ -668,6 +865,8 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
             )}
           </div>
         </div>
+        </>
+      )}
 
       </main>
 
