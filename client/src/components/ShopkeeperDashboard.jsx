@@ -424,15 +424,13 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Settlement UPI ID (Frozen)</span>
+                    <span>Settlement UPI ID</span>
                   </label>
                   <a
-                    href="https://wa.me/916299446452?text=Hi%20Printo,%20I%20want%20to%20update%20my%20shop%20UPI%20ID"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={`mailto:support@getprinto.in?subject=Request%20to%20update%20Shop%20UPI%20ID%20(${effectiveShopId})&body=Hi%20Printo%20Support,%0A%0APlease%20update%20the%20UPI%20ID%20for%20my%20shop:%0AShop%20ID:%20${effectiveShopId}%0ACurrent%20UPI:%20${upiId}%0ANew%20UPI%20ID:%20%0A%0AThank%20you.`}
                     className="text-[10px] text-[#b84b00] hover:underline font-bold"
                   >
-                    Need change? WhatsApp Support
+                    Need change? Email Support
                   </a>
                 </div>
                 <div className="relative">
