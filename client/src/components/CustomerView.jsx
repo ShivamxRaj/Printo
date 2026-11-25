@@ -359,15 +359,8 @@ export default function CustomerView({ shopId = 'shivam' }) {
             </div>
             <div className="min-w-0">
               <h1 className="font-bold text-slate-900 text-sm sm:text-base leading-tight truncate">
-                {shop?.name || 'Smart Print'}
+                {shop?.name || 'Shivam'}
               </h1>
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">
-                <span className="truncate">Instant Print</span>
-                <span className="text-slate-300">•</span>
-                <span className="text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded text-[10px] shrink-0">
-                  Ready
-                </span>
-              </div>
             </div>
           </div>
           <div className="shrink-0 flex items-center">
