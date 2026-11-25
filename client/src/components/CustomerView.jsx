@@ -396,16 +396,16 @@ export default function CustomerView({ shopId = 'shivam' }) {
                 <div>
                   <h4 className="font-semibold text-slate-900 text-sm">
                     {currentOrder.paymentStatus === 'paid' 
-                      ? 'Payment Verified & Released' 
+                      ? 'Payment Verified' 
                       : currentOrder.paymentClaimed 
-                      ? 'Payment Reported (Ready at Counter)' 
+                      ? 'Payment Reported' 
                       : 'Awaiting Payment'}
                   </h4>
                   <p className="text-xs text-slate-500">
                     {currentOrder.paymentStatus === 'paid' 
                       ? 'Received via UPI' 
                       : currentOrder.paymentClaimed 
-                      ? `Show PIN #${currentOrder.orderCode} at the counter` 
+                      ? 'Order queued for print' 
                       : `Total to pay: ₹${currentOrder.totalAmount}`}
                   </p>
                 </div>
@@ -526,15 +526,15 @@ export default function CustomerView({ shopId = 'shivam' }) {
                   />
                 </div>
 
-                {/* Direct Verification Button or Waiting Card */}
+                {/* Direct Verification Button or Status */}
                 {currentOrder.paymentClaimed ? (
-                  <div className="bg-amber-50 border border-amber-200/90 rounded-xl p-3.5 text-center space-y-1.5 shadow-2xs">
-                    <span className="text-xs font-bold text-amber-900 block flex items-center justify-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                      Order Sent to Shop Counter Queue!
+                  <div className="bg-emerald-50 border border-emerald-200/90 rounded-xl p-3 text-center space-y-1 shadow-2xs">
+                    <span className="text-xs font-bold text-emerald-900 flex items-center justify-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
+                      Payment Reported
                     </span>
                     <p className="text-[11px] text-slate-600">
-                      Please tell Pickup PIN <strong className="text-[#b84b00] font-mono font-black text-xs">#{currentOrder.orderCode}</strong> to the shopkeeper. Your fresh prints will be released instantly!
+                      Your document has been sent to the printer queue.
                     </p>
                   </div>
                 ) : (
@@ -544,11 +544,8 @@ export default function CustomerView({ shopId = 'shivam' }) {
                       className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                     >
                       <CheckCircle className="w-4 h-4" />
-                      I Have Paid ₹{currentOrder.totalAmount} • Get Pickup PIN
+                      I Have Paid ₹{currentOrder.totalAmount} (Verify & Print)
                     </button>
-                    <p className="text-[10px] text-center text-slate-500 mt-1.5">
-                      Sends your order to the counter queue. Show your PIN to collect your print.
-                    </p>
                   </div>
                 )}
               </div>
