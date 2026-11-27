@@ -3,7 +3,7 @@ import {
   Printer, TrendingUp, IndianRupee, Layers, Settings, 
   RefreshCw, CheckCircle, Clock, AlertTriangle, QrCode, 
   ExternalLink, Shield, Power, Play, Download, PlusCircle, Store,
-  Lock
+  Lock, HelpCircle
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { API_BASE, SOCKET_URL } from '../config';
@@ -411,9 +411,10 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                   </label>
                   <a
                     href={`mailto:support@getprinto.in?subject=Request%20to%20update%20Shop%20UPI%20ID%20(${effectiveShopId})&body=Hi%20Printo%20Support,%0A%0APlease%20update%20the%20UPI%20ID%20for%20my%20shop:%0AShop%20ID:%20${effectiveShopId}%0ACurrent%20UPI:%20${upiId}%0ANew%20UPI%20ID:%20%0A%0AThank%20you.`}
-                    className="text-[10px] text-[#b84b00] underline font-bold"
+                    className="inline-flex items-center gap-1 text-[11px] text-slate-700 hover:text-slate-900 font-medium transition-colors"
                   >
-                    Need Support
+                    <HelpCircle className="w-3.5 h-3.5 text-slate-700" />
+                    <span>Need help</span>
                   </a>
                 </div>
                 <div className="relative">
