@@ -33,6 +33,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
     minOrder: 1
   });
   const [upiId, setUpiId] = useState('');
+  const [paytmMid, setPaytmMid] = useState('');
   const [shopName, setShopName] = useState('');
 
   // Socket
@@ -81,6 +82,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
       setShopName(shopData.name || '');
       document.title = `Shop Dashboard — ${shopData.name || 'Admin'} | Printo`;
       setUpiId(shopData.upiId || '');
+      setPaytmMid(shopData.paytmMid || '');
       if (shopData.rates) setRates(shopData.rates);
       setAgentStatus(shopData.status || 'offline');
       if (shopData.activePrinter) setActivePrinter(shopData.activePrinter);
@@ -110,6 +112,7 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
         body: JSON.stringify({
           id: effectiveShopId,
           name: shopName,
+          paytmMid: paytmMid.trim(),
           rates: {
             bwSingle: parseFloat(rates.bwSingle) || 2,
             bwDouble: parseFloat(rates.bwDouble) || 3,
@@ -431,6 +434,29 @@ export default function ShopkeeperDashboard({ shopId = 'shivam', onOpenRegisterM
                 </div>
                 <p className="text-[10px] text-slate-500 mt-1">
                   Customer payments go directly to this bank account. Locked to protect against unauthorized changes.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-slate-700">
+                    Paytm Business MID <span className="text-[10px] font-normal text-slate-400">(Optional)</span>
+                  </label>
+                  {paytmMid.trim() && (
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                      ⚡ Auto-Print Active
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  value={paytmMid}
+                  onChange={(e) => setPaytmMid(e.target.value)}
+                  placeholder="e.g. AbCdEf1234567890 (from Paytm Business App)"
+                  className="w-full text-xs font-mono px-3 py-2 border border-slate-200 rounded-lg focus:outline-[#b84b00]"
+                />
+                <p className="text-[10px] text-slate-500 mt-1">
+                  Enables 100% automatic payment verification &amp; hands-free printing. Leave blank for manual Verify &amp; Print.
                 </p>
               </div>
 

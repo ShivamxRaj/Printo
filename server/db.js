@@ -115,6 +115,7 @@ const db = {
       ownerName: sanitizeText(cleanInput.ownerName, 80),
       phone: sanitizeText(cleanInput.phone, 20),
       upiId: sanitizeText(cleanInput.upiId, 60),
+      paytmMid: cleanInput.paytmMid !== undefined ? sanitizeText(cleanInput.paytmMid, 40) : (existing?.paytmMid || ''),
       pin: cleanInput.pin ? String(cleanInput.pin).trim().slice(0, 10) : (existing?.pin || '1234'),
       rates: {
         bwSingle: Number(cleanInput.rates?.bwSingle) || 2,

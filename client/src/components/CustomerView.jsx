@@ -119,6 +119,36 @@ export default function CustomerView({ shopId = 'shivam' }) {
     };
   }, [socket, currentOrder?.id]);
 
+  // Automated Paytm Business Verification Polling (Zero-click auto-print when shop has Paytm MID)
+  useEffect(() => {
+    if (!currentOrder?.id || currentOrder.paymentStatus === 'paid' || !shop?.paytmMid) {
+      return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 100; // Poll up to 5 minutes (100 * 3s)
+
+    const timer = setInterval(async () => {
+      attempts += 1;
+      if (attempts > maxAttempts) {
+        clearInterval(timer);
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE}/api/orders/${currentOrder.id}/check-paytm-status`);
+        const data = await res.json();
+        if (data?.paid && data?.order) {
+          setCurrentOrder(data.order);
+          clearInterval(timer);
+        }
+      } catch (e) {
+        // Ignore transient poll errors
+      }
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [currentOrder?.id, currentOrder?.paymentStatus, shop?.paytmMid]);
+
   // Instant synchronous price calculation based strictly on real shop rates
   const calculateEstimate = (m, c, s, cp, p) => {
     if (!shop || !shop.rates) return { totalAmount: 0, breakdown: '' };
@@ -444,6 +474,13 @@ export default function CustomerView({ shopId = 'shivam' }) {
                   <span className="font-medium text-slate-800 text-sm">Pay using any UPI app:</span>
                   <span className="font-bold text-[#b84b00] text-base">₹{currentOrder.totalAmount}</span>
                 </div>
+
+                {shop?.paytmMid && (
+                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-lg text-[11px] font-semibold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    <span>Auto-Verify Active — Prints automatically upon payment!</span>
+                  </div>
+                )}
 
                 {/* Copy UPI Box for Direct In-App Payment (Bypasses Bank Intent Blocks) */}
                 <div className="bg-white p-2.5 rounded-lg border border-amber-200/80 flex items-center justify-between shadow-2xs">

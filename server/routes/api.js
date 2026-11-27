@@ -258,7 +258,7 @@ if %errorlevel% neq 0 (
   // SECURITY HARDENING: For existing shops, UPI ID is PERMANENTLY FROZEN.
   // Rates and shop name can be updated freely, but UPI ID cannot be hijacked!
   router.post('/shops', (req, res) => {
-    const { id, name, ownerName, phone, upiId, rates } = req.body;
+    const { id, name, ownerName, phone, upiId, paytmMid, rates } = req.body;
     const cleanId = sanitizeId(id);
 
     if (!cleanId || !name) {
@@ -279,6 +279,7 @@ if %errorlevel% neq 0 (
       ownerName: ownerName !== undefined ? ownerName : (existingShop?.ownerName || ''),
       phone: phone !== undefined ? phone : (existingShop?.phone || ''),
       upiId: finalizedUpiId,
+      paytmMid: paytmMid !== undefined ? String(paytmMid).trim() : (existingShop?.paytmMid || ''),
       pin: existingShop?.pin || (phone ? phone.slice(-4) : '1234'),
       rates: rates || existingShop?.rates || {
         bwSingle: 2,
@@ -461,19 +462,21 @@ if %errorlevel% neq 0 (
         customerPhone: sanitizeText(customerPhone, 20)
       });
 
-      // Construct UPI deep links
+      // Construct UPI deep links with unique Transaction Reference (`tr`) for automated verification
       const upiId = shop.upiId;
       const shopName = shop.name;
       const amountStr = calculation.totalAmount.toFixed(2);
       const note = `Print Order ${order.orderCode}`;
+      const tr = encodeURIComponent(order.id);
+      const queryParams = `pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}&tr=${tr}`;
 
-      const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`;
+      const upiUrl = `upi://pay?${queryParams}`;
 
       const intents = {
         generic: upiUrl,
-        gpay: `gpay://upi/pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`,
-        phonepe: `phonepe://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`,
-        paytm: `paytmmp://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`
+        gpay: `gpay://upi/pay?${queryParams}`,
+        phonepe: `phonepe://pay?${queryParams}`,
+        paytm: `paytmmp://pay?${queryParams}`
       };
 
       const qrCodeDataUrl = await QRCode.toDataURL(upiUrl, {
@@ -524,6 +527,48 @@ if %errorlevel% neq 0 (
     res.json({ success: true, order: updated, message: 'Payment reported to shopkeeper dashboard.' });
   });
 
+  /**
+   * Shared helper: marks an order paid, broadcasts real-time updates, and dispatches print job to desktop agent.
+   */
+  function markOrderPaidAndDispatch(req, order, transactionId) {
+    const updatedOrder = db.updateOrder(order.id, {
+      paymentStatus: 'paid',
+      printStatus: 'queued',
+      paidAt: new Date().toISOString(),
+      transactionId: sanitizeText(transactionId, 64) || 'UPI_' + Date.now()
+    });
+
+    io.to(`order_${order.id}`).emit('order_status', updatedOrder);
+    io.to(`shop_${order.shopId}`).emit('order_updated', updatedOrder);
+
+    const agentSocket = connectedAgents[order.shopId];
+    if (agentSocket) {
+      const host = req.get('host') || '';
+      const protocol = req.headers['x-forwarded-proto'] || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
+      const fullPdfUrl = `${protocol}://${host}${order.fileUrl}`;
+      const printJob = {
+        orderId: order.id,
+        orderCode: order.orderCode,
+        fileUrl: fullPdfUrl,
+        fileName: order.fileName,
+        options: {
+          colorMode: order.colorMode,
+          copies: order.copies,
+          sides: order.sides,
+          pageRange: order.pageRange
+        }
+      };
+
+      console.log(`[PRINT DISPATCH] Dispatching job #${order.orderCode} to agent for shop ${order.shopId}`);
+      agentSocket.emit('print_job', printJob);
+      db.updateOrder(order.id, { printStatus: 'sent_to_printer' });
+    } else {
+      console.warn(`[PRINT AGENT OFFLINE] No connected agent found for shop: ${order.shopId}`);
+    }
+
+    return updatedOrder;
+  }
+
   // 8. Verify Payment & Trigger Automatic Print Job
   // Accepts: Shopkeeper Auth Token OR Valid Shop Owner PIN OR Direct Verified Shopkeeper Action
   router.post('/orders/:orderId/verify-payment', (req, res) => {
@@ -568,48 +613,56 @@ if %errorlevel% neq 0 (
       return res.status(403).json({ error: 'Shopkeeper confirmation required to trigger print.' });
     }
 
-    // Mark as PAID
-    const updatedOrder = db.updateOrder(orderId, {
-      paymentStatus: 'paid',
-      printStatus: 'queued',
-      paidAt: new Date().toISOString(),
-      transactionId: sanitizeText(transactionId, 64) || 'UPI_' + Date.now()
-    });
-
-    // Notify customer mobile screen that payment succeeded
-    io.to(`order_${orderId}`).emit('order_status', updatedOrder);
-
-    // Notify shopkeeper dashboard
-    io.to(`shop_${order.shopId}`).emit('order_updated', updatedOrder);
-
-    // Trigger Desktop Print Agent!
-    const agentSocket = connectedAgents[order.shopId];
-    if (agentSocket) {
-      const host = req.get('host') || '';
-      const protocol = req.headers['x-forwarded-proto'] || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
-      const fullPdfUrl = `${protocol}://${host}${order.fileUrl}`;
-      const printJob = {
-        orderId: order.id,
-        orderCode: order.orderCode,
-        fileUrl: fullPdfUrl,
-        fileName: order.fileName,
-        options: {
-          colorMode: order.colorMode,
-          copies: order.copies,
-          sides: order.sides,
-          pageRange: order.pageRange
-        }
-      };
-
-      console.log(`[PRINT DISPATCH] Dispatching job #${order.orderCode} to agent for shop ${order.shopId}`);
-      agentSocket.emit('print_job', printJob);
-
-      db.updateOrder(orderId, { printStatus: 'sent_to_printer' });
-    } else {
-      console.warn(`[PRINT AGENT OFFLINE] No connected agent found for shop: ${order.shopId}`);
-    }
-
+    const updatedOrder = markOrderPaidAndDispatch(req, order, transactionId);
     res.json({ success: true, order: updatedOrder });
+  });
+
+  // 8a. Automated Paytm for Business Verification (Checks Paytm status API using shop's optional MID)
+  router.get('/orders/:orderId/check-paytm-status', async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      const order = db.getOrder(orderId);
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      if (order.paymentStatus === 'paid') {
+        return res.json({ success: true, paid: true, order });
+      }
+
+      const shop = db.getShop(order.shopId, true);
+      const mid = shop?.paytmMid ? String(shop.paytmMid).trim() : '';
+      if (!mid) {
+        return res.json({ success: false, paid: false, reason: 'no_mid' });
+      }
+
+      const payload = JSON.stringify({ MID: mid, ORDERID: order.id });
+      const statusUrl = `https://securegw.paytm.in/merchant-status/getTxnStatus?JsonData=${encodeURIComponent(payload)}`;
+      const response = await fetch(statusUrl, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(6000)
+      });
+      const data = await response.json().catch(() => ({}));
+
+      // Strict 3-point validation: STATUS + ORDERID + exact paise TXNAMOUNT
+      const expectedPaise = Math.round(Number(order.totalAmount) * 100);
+      const paidPaise = Math.round(Number(data?.TXNAMOUNT) * 100);
+
+      if (
+        data?.STATUS === 'TXN_SUCCESS' &&
+        data?.ORDERID === order.id &&
+        Number.isFinite(paidPaise) &&
+        paidPaise === expectedPaise
+      ) {
+        const updatedOrder = markOrderPaidAndDispatch(req, order, data.TXNID || `PAYTM_${Date.now()}`);
+        return res.json({ success: true, paid: true, order: updatedOrder });
+      }
+
+      return res.json({ success: true, paid: false, status: data?.STATUS || 'PENDING' });
+    } catch (err) {
+      // Treat network/timeout errors as pending so polling continues cleanly
+      return res.json({ success: true, paid: false, status: 'PENDING' });
+    }
   });
 
   // 9. Reprint Order (Strictly requires 4-digit order code match)
