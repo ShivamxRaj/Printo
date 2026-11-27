@@ -174,12 +174,11 @@ export default function StandeePoster({ shopId = 'shivam' }) {
         </div>
 
         {/* Footer Privacy Notice */}
-        <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500 font-medium">
+        <div className="pt-4 border-t border-slate-200 flex items-center justify-center text-[10px] text-slate-500 font-medium">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>100% Data Privacy: Files are automatically destroyed immediately after printing.</span>
           </div>
-          <span>Powered by Printo Smart Gateway</span>
         </div>
 
       </div>
