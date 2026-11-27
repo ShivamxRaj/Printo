@@ -268,10 +268,14 @@ if %errorlevel% neq 0 (
     const existingShop = db.getShop(cleanId, true);
 
     // If shop already exists, FREEZE the UPI ID (cannot be modified via dashboard save)
+    // Also FREEZE Paytm MID once configured so it cannot be hijacked or deleted
     const finalizedUpiId = existingShop ? existingShop.upiId : String(upiId || '').trim();
     if (!finalizedUpiId) {
       return res.status(400).json({ error: 'UPI ID is required during registration' });
     }
+    const finalizedPaytmMid = existingShop?.paytmMid
+      ? existingShop.paytmMid
+      : (paytmMid !== undefined ? String(paytmMid).trim() : '');
 
     const updated = db.saveShop({
       id: cleanId,
@@ -279,7 +283,7 @@ if %errorlevel% neq 0 (
       ownerName: ownerName !== undefined ? ownerName : (existingShop?.ownerName || ''),
       phone: phone !== undefined ? phone : (existingShop?.phone || ''),
       upiId: finalizedUpiId,
-      paytmMid: paytmMid !== undefined ? String(paytmMid).trim() : (existingShop?.paytmMid || ''),
+      paytmMid: finalizedPaytmMid,
       pin: existingShop?.pin || (phone ? phone.slice(-4) : '1234'),
       rates: rates || existingShop?.rates || {
         bwSingle: 2,
